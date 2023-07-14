@@ -72,15 +72,15 @@ renderer = vtk.vtkRenderer()
 ###############
 ## Apply BET:
 ANAYLYSIS_TYPE="CSF_COMPARTMENT_VEN_SUL_AB"
-project_folder="/media/atul/AC0095E80095BA32/WASHU_WORK/PROJECTS/CSF_Compartment"
+project_folder="/media/atul/AC0095E80095BA32/WASHU_WORK/PROJECTS/SAH_N_CSF_Compartment"
 
 
 #MATFILE_directory_name_parent="/media/atul/AC0095E80095BA32/WASHU_WORK/PROJECTS/NetWaterUptake/DATA/CTP_MASK/"
 #CTP_directory_name_parent="/media/atul/AC0095E80095BA32/WASHU_WORK/PROJECTS/NetWaterUptake/DATA/CTP/"
-NECT_directory_name_parent="/media/atul/AC0095E80095BA32/WASHU_WORK/PROJECTS/CSF_Compartment/DATA/NECT"
-NECT_BET_directory_name_parent="/media/atul/AC0095E80095BA32/WASHU_WORK/PROJECTS/CSF_Compartment/DATA/BET"
-RESULT_DIRECTORY="/media/atul/AC0095E80095BA32/WASHU_WORK/PROJECTS/CSF_Compartment/RESULTS"
-SLICE_OUTPUT_DIRECTORY="/media/atul/AC0095E80095BA32/WASHU_WORK/PROJECTS/CSF_Compartment/RESULTS/IMAGES"
+NECT_directory_name_parent="/media/atul/AC0095E80095BA32/WASHU_WORK/PROJECTS/SAH_N_CSF_Compartment/DATA/NECT"
+NECT_BET_directory_name_parent="/media/atul/AC0095E80095BA32/WASHU_WORK/PROJECTS/SAH_N_CSF_Compartment/DATA/BET"
+RESULT_DIRECTORY="/media/atul/AC0095E80095BA32/WASHU_WORK/PROJECTS/SAH_N_CSF_Compartment/RESULTS"
+SLICE_OUTPUT_DIRECTORY="/media/atul/AC0095E80095BA32/WASHU_WORK/PROJECTS/SAH_N_CSF_Compartment/RESULTS/IMAGES"
 latexfilename=os.path.join(os.path.dirname(SLICE_OUTPUT_DIRECTORY),ANAYLYSIS_TYPE+".tex")
 grayscalefilextension="_levelset.nii.gz"
 
