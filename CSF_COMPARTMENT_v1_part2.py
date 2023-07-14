@@ -117,8 +117,7 @@ for dirname in os.listdir(NECT_directory_name_parent):
                 RAW_DATA_FOLDER=NECT_directory_name
 #                call_for_all_files(RAW_DATA_FOLDER,grayscale_suffix,masksuffix,betsuffix)
                 each_unique_names_file_pattern=dirname
-                filename_gray = NE
-CT_filename
+                filename_gray = NECT_filename
                 filename_mask = CSF_Mask_filename
                 filename_bet = NECT_HET_filename
                 print("filename_gray")
@@ -138,7 +137,7 @@ CT_filename
 
                 this_dict={"Subject": nect_file_basename[:-7],"Sulci_VolTotal":sulci_vol,"Ventricles_Vol":ventricle_vol,"Sulci_VolL":leftcountsul,"Sulci_VolR":rightcountsul,"Ventricles_VolL":leftcountven,"Ventricles_VolR":rightcountven,"sulci_vol_above_vent": sulci_vol_above_vent,"sulci_vol_below_vent" :sulci_vol_below_vent,"sulci_vol_at_vent":sulci_vol_at_vent}
                 dict_for_csv.append(this_dict)
-                count=count+1 #0.5
+                count=count+1
 
 csv_filename=os.path.join(RESULT_DIRECTORY,ANAYLYSIS_TYPE)
 csvfile_with_vol=csv_filename+'.csv'
