@@ -117,7 +117,8 @@ for dirname in os.listdir(NECT_directory_name_parent):
                 RAW_DATA_FOLDER=NECT_directory_name
 #                call_for_all_files(RAW_DATA_FOLDER,grayscale_suffix,masksuffix,betsuffix)
                 each_unique_names_file_pattern=dirname
-                filename_gray = NECT_filename
+                filename_gray = NE
+CT_filename
                 filename_mask = CSF_Mask_filename
                 filename_bet = NECT_HET_filename
                 print("filename_gray")
