@@ -58,14 +58,14 @@ from mpl_toolkits.mplot3d import Axes3D
 import numpy as np
 from matplotlib import cm
 import sys, subprocess
-from volume_rendering_vtk import * 
+# from volume_rendering_vtk import *
 from vtk import * 
 from vtk import (
     vtkJPEGReader, vtkImageCanvasSource2D, vtkImageActor, vtkPolyDataMapper,
     vtkRenderer, vtkRenderWindow, vtkRenderWindowInteractor, vtkSuperquadricSource,
     vtkActor, VTK_MAJOR_VERSION
 )
-from myfunctions import * 
+# from myfunctions import *
 import re
 from  Segmentation_Ventricle_Sulcus_CSF_1_Dec15_2019 import * 
 colors = vtk.vtkNamedColors()
