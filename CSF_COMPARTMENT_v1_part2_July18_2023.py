@@ -46,7 +46,7 @@ betsuffix="_levelset_bet"
 def csf_compartments(filename_gray,filename_mask,filename_bet):
     returnvalue=0
     try:
-        latexfilename=os.path.join(os.path.dirname(SLICE_OUTPUT_DIRECTORY),ANAYLYSIS_TYPE+".tex")
+        latexfilename=os.path.join(os.path.dirname(SLICE_OUTPUT_DIRECTORY),os.path.basename(filename_gray).split('.nii')[0].replace('.','_')+".tex")
         sulci_vol, ventricle_vol,leftcountven,rightcountven,leftcountsul,rightcountsul,sulci_vol_above_vent,sulci_vol_below_vent,sulci_vol_at_vent = divideintozones_v1(latexfilename,SLICE_OUTPUT_DIRECTORY,filename_gray,filename_mask,filename_bet)
         latex_start_table2c(latexfilename)
         latex_inserttext_table2c(latexfilename,text1='SulciVol:', text2=str(sulci_vol))
