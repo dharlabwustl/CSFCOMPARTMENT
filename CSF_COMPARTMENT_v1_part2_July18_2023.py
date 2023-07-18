@@ -46,7 +46,7 @@ betsuffix="_levelset_bet"
 def csf_compartments(filename_gray,filename_mask,filename_bet):
     returnvalue=0
     try:
-        latexfilename=os.path.join(os.path.dirname(SLICE_OUTPUT_DIRECTORY),os.path.basename(filename_gray).split('.nii')[0]+".tex")
+        latexfilename=os.path.join(os.path.dirname(SLICE_OUTPUT_DIRECTORY),ANAYLYSIS_TYPE+".tex")
         # latex_start(latexfilename)
         # latex_begin_document(latexfilename)
         # print("filename_gray")
