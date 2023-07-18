@@ -47,7 +47,6 @@ def csf_compartments(filename_gray,filename_mask,filename_bet):
     returnvalue=0
     try:
         latexfilename=os.path.join(os.path.dirname(SLICE_OUTPUT_DIRECTORY),os.path.basename(filename_gray)+".tex")
-        # allgrayscalefolder = os.listdir(NECT_directory_name_parent)
         file1=latex_start(latexfilename)
         latex_start(latexfilename)
         latex_begin_document(latexfilename)
