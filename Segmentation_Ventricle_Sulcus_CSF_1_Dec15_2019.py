@@ -106,7 +106,7 @@ def get_ventricles_range(numpy_array_3D_mask):
 def divideintozones_v1(filename_gray,filename_mask,filename_bet):
     try:
         sulci_vol, ventricle_vol,leftcountven,rightcountven,leftcountsul,rightcountsul,sulci_vol_above_vent,sulci_vol_below_vent,sulci_vol_at_vent=(0,0,0,0,0,0,0,0,0) #seg_explicit_thresholds, subtracted_image
-        subprocess.call("echo " + "SUCCEED AT ::{}  > error.txt".format(inspect.stack()[0][3]) ,shell=True )
+        subprocess.call("echo " + "SUCCEEDED AT ::{}  > error.txt".format(inspect.stack()[0][3]) ,shell=True )
         file_gray = filename_gray
         reader_gray = sitk.ImageFileReader()
         reader_gray.SetImageIO("NiftiImageIO")
@@ -175,7 +175,7 @@ def divideintozones_v1(filename_gray,filename_mask,filename_bet):
 
             initial_seed_point_indexes=[stats.GetMinimumIndex(stats.GetLabels()[id_of_maxsize_comp])]
             seg_explicit_thresholds = sitk.ConnectedThreshold(img_T1, seedList=initial_seed_point_indexes, lower=100, upper=255)
-            # subprocess.call("echo " + "SUCCEED AT ::{}  > error.txt".format(inspect.stack()[0][3]) ,shell=True )
+            # subprocess.call("echo " + "SUCCEEDED AT ::{}  > error.txt".format(inspect.stack()[0][3]) ,shell=True )
     #         zoneV_min_z,zoneV_max_z=get_ventricles_range(sitk.GetArrayFromImage(seg_explicit_thresholds))
     #         subtracted_image=subtract_binary_1(sitk.GetArrayFromImage(img_T1_Copy),sitk.GetArrayFromImage(seg_explicit_thresholds)*255)
     #         subtracted_image=sitk.GetImageFromArray(subtracted_image)
