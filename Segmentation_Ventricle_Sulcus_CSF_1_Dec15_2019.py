@@ -69,7 +69,17 @@ renderWindowInteractor = vtk.vtkRenderWindowInteractor()
 renderWindowInteractor.SetRenderWindow(renderWindow)
 def sortSecond(val):
     return val[1]
-#latexfilename="test.tex"
+def calculate_volume(nii_img,mask_img):
+    #    mask_data=myfunctions.analyze_stack(mask_file)
+    #    img = nib.load(nii_file)
+    resol= np.prod(np.array(nii_img.header["pixdim"][1:4]))
+    #    print("header[pixdim][1:4]")
+    #    print(nii_img.header["pixdim"][1:4])
+    mask_data_flatten= mask_img.flatten()
+    num_pixel_gt_0=mask_data_flatten[np.where(mask_data_flatten>0)]
+    #    print(num_pixel_gt_0)
+    return (resol * num_pixel_gt_0.size)/1000
+
 def slicenum_at_end(image):
     image_copy=np.zeros([image.shape[1],image.shape[2],image.shape[0]])
     for i in range(image.shape[0]):
@@ -189,16 +199,16 @@ def divideintozones_v1(filename_gray,filename_mask,filename_bet):
             below_ventricle_image= sitk.GetArrayFromImage(subtracted_image)
             below_ventricle_image[zoneV_min_z:above_ventricle_image.shape[0],:,:]=0
             subprocess.call("echo " + "SUCCEEDED AT ::{}  > error.txt".format(inspect.stack()[0][3]) ,shell=True )
-            # sulci_vol=calculate_volume(gray_image,sitk.GetArrayFromImage(subtracted_image))
-            # ventricle_vol=calculate_volume(gray_image,sitk.GetArrayFromImage(seg_explicit_thresholds))
-            # sulci_vol_above_vent=calculate_volume(gray_image,above_ventricle_image)
-            # sulci_vol_below_vent=calculate_volume(gray_image,below_ventricle_image)
-            # sulci_vol_at_vent=calculate_volume(gray_image,covering_ventricle_image)
-            # allinone=np.zeros(below_ventricle_image.shape)
-            # allinone[below_ventricle_image>0]=100
-            # allinone[above_ventricle_image>0]=180
-            # allinone[sitk.GetArrayFromImage(seg_explicit_thresholds)>0]=240
-            # allinone[covering_ventricle_image>0]=255
+            sulci_vol=calculate_volume(gray_image,sitk.GetArrayFromImage(subtracted_image))
+            ventricle_vol=calculate_volume(gray_image,sitk.GetArrayFromImage(seg_explicit_thresholds))
+            sulci_vol_above_vent=calculate_volume(gray_image,above_ventricle_image)
+            sulci_vol_below_vent=calculate_volume(gray_image,below_ventricle_image)
+            sulci_vol_at_vent=calculate_volume(gray_image,covering_ventricle_image)
+            allinone=np.zeros(below_ventricle_image.shape)
+            allinone[below_ventricle_image>0]=100
+            allinone[above_ventricle_image>0]=180
+            allinone[sitk.GetArrayFromImage(seg_explicit_thresholds)>0]=240
+            allinone[covering_ventricle_image>0]=255
 
 
     except:
