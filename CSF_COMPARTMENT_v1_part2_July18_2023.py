@@ -6,7 +6,7 @@ Created on Thu Sep  5 10:26:44 2019
 
 @author: atul
 """
-
+import os.path
 import sys,argparse,inspect
 sys.path.append('/media/atul/AC0095E80095BA32/WASHU_WORK/PROJECTS/CommonPrograms/pyscripts')
 
@@ -46,12 +46,7 @@ betsuffix="_levelset_bet"
 def csf_compartments(filename_gray,filename_mask,filename_bet):
     returnvalue=0
     try:
-        # # RAW_DATA_FOLDER=NECT_directory_name
-        #
-        # each_unique_names_file_pattern=dirname
-        # filename_gray = NECT_filename
-        # filename_mask = CSF_Mask_filename
-        # filename_bet = NECT_HET_filename
+        latexfilename=os.path.join(os.path.dirname(SLICE_OUTPUT_DIRECTORY),os.path.basename(filename_gray)+".tex")
         print("filename_gray")
         print(filename_gray)
         sulci_vol, ventricle_vol,leftcountven,rightcountven,leftcountsul,rightcountsul,sulci_vol_above_vent,sulci_vol_below_vent,sulci_vol_at_vent = divideintozones_v1(latexfilename,SLICE_OUTPUT_DIRECTORY,filename_gray,filename_mask,filename_bet)
