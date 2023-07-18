@@ -42,6 +42,7 @@ def csf_compartments(filename_gray,filename_mask,filename_bet):
         latex_begin_document(latexfilename)
         sulci_vol, ventricle_vol,leftcountven,rightcountven,leftcountsul,rightcountsul,sulci_vol_above_vent,sulci_vol_below_vent,sulci_vol_at_vent = divideintozones_v1(latexfilename,SLICE_OUTPUT_DIRECTORY,filename_gray,filename_mask,filename_bet)
         print("sulci_vol::{}, ventricle_vol::{},leftcountven::{},rightcountven::{},leftcountsul::{},rightcountsul::{},sulci_vol_above_vent::{},sulci_vol_below_vent::{},sulci_vol_at_vent::{}".format(sulci_vol, ventricle_vol,leftcountven,rightcountven,leftcountsul,rightcountsul,sulci_vol_above_vent,sulci_vol_below_vent,sulci_vol_at_vent))
+        print("latexfilename::{}".format(latexfilename))
         # latex_start_table2c(latexfilename)
         # latex_inserttext_table2c(latexfilename,text1='SulciVol:', text2=str(sulci_vol))
         # latex_insert_line(latexfilename,text='\\\\')
