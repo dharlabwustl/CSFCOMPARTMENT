@@ -47,10 +47,10 @@ def csf_compartments(filename_gray,filename_mask,filename_bet):
     returnvalue=0
     try:
         latexfilename=os.path.join(os.path.dirname(SLICE_OUTPUT_DIRECTORY),os.path.basename(filename_gray)+".tex")
-        latex_start(latexfilename)
-        latex_begin_document(latexfilename)
-        print("filename_gray")
-        print(filename_gray)
+        # latex_start(latexfilename)
+        # latex_begin_document(latexfilename)
+        # print("filename_gray")
+        # print(filename_gray)
         sulci_vol, ventricle_vol,leftcountven,rightcountven,leftcountsul,rightcountsul,sulci_vol_above_vent,sulci_vol_below_vent,sulci_vol_at_vent = divideintozones_v1(latexfilename,SLICE_OUTPUT_DIRECTORY,filename_gray,filename_mask,filename_bet)
         latex_start_table2c(latexfilename)
         latex_inserttext_table2c(latexfilename,text1='SulciVol:', text2=str(sulci_vol))
@@ -131,6 +131,7 @@ csv_columns=['Subject','Sulci_VolTotal','Ventricles_Vol','Sulci_VolL','Sulci_Vol
 write_csv(csvfile_with_vol,csv_columns,dict_for_csv)
 latex_end(latexfilename)
 latex_file_build(latexfilename)
+print("latexfilename::{}".format(latexfilename))
 def main():
     print("WO ZAI ::{}".format("main"))
     parser = argparse.ArgumentParser()
