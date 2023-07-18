@@ -8,21 +8,13 @@ Created on Thu Sep  5 10:26:44 2019
 """
 import os.path
 import sys,argparse,inspect
-# sys.path.append('/media/atul/AC0095E80095BA32/WASHU_WORK/PROJECTS/CommonPrograms/pyscripts')
 
-from sympy import *
-
-# sys.path.append('/media/atul/AC0095E80095BA32/WASHU_WORK/PROJECTS/CommonPrograms/pyscripts/imagedisplay')
-# sys.path.append('/media/atul/AC0095E80095BA32/WASHU_WORK/PROJECTS/MIDLINE/SOFTWARE/pyscripts/csfbased')
-# sys.path.append('/media/atul/AC0095E80095BA32/WASHU_WORK/PROJECTS/CommonPrograms/pyscripts')
-# sys.path.append('/media/atul/AC0095E80095BA32/WASHU_WORK/PROJECTS/HEMORRHAGE/SOFTWARE/pyScripts')
 from utilities_simple_compartments import *
 
 from  Segmentation_Ventricle_Sulcus_CSF_1_Dec15_2019 import * 
 colors = vtk.vtkNamedColors()
 renderer = vtk.vtkRenderer()
-###############
-## Apply BET:
+
 ANAYLYSIS_TYPE="CSF_COMPARTMENT_VEN_SUL_AB"
 project_folder="/media/atul/AC0095E80095BA32/WASHU_WORK/PROJECTS/SAH_N_CSF_Compartment"
 
@@ -31,7 +23,6 @@ NECT_directory_name_parent="/media/atul/AC0095E80095BA32/WASHU_WORK/PROJECTS/SAH
 NECT_BET_directory_name_parent="/media/atul/AC0095E80095BA32/WASHU_WORK/PROJECTS/SAH_N_CSF_Compartment/DATA/BET"
 RESULT_DIRECTORY="/media/atul/AC0095E80095BA32/WASHU_WORK/PROJECTS/SAH_N_CSF_Compartment/RESULTS"
 SLICE_OUTPUT_DIRECTORY="/media/atul/AC0095E80095BA32/WASHU_WORK/PROJECTS/SAH_N_CSF_Compartment/RESULTS/IMAGES"
-# latexfilename=os.path.join(os.path.dirname(SLICE_OUTPUT_DIRECTORY),ANAYLYSIS_TYPE+".tex")
 grayscalefilextension="_levelset.nii.gz"
 
 
@@ -46,7 +37,7 @@ betsuffix="_levelset_bet"
 def csf_compartments(filename_gray,filename_mask,filename_bet):
     returnvalue=0
     try:
-        latexfilename=os.path.join(os.path.dirname(SLICE_OUTPUT_DIRECTORY),ANAYLYSIS_TYPE+".tex")
+        latexfilename=os.path.join(os.path.dirname(SLICE_OUTPUT_DIRECTORY),'test'+".tex")
         sulci_vol, ventricle_vol,leftcountven,rightcountven,leftcountsul,rightcountsul,sulci_vol_above_vent,sulci_vol_below_vent,sulci_vol_at_vent = divideintozones_v1(latexfilename,SLICE_OUTPUT_DIRECTORY,filename_gray,filename_mask,filename_bet)
         latex_start_table2c(latexfilename)
         latex_inserttext_table2c(latexfilename,text1='SulciVol:', text2=str(sulci_vol))
