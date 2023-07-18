@@ -895,4 +895,5 @@ def divideintozones_v1(latexfilename,SLICE_OUTPUT_DIRECTORY,filename_gray,filena
 #         filename_gray_data_np= exposure.rescale_intensity(slicenum_at_end(sitk.GetArrayFromImage(filename_gray_data)), in_range=(1000, 1200))
 #         combine_masks_as_color_v2(latexfilename,filename_gray_data_np,slicenum_at_end(allinone),image_slice_jpg_dir,filename_gray[:-7])
 #
-    return sulci_vol, ventricle_vol,leftcountven*resol,rightcountven*resol,leftcountsul*resol,rightcountsul*resol,sulci_vol_above_vent,sulci_vol_below_vent,sulci_vol_at_vent #seg_explicit_thresholds, subtracted_image
+    return  sulci_vol, ventricle_vol,leftcountven,rightcountven,leftcountsul,rightcountsul,sulci_vol_above_vent,sulci_vol_below_vent,sulci_vol_at_vent
+    # return sulci_vol, ventricle_vol,leftcountven*resol,rightcountven*resol,leftcountsul*resol,rightcountsul*resol,sulci_vol_above_vent,sulci_vol_below_vent,sulci_vol_at_vent #seg_explicit_thresholds, subtracted_image
