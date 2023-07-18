@@ -107,25 +107,25 @@ def divideintozones_v1(filename_gray,filename_mask,filename_bet):
     try:
         sulci_vol, ventricle_vol,leftcountven,rightcountven,leftcountsul,rightcountsul,sulci_vol_above_vent,sulci_vol_below_vent,sulci_vol_at_vent=(0,0,0,0,0,0,0,0,0) #seg_explicit_thresholds, subtracted_image
 
-    #     file_gray = filename_gray
-    #     reader_gray = sitk.ImageFileReader()
-    #     reader_gray.SetImageIO("NiftiImageIO")
-    #     reader_gray.SetFileName(file_gray)
-    #
-    #
-    #     gray_scale_file=filename_gray
-    #     gray_image=nib.load(gray_scale_file)
-    #
-    #
-    #
-    #     file =filename_mask
-    #     reader = sitk.ImageFileReader()
-    #     reader.SetImageIO("NiftiImageIO")
-    #     reader.SetFileName(file)
-    #     img_T1 = reader.Execute();
-    #     img_T1_Copy=img_T1
-    #     imagenparray=sitk.GetArrayFromImage(img_T1)
-    #
+        file_gray = filename_gray
+        reader_gray = sitk.ImageFileReader()
+        reader_gray.SetImageIO("NiftiImageIO")
+        reader_gray.SetFileName(file_gray)
+
+
+        gray_scale_file=filename_gray
+        gray_image=nib.load(gray_scale_file)
+
+
+
+        file =filename_mask
+        reader = sitk.ImageFileReader()
+        reader.SetImageIO("NiftiImageIO")
+        reader.SetFileName(file)
+        img_T1 = reader.Execute();
+        img_T1_Copy=img_T1
+        imagenparray=sitk.GetArrayFromImage(img_T1)
+        subprocess.call("echo " + "FAILED AT ::{}  >> error.txt".format(inspect.stack()[0][3]) ,shell=True )
     #     if np.sum(imagenparray)>200:
     #         img_T1=img_T1*255
     #
@@ -197,7 +197,7 @@ def divideintozones_v1(filename_gray,filename_mask,filename_bet):
     #         allinone[above_ventricle_image>0]=180
     #         allinone[sitk.GetArrayFromImage(seg_explicit_thresholds)>0]=240
     #         allinone[covering_ventricle_image>0]=255
-        subprocess.call("echo " + "FAILED AT ::{}  >> error.txt".format(inspect.stack()[0][3]) ,shell=True )
+
     except:
         subprocess.call("echo " + "FAILED AT ::{}  >> error.txt".format(inspect.stack()[0][3]) ,shell=True )
 
