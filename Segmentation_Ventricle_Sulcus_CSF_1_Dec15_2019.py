@@ -177,28 +177,29 @@ def divideintozones_v1(filename_gray,filename_mask,filename_bet):
 
             initial_seed_point_indexes=[stats.GetMinimumIndex(stats.GetLabels()[id_of_maxsize_comp])]
             seg_explicit_thresholds = sitk.ConnectedThreshold(img_T1, seedList=initial_seed_point_indexes, lower=100, upper=255)
+
+            zoneV_min_z,zoneV_max_z=get_ventricles_range(sitk.GetArrayFromImage(seg_explicit_thresholds))
+            subtracted_image=subtract_binary_1(sitk.GetArrayFromImage(img_T1_Copy),sitk.GetArrayFromImage(seg_explicit_thresholds)*255)
+            subtracted_image=sitk.GetImageFromArray(subtracted_image)
+            above_ventricle_image= sitk.GetArrayFromImage(subtracted_image)
+            above_ventricle_image[0:zoneV_max_z+1,:,:]=0
+            covering_ventricle_image= sitk.GetArrayFromImage(subtracted_image)
+            covering_ventricle_image[0:zoneV_min_z+1,:,:]=0
+            covering_ventricle_image[zoneV_max_z+1:above_ventricle_image.shape[0],:,:]=0
+            below_ventricle_image= sitk.GetArrayFromImage(subtracted_image)
+            below_ventricle_image[zoneV_min_z:above_ventricle_image.shape[0],:,:]=0
+
+            sulci_vol=calculate_volume(gray_image,sitk.GetArrayFromImage(subtracted_image))
+            ventricle_vol=calculate_volume(gray_image,sitk.GetArrayFromImage(seg_explicit_thresholds))
+            sulci_vol_above_vent=calculate_volume(gray_image,above_ventricle_image)
+            sulci_vol_below_vent=calculate_volume(gray_image,below_ventricle_image)
+            sulci_vol_at_vent=calculate_volume(gray_image,covering_ventricle_image)
+            allinone=np.zeros(below_ventricle_image.shape)
+            allinone[below_ventricle_image>0]=100
+            allinone[above_ventricle_image>0]=180
+            allinone[sitk.GetArrayFromImage(seg_explicit_thresholds)>0]=240
+            allinone[covering_ventricle_image>0]=255
             subprocess.call("echo " + "SUCCEEDED AT ::{}  > error.txt".format(inspect.stack()[0][3]) ,shell=True )
-    #         zoneV_min_z,zoneV_max_z=get_ventricles_range(sitk.GetArrayFromImage(seg_explicit_thresholds))
-    #         subtracted_image=subtract_binary_1(sitk.GetArrayFromImage(img_T1_Copy),sitk.GetArrayFromImage(seg_explicit_thresholds)*255)
-    #         subtracted_image=sitk.GetImageFromArray(subtracted_image)
-    #         above_ventricle_image= sitk.GetArrayFromImage(subtracted_image)
-    #         above_ventricle_image[0:zoneV_max_z+1,:,:]=0
-    #         covering_ventricle_image= sitk.GetArrayFromImage(subtracted_image)
-    #         covering_ventricle_image[0:zoneV_min_z+1,:,:]=0
-    #         covering_ventricle_image[zoneV_max_z+1:above_ventricle_image.shape[0],:,:]=0
-    #         below_ventricle_image= sitk.GetArrayFromImage(subtracted_image)
-    #         below_ventricle_image[zoneV_min_z:above_ventricle_image.shape[0],:,:]=0
-    #
-    #         sulci_vol=calculate_volume(gray_image,sitk.GetArrayFromImage(subtracted_image))
-    #         ventricle_vol=calculate_volume(gray_image,sitk.GetArrayFromImage(seg_explicit_thresholds))
-    #         sulci_vol_above_vent=calculate_volume(gray_image,above_ventricle_image)
-    #         sulci_vol_below_vent=calculate_volume(gray_image,below_ventricle_image)
-    #         sulci_vol_at_vent=calculate_volume(gray_image,covering_ventricle_image)
-    #         allinone=np.zeros(below_ventricle_image.shape)
-    #         allinone[below_ventricle_image>0]=100
-    #         allinone[above_ventricle_image>0]=180
-    #         allinone[sitk.GetArrayFromImage(seg_explicit_thresholds)>0]=240
-    #         allinone[covering_ventricle_image>0]=255
 
     except:
         subprocess.call("echo " + "FAILED AT ::{}  >> error.txt".format(inspect.stack()[0][3]) ,shell=True )
