@@ -7,7 +7,7 @@ Created on Thu Sep  5 10:26:44 2019
 @author: atul
 """
 
-import sys
+import sys,argparse,inspect
 sys.path.append('/media/atul/AC0095E80095BA32/WASHU_WORK/PROJECTS/CommonPrograms/pyscripts')
 
 from sympy import *
@@ -43,10 +43,47 @@ count =0
 grayscale_suffix="_levelset"
 masksuffix="_final_seg" #
 betsuffix="_levelset_bet"
-def csf_compartments():
+def csf_compartments(filename_gray,filename_mask,filename_bet):
     returnvalue=0
+    try:
+        # # RAW_DATA_FOLDER=NECT_directory_name
+        #
+        # each_unique_names_file_pattern=dirname
+        # filename_gray = NECT_filename
+        # filename_mask = CSF_Mask_filename
+        # filename_bet = NECT_HET_filename
+        print("filename_gray")
+        print(filename_gray)
+        sulci_vol, ventricle_vol,leftcountven,rightcountven,leftcountsul,rightcountsul,sulci_vol_above_vent,sulci_vol_below_vent,sulci_vol_at_vent = divideintozones_v1(latexfilename,SLICE_OUTPUT_DIRECTORY,filename_gray,filename_mask,filename_bet)
+        latex_start_table2c(latexfilename)
+        latex_inserttext_table2c(latexfilename,text1='SulciVol:', text2=str(sulci_vol))
+        latex_insert_line(latexfilename,text='\\\\')
+        latex_inserttext_table2c(latexfilename,text1='VentricleVol:', text2=str(ventricle_vol))
+        latex_insert_line(latexfilename,text="\\\\")
+        latex_inserttext_table2c(latexfilename,text1='SulciVolAboveVent:', text2=str(sulci_vol_above_vent))
+        latex_insert_line(latexfilename,text="\\\\")
+        latex_inserttext_table2c(latexfilename,text1='SulciVolBelowVent:', text2=str(sulci_vol_below_vent))
+        latex_insert_line(latexfilename,text="\\\\")
+        latex_inserttext_table2c(latexfilename,text1='SulciVolAtVent:', text2=str(sulci_vol_at_vent))
+        latex_end_table2c(latexfilename)
+
+        this_dict={"Subject": nect_file_basename[:-7],"Sulci_VolTotal":sulci_vol,"Ventricles_Vol":ventricle_vol,"Sulci_VolL":leftcountsul,"Sulci_VolR":rightcountsul,"Ventricles_VolL":leftcountven,"Ventricles_VolR":rightcountven,"sulci_vol_above_vent": sulci_vol_above_vent,"sulci_vol_below_vent" :sulci_vol_below_vent,"sulci_vol_at_vent":sulci_vol_at_vent}
+        dict_for_csv.append(this_dict)
+        # count=count+1
+
+        csv_filename=os.path.join(RESULT_DIRECTORY,ANAYLYSIS_TYPE)
+        csvfile_with_vol=csv_filename+'.csv'
+        csv_columns=['Subject','Sulci_VolTotal','Ventricles_Vol','Sulci_VolL','Sulci_VolR','Ventricles_VolL','Ventricles_VolR','sulci_vol_above_vent','sulci_vol_below_vent','sulci_vol_at_vent']
+
+        write_csv(csvfile_with_vol,csv_columns,dict_for_csv)
+        latex_end(latexfilename)
+        print("I SUCCEED AT ::{}".format(inspect.stack()[0][3]))
+        return 1
+    except:
+        print("I FAILED AT ::{}".format(inspect.stack()[0][3]))
+        pass
     return returnvalue
-def call_csf_compartments():
+def call_csf_compartments(args):
     returnvalue=0
 
     return returnvalue
@@ -68,29 +105,43 @@ for dirname in os.listdir(NECT_directory_name_parent):
                 filename_gray = NECT_filename
                 filename_mask = CSF_Mask_filename
                 filename_bet = NECT_HET_filename
-                print("filename_gray")
-                print(filename_gray)
-                sulci_vol, ventricle_vol,leftcountven,rightcountven,leftcountsul,rightcountsul,sulci_vol_above_vent,sulci_vol_below_vent,sulci_vol_at_vent = divideintozones_v1(latexfilename,SLICE_OUTPUT_DIRECTORY,filename_gray,filename_mask,filename_bet)
-                latex_start_table2c(latexfilename)
-                latex_inserttext_table2c(latexfilename,text1='SulciVol:', text2=str(sulci_vol))
-                latex_insert_line(latexfilename,text='\\\\')
-                latex_inserttext_table2c(latexfilename,text1='VentricleVol:', text2=str(ventricle_vol))
-                latex_insert_line(latexfilename,text="\\\\")
-                latex_inserttext_table2c(latexfilename,text1='SulciVolAboveVent:', text2=str(sulci_vol_above_vent))
-                latex_insert_line(latexfilename,text="\\\\")
-                latex_inserttext_table2c(latexfilename,text1='SulciVolBelowVent:', text2=str(sulci_vol_below_vent))
-                latex_insert_line(latexfilename,text="\\\\")
-                latex_inserttext_table2c(latexfilename,text1='SulciVolAtVent:', text2=str(sulci_vol_at_vent))                        
-                latex_end_table2c(latexfilename)
-
-                this_dict={"Subject": nect_file_basename[:-7],"Sulci_VolTotal":sulci_vol,"Ventricles_Vol":ventricle_vol,"Sulci_VolL":leftcountsul,"Sulci_VolR":rightcountsul,"Ventricles_VolL":leftcountven,"Ventricles_VolR":rightcountven,"sulci_vol_above_vent": sulci_vol_above_vent,"sulci_vol_below_vent" :sulci_vol_below_vent,"sulci_vol_at_vent":sulci_vol_at_vent}
-                dict_for_csv.append(this_dict)
-                count=count+1
-
-csv_filename=os.path.join(RESULT_DIRECTORY,ANAYLYSIS_TYPE)
-csvfile_with_vol=csv_filename+'.csv'
-csv_columns=['Subject','Sulci_VolTotal','Ventricles_Vol','Sulci_VolL','Sulci_VolR','Ventricles_VolL','Ventricles_VolR','sulci_vol_above_vent','sulci_vol_below_vent','sulci_vol_at_vent']
-
-write_csv(csvfile_with_vol,csv_columns,dict_for_csv)
-latex_end(latexfilename)
+                csf_compartments(filename_gray,filename_mask,filename_bet)
+#
+#                 print("filename_gray")
+#                 print(filename_gray)
+#                 sulci_vol, ventricle_vol,leftcountven,rightcountven,leftcountsul,rightcountsul,sulci_vol_above_vent,sulci_vol_below_vent,sulci_vol_at_vent = divideintozones_v1(latexfilename,SLICE_OUTPUT_DIRECTORY,filename_gray,filename_mask,filename_bet)
+#                 latex_start_table2c(latexfilename)
+#                 latex_inserttext_table2c(latexfilename,text1='SulciVol:', text2=str(sulci_vol))
+#                 latex_insert_line(latexfilename,text='\\\\')
+#                 latex_inserttext_table2c(latexfilename,text1='VentricleVol:', text2=str(ventricle_vol))
+#                 latex_insert_line(latexfilename,text="\\\\")
+#                 latex_inserttext_table2c(latexfilename,text1='SulciVolAboveVent:', text2=str(sulci_vol_above_vent))
+#                 latex_insert_line(latexfilename,text="\\\\")
+#                 latex_inserttext_table2c(latexfilename,text1='SulciVolBelowVent:', text2=str(sulci_vol_below_vent))
+#                 latex_insert_line(latexfilename,text="\\\\")
+#                 latex_inserttext_table2c(latexfilename,text1='SulciVolAtVent:', text2=str(sulci_vol_at_vent))
+#                 latex_end_table2c(latexfilename)
+#
+#                 this_dict={"Subject": nect_file_basename[:-7],"Sulci_VolTotal":sulci_vol,"Ventricles_Vol":ventricle_vol,"Sulci_VolL":leftcountsul,"Sulci_VolR":rightcountsul,"Ventricles_VolL":leftcountven,"Ventricles_VolR":rightcountven,"sulci_vol_above_vent": sulci_vol_above_vent,"sulci_vol_below_vent" :sulci_vol_below_vent,"sulci_vol_at_vent":sulci_vol_at_vent}
+#                 dict_for_csv.append(this_dict)
+#                 count=count+1
+#
+# csv_filename=os.path.join(RESULT_DIRECTORY,ANAYLYSIS_TYPE)
+# csvfile_with_vol=csv_filename+'.csv'
+# csv_columns=['Subject','Sulci_VolTotal','Ventricles_Vol','Sulci_VolL','Sulci_VolR','Ventricles_VolL','Ventricles_VolR','sulci_vol_above_vent','sulci_vol_below_vent','sulci_vol_at_vent']
+#
+# write_csv(csvfile_with_vol,csv_columns,dict_for_csv)
+# latex_end(latexfilename)
 # latex_file_build(latexfilename)
+def main():
+    print("WO ZAI ::{}".format("main"))
+    parser = argparse.ArgumentParser()
+    parser.add_argument('stuff', nargs='+')
+    args = parser.parse_args()
+    name_of_the_function=args.stuff[0]
+    return_value=0
+    if name_of_the_function == "call_csf_compartments":
+        return_value=call_csf_compartments(args)
+
+if __name__ == '__main__':
+    main()
