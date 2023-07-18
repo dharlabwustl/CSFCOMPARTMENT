@@ -74,7 +74,7 @@ def csf_compartments(filename_gray,filename_mask,filename_bet):
         # latex_end(latexfilename)
         # print("latexfilename::{}".format(latexfilename))
         # # latex_file_build(latexfilename)
-        # print("I SUCCEED AT ::{}".format(inspect.stack()[0][3]))
+        print("I SUCCEED AT ::{}".format(inspect.stack()[0][3]))
         returnvalue=1
     except:
         print("I FAILED AT ::{}".format(inspect.stack()[0][3]))
