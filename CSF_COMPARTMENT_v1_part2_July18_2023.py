@@ -120,7 +120,7 @@ for dirname in os.listdir(NECT_directory_name_parent):
 #
 #                 this_dict={"Subject": nect_file_basename[:-7],"Sulci_VolTotal":sulci_vol,"Ventricles_Vol":ventricle_vol,"Sulci_VolL":leftcountsul,"Sulci_VolR":rightcountsul,"Ventricles_VolL":leftcountven,"Ventricles_VolR":rightcountven,"sulci_vol_above_vent": sulci_vol_above_vent,"sulci_vol_below_vent" :sulci_vol_below_vent,"sulci_vol_at_vent":sulci_vol_at_vent}
 #                 dict_for_csv.append(this_dict)
-#                 count=count+1
+                count=count+1
 #
 # csv_filename=os.path.join(RESULT_DIRECTORY,ANAYLYSIS_TYPE)
 # csvfile_with_vol=csv_filename+'.csv'
