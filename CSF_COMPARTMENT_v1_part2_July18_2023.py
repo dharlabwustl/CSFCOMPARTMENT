@@ -48,7 +48,6 @@ def csf_compartments(filename_gray,filename_mask,filename_bet):
     try:
         latexfilename=os.path.join(os.path.dirname(SLICE_OUTPUT_DIRECTORY),os.path.basename(filename_gray)+".tex")
         latex_start(latexfilename)
-        latex_start(latexfilename)
         latex_begin_document(latexfilename)
         print("filename_gray")
         print(filename_gray)
