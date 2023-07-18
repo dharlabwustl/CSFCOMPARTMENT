@@ -12,7 +12,7 @@ import SimpleITK as sitk
 import math
 import numpy as np
 sys.path.append('/media/atul/AC0095E80095BA32/WASHU_WORK/PROJECTS/CommonPrograms/pyscripts')
-from utilities_master import * 
+from utilities_master import *
 from scipy.io import loadmat
 ##############
 import numpy as np
@@ -45,7 +45,7 @@ from utilities_master import *
 from matplotlib.patches import Circle
 import subprocess
 import cv2
-# from savenumpymatrix import *
+from savenumpymatrix import *
 # identify the slice which contains the
 import vtk
 import itk
@@ -58,14 +58,14 @@ from mpl_toolkits.mplot3d import Axes3D
 import numpy as np
 from matplotlib import cm
 import sys, subprocess
-# from volume_rendering_vtk import *
+from volume_rendering_vtk import *
 from vtk import * 
 from vtk import (
     vtkJPEGReader, vtkImageCanvasSource2D, vtkImageActor, vtkPolyDataMapper,
     vtkRenderer, vtkRenderWindow, vtkRenderWindowInteractor, vtkSuperquadricSource,
     vtkActor, VTK_MAJOR_VERSION
 )
-# from myfunctions import *
+from myfunctions import *
 import re
 from  Segmentation_Ventricle_Sulcus_CSF_1_Dec15_2019 import * 
 colors = vtk.vtkNamedColors()
