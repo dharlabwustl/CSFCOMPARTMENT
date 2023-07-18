@@ -125,7 +125,7 @@ def divideintozones_v1(filename_gray,filename_mask,filename_bet):
         img_T1 = reader.Execute();
         img_T1_Copy=img_T1
         imagenparray=sitk.GetArrayFromImage(img_T1)
-        subprocess.call("echo " + "SUCCEEDED AT ::{}  > error.txt".format(inspect.stack()[0][3]) ,shell=True )
+
         if np.sum(imagenparray)>200:
             img_T1=img_T1*255
 
@@ -146,7 +146,7 @@ def divideintozones_v1(filename_gray,filename_mask,filename_bet):
 
             maxsize_comp_1=0
             id_of_maxsize_comp_1=0
-
+            subprocess.call("echo " + "SUCCEEDED AT ::{}  > error.txt".format(inspect.stack()[0][3]) ,shell=True )
             for l in range(len(stats1.GetLabels())):
                 if stats1.GetPhysicalSize(stats1.GetLabels()[l])>maxsize_comp_1:
                     maxsize_comp_1=stats1.GetPhysicalSize(stats1.GetLabels()[l])
