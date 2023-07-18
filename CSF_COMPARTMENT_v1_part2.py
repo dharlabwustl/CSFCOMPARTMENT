@@ -145,7 +145,7 @@ csv_columns=['Subject','Sulci_VolTotal','Ventricles_Vol','Sulci_VolL','Sulci_Vol
 
 write_csv(csvfile_with_vol,csv_columns,dict_for_csv)
 latex_end(latexfilename)
-latex_file_build(latexfilename,os.path.dirname(latexfilename))
+latex_file_build(latexfilename) ##,os.path.dirname(latexfilename))
 
 #                print(NECT_HET_filename)
 #                file_gray_bet=NECT_HET_filename #NECT_HET_filename_gray
