@@ -1710,19 +1710,18 @@ def call_call_for_all_files(RAW_DATA_FOLDER,grayscale_suffix,masksuffix,betsuffi
 def divideintozones_v1(latexfilename,SLICE_OUTPUT_DIRECTORY,filename_gray,filename_mask,filename_bet):
     sulci_vol, ventricle_vol,leftcountven,rightcountven,leftcountsul,rightcountsul,sulci_vol_above_vent,sulci_vol_below_vent,sulci_vol_at_vent=(0,0,0,0,0,0,0,0,0) #seg_explicit_thresholds, subtracted_image
 
-    file_gray = filename_gray #os.path.join(RAW_DATA_FOLDER,filename_gray)
+    file_gray = filename_gray
     reader_gray = sitk.ImageFileReader()
     reader_gray.SetImageIO("NiftiImageIO")
     reader_gray.SetFileName(file_gray)
     filename_gray_data = reader_gray.Execute();
     
-    gray_scale_file=filename_gray #os.path.join(RAW_DATA_FOLDER,filename_gray)
+    gray_scale_file=filename_gray
     gray_image=nib.load(gray_scale_file)
     resol= np.prod(np.array(gray_image.header["pixdim"][1:4]))
-    affine_1=gray_image.affine
-    gray_image_data=gray_image.get_fdata()
 
-    file =filename_mask # os.path.join(RAW_DATA_FOLDER,filename_mask)
+
+    file =filename_mask
     reader = sitk.ImageFileReader()
     reader.SetImageIO("NiftiImageIO")
     reader.SetFileName(file)
@@ -1730,20 +1729,12 @@ def divideintozones_v1(latexfilename,SLICE_OUTPUT_DIRECTORY,filename_gray,filena
     img_T1_Copy=img_T1
     imagenparray=sitk.GetArrayFromImage(img_T1)
 
-    initial_seed_point_indexes1=[]
     if np.sum(imagenparray)>200:
         img_T1=img_T1*255
-        # ## Read Data and Select Seed Point(s)
-        # 
-        # We first load a T1 MRI brain scan and select our seed point(s). If you are unfamiliar with the anatomy you can use the preselected seed point specified below, just uncomment the line.
-        
-        ######## In[13]:
-        # img_T1 = sitk.ReadImage(fdata("nac-hncma-atlas2013-Slicer4Version/Data/A1_grayT1.nrrd"))
-        # Rescale the intensities and map them to [0,255], these are the default values for the output
-        # We will use this image to display the results of segmentation
+
         img_T1_255 = sitk.Cast(sitk.IntensityWindowing(img_T1) ,sitk.sitkUInt8)
 
-        file1 = filename_bet # os.path.join(RAW_DATA_FOLDER,filename_bet)
+        file1 = filename_bet
         reader1 = sitk.ImageFileReader()
         reader1.SetImageIO("NiftiImageIO")
         reader1.SetFileName(file1)
@@ -1755,11 +1746,10 @@ def divideintozones_v1(latexfilename,SLICE_OUTPUT_DIRECTORY,filename_gray,filena
         cc = sitk.ConnectedComponent(img_T1_255>0)
         stats = sitk.LabelIntensityStatisticsImageFilter()
         stats.Execute(cc,img_T1)
-        maxsize_comp=0
-        id_of_maxsize_comp=0
+
         maxsize_comp_1=0
         id_of_maxsize_comp_1=0
-        bet_ids=[]
+
         for l in range(len(stats1.GetLabels())):  
             if stats1.GetPhysicalSize(stats1.GetLabels()[l])>maxsize_comp_1:
                 maxsize_comp_1=stats1.GetPhysicalSize(stats1.GetLabels()[l])
@@ -1811,8 +1801,8 @@ def divideintozones_v1(latexfilename,SLICE_OUTPUT_DIRECTORY,filename_gray,filena
         allinone[sitk.GetArrayFromImage(seg_explicit_thresholds)>0]=240
         allinone[covering_ventricle_image>0]=255        
 
-        image_slice_jpg_dir=SLICE_OUTPUT_DIRECTORY #"/media/atul/AC0095E80095BA32/WASHU_WORK/PROJECTS/CSF_Compartment/RESULTS/IMAGES"
+        image_slice_jpg_dir=SLICE_OUTPUT_DIRECTORY
         filename_gray_data_np= exposure.rescale_intensity(slicenum_at_end(sitk.GetArrayFromImage(filename_gray_data)), in_range=(1000, 1200))
-        combine_masks_as_color_v2(latexfilename,filename_gray_data_np,slicenum_at_end(allinone),image_slice_jpg_dir,filename_gray[:-7]) #(allmasks)
+        combine_masks_as_color_v2(latexfilename,filename_gray_data_np,slicenum_at_end(allinone),image_slice_jpg_dir,filename_gray[:-7])
 
     return sulci_vol, ventricle_vol,leftcountven*resol,rightcountven*resol,leftcountsul*resol,rightcountsul*resol,sulci_vol_above_vent,sulci_vol_below_vent,sulci_vol_at_vent #seg_explicit_thresholds, subtracted_image
