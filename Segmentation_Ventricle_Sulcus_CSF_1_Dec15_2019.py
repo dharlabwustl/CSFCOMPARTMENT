@@ -204,11 +204,14 @@ def divideintozones_v1(filename_gray,filename_mask,filename_bet):
             sulci_vol_above_vent=calculate_volume(gray_image,above_ventricle_image)
             sulci_vol_below_vent=calculate_volume(gray_image,below_ventricle_image)
             sulci_vol_at_vent=calculate_volume(gray_image,covering_ventricle_image)
-            allinone=np.zeros(below_ventricle_image.shape)
-            allinone[below_ventricle_image>0]=100
-            allinone[above_ventricle_image>0]=180
-            allinone[sitk.GetArrayFromImage(seg_explicit_thresholds)>0]=240
-            allinone[covering_ventricle_image>0]=255
+            # subtracted_image_sitk=sitk.GetImageFromArray(subtracted_image)
+            subtracted_image.CopyInformation(reader1)
+            sitk.WriteImage(subtracted_image, "sulci_total.nii.gz", True)
+            # allinone=np.zeros(below_ventricle_image.shape)
+            # allinone[below_ventricle_image>0]=100
+            # allinone[above_ventricle_image>0]=180
+            # allinone[sitk.GetArrayFromImage(seg_explicit_thresholds)>0]=240
+            # allinone[covering_ventricle_image>0]=255
             subprocess.call("echo " + "SUCCEEDED AT ::{}  > error.txt".format(inspect.stack()[0][3]) ,shell=True )
 
 
