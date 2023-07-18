@@ -67,6 +67,8 @@ renderWindow = vtk.vtkRenderWindow()
 renderWindow.AddRenderer(renderer)
 renderWindowInteractor = vtk.vtkRenderWindowInteractor()
 renderWindowInteractor.SetRenderWindow(renderWindow)
+def sortSecond(val):
+    return val[1]
 #latexfilename="test.tex"
 def slicenum_at_end(image):
     image_copy=np.zeros([image.shape[1],image.shape[2],image.shape[0]])
