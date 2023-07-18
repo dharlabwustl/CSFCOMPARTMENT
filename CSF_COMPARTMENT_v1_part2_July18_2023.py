@@ -16,7 +16,7 @@ from sympy import *
 # sys.path.append('/media/atul/AC0095E80095BA32/WASHU_WORK/PROJECTS/MIDLINE/SOFTWARE/pyscripts/csfbased')
 # sys.path.append('/media/atul/AC0095E80095BA32/WASHU_WORK/PROJECTS/CommonPrograms/pyscripts')
 # sys.path.append('/media/atul/AC0095E80095BA32/WASHU_WORK/PROJECTS/HEMORRHAGE/SOFTWARE/pyScripts')
-from utilities_master import *
+from utilities_master_compartments import *
 
 from  Segmentation_Ventricle_Sulcus_CSF_1_Dec15_2019 import * 
 colors = vtk.vtkNamedColors()

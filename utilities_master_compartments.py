@@ -1,106 +1,44 @@
 from nilearn.image import resample_img
 import pylab as plt
 import nibabel as nb
-import numpy as np
+
 import itk,math,re
-import numpy as np
-import nibabel as nib
-import cv2 as cv
-import numpy as np
-import matplotlib.pyplot as plt
-import PIL
-from PIL import Image, ImageEnhance
-import os
-import subprocess as subp 
-import csv 
-import glob
-from datetime import datetime
-import os 
-import cv2 as cv 
-import cv2
-from matplotlib import pyplot as plt 
-import subprocess,signal
-from skimage import exposure
-from tkinter.filedialog import askopenfilename
-import vtk
+
 from vtk import * 
 from vtk.util import numpy_support
-import numpy as np
-import cv2 as cv
-import numpy as np
-import argparse
+
 import random as rng
-from scipy import spatial
+
 rng.seed(12345)
-import numpy as np
-import matplotlib.pyplot as plt
-import numpy as np
-import os
-import nibabel as nib
-import matplotlib.pyplot as plt
-import cv2
+
 import smtplib,pickle
-import matplotlib.pyplot as plt
-#import image_functions as imf
-import glob
-import pandas as pd
-import skimage.io as io
-import subprocess
-import threading
-import csv,sys
+
 import math
-from scipy.spatial import distance
-import SimpleITK as sitk
-from skimage import exposure
-import skimage.morphology as morp
-from skimage.filters import rank
+
 import SimpleITK as sitk
 import vtk
-import numpy as np
-import sys
+
 from vtk.util.vtkConstants import *
-import os
-import numpy as np
-from nibabel.testing import data_path
-import nibabel as nib
-import h5py
-import subprocess
-#import image_functions as imf
-import cv2
-import glob
-from skimage import exposure
-import skimage.morphology as morp
-from skimage.filters import rank
+
 from sklearn.linear_model import RANSACRegressor
-# import operating system and glob libraries
+
 from scipy import stats
-import os, glob
+
 import h5py
-from nilearn.datasets import fetch_neurovault_motor_task
-from nilearn.datasets import load_mni152_template   
-from nilearn.image import resample_to_img
-from nilearn.image import load_img
-from nilearn import plotting
-# import some useful date functions
+
 
 from datetime import datetime
-import nibabel as nib
+
 import cv2 as cv
-import numpy as np
 import matplotlib.pyplot as plt
-import PIL
-from PIL import Image, ImageEnhance
-import os
-import subprocess as subp
 from skimage.feature import hessian_matrix, hessian_matrix_eigvals
-from sklearn.datasets import make_regression
-import ants,os,sys
+import ants
 IMAGE_SIZE_TO=512
-import numpy as np
+
 from shapely.geometry import Point
 from shapely.geometry import LineString
 from image_features import image_features 
-from utilities_simple import * 
+from utilities_simple_compartments import *
 def project_point_online(point1,line1):
     point = Point(point1[0], point1[1])
     line = LineString([line1[0], line1[1]])
