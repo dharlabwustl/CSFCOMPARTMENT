@@ -198,7 +198,7 @@ def divideintozones_v1(filename_gray,filename_mask,filename_bet):
             covering_ventricle_image[zoneV_max_z+1:above_ventricle_image.shape[0],:,:]=0
             below_ventricle_image= sitk.GetArrayFromImage(subtracted_image)
             below_ventricle_image[zoneV_min_z:above_ventricle_image.shape[0],:,:]=0
-            subprocess.call("echo " + "SUCCEEDED AT ::{}  > error.txt".format(inspect.stack()[0][3]) ,shell=True )
+
             sulci_vol=calculate_volume(gray_image,sitk.GetArrayFromImage(subtracted_image))
             ventricle_vol=calculate_volume(gray_image,sitk.GetArrayFromImage(seg_explicit_thresholds))
             sulci_vol_above_vent=calculate_volume(gray_image,above_ventricle_image)
@@ -209,6 +209,7 @@ def divideintozones_v1(filename_gray,filename_mask,filename_bet):
             allinone[above_ventricle_image>0]=180
             allinone[sitk.GetArrayFromImage(seg_explicit_thresholds)>0]=240
             allinone[covering_ventricle_image>0]=255
+            subprocess.call("echo " + "SUCCEEDED AT ::{}  > error.txt".format(inspect.stack()[0][3]) ,shell=True )
 
 
     except:
