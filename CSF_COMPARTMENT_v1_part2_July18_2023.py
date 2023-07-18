@@ -44,6 +44,8 @@ def csf_compartments(filename_gray,filename_mask,filename_bet):
         latex_begin_document(latexfilename)
         # latex_insert_line_nodek(latexfilename,"\\input{"+latexfilename1+"}")
         sulci_vol, ventricle_vol,leftcountven,rightcountven,leftcountsul,rightcountsul,sulci_vol_above_vent,sulci_vol_below_vent,sulci_vol_at_vent = divideintozones_v1(latexfilename,SLICE_OUTPUT_DIRECTORY,filename_gray,filename_mask,filename_bet)
+    #     latex_insert_line_nodek(latexfilename1,text=values_in_table_df.to_latex(index=False))
+    # latex_end_table2c(latexfilename1)
         # print("sulci_vol::{}, ventricle_vol::{},leftcountven::{},rightcountven::{},leftcountsul::{},rightcountsul::{},sulci_vol_above_vent::{},sulci_vol_below_vent::{},sulci_vol_at_vent::{}".format(sulci_vol, ventricle_vol,leftcountven,rightcountven,leftcountsul,rightcountsul,sulci_vol_above_vent,sulci_vol_below_vent,sulci_vol_at_vent))
         # print("latexfilename::{}".format(latexfilename))
         # latex_start_table2c(latexfilename)
@@ -63,7 +65,7 @@ def csf_compartments(filename_gray,filename_mask,filename_bet):
         # csvfile_with_vol=csv_filename+'.csv'
         # csv_columns=['Subject','Sulci_VolTotal','Ventricles_Vol','Sulci_VolL','Sulci_VolR','Ventricles_VolL','Ventricles_VolR','sulci_vol_above_vent','sulci_vol_below_vent','sulci_vol_at_vent']
         # write_csv(csvfile_with_vol,csv_columns,dict_for_csv)
-        # latex_end(latexfilename)
+        latex_end(latexfilename)
         # print("latexfilename::{}".format(latexfilename))
         # # latex_file_build(latexfilename)
         # print("I SUCCEED AT ::{}".format(inspect.stack()[0][3]))
