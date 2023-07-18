@@ -205,7 +205,7 @@ def divideintozones_v1(filename_gray,filename_mask,filename_bet):
             sulci_vol_below_vent=calculate_volume(gray_image,below_ventricle_image)
             sulci_vol_at_vent=calculate_volume(gray_image,covering_ventricle_image)
             # subtracted_image_sitk=sitk.GetImageFromArray(subtracted_image)
-            subtracted_image.CopyInformation(reader1)
+            # subtracted_image.CopyInformation(reader1)
             # sitk.WriteImage(subtracted_image, "sulci_total.nii.gz", True)
             # allinone=np.zeros(below_ventricle_image.shape)
             # allinone[below_ventricle_image>0]=100
