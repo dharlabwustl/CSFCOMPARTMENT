@@ -39,7 +39,7 @@ def csf_compartments(filename_gray,filename_mask,filename_bet):
     returnvalue=0
     try:
 
-        sulci_vol, ventricle_vol,leftcountven,rightcountven,leftcountsul,rightcountsul,sulci_vol_above_vent,sulci_vol_below_vent,sulci_vol_at_vent = divideintozones_v1(SLICE_OUTPUT_DIRECTORY,filename_gray,filename_mask,filename_bet)
+        sulci_vol, ventricle_vol,leftcountven,rightcountven,leftcountsul,rightcountsul,sulci_vol_above_vent,sulci_vol_below_vent,sulci_vol_at_vent = divideintozones_v1(filename_gray,filename_mask,filename_bet)
 
         print("I SUCCEED AT ::{}".format(inspect.stack()[0][3]))
         returnvalue=1
