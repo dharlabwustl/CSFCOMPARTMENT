@@ -106,7 +106,7 @@ def get_ventricles_range(numpy_array_3D_mask):
 def divideintozones_v1(filename_gray,filename_mask,filename_bet):
     try:
         sulci_vol, ventricle_vol,leftcountven,rightcountven,leftcountsul,rightcountsul,sulci_vol_above_vent,sulci_vol_below_vent,sulci_vol_at_vent=(0,0,0,0,0,0,0,0,0) #seg_explicit_thresholds, subtracted_image
-
+        subprocess.call("echo " + "SUCCEED AT ::{}  > error.txt".format(inspect.stack()[0][3]) ,shell=True )
         file_gray = filename_gray
         reader_gray = sitk.ImageFileReader()
         reader_gray.SetImageIO("NiftiImageIO")
