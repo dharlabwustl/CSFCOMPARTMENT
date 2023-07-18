@@ -41,12 +41,12 @@ sys.path.append('/media/atul/AC0095E80095BA32/WASHU_WORK/PROJECTS/MIDLINE/SOFTWA
 sys.path.append('/media/atul/AC0095E80095BA32/WASHU_WORK/PROJECTS/CommonPrograms/pyscripts')
 sys.path.append('/media/atul/AC0095E80095BA32/WASHU_WORK/PROJECTS/HEMORRHAGE/SOFTWARE/pyScripts')
 from utilities import *
-from vtk_python_functions import *
-from csf_bounding_box import *
-from matplotlib.patches import Circle
-import subprocess
-import cv2
-from savenumpymatrix import *
+# from vtk_python_functions import *
+# from csf_bounding_box import *
+# from matplotlib.patches import Circle
+# import subprocess
+# import cv2
+# from savenumpymatrix import *
 # identify the slice which contains the
 import vtk
 import itk
@@ -59,14 +59,14 @@ from mpl_toolkits.mplot3d import Axes3D
 import numpy as np
 from matplotlib import cm
 import sys, subprocess
-from volume_rendering_vtk import *
-from vtk import * 
-from vtk import (
-    vtkJPEGReader, vtkImageCanvasSource2D, vtkImageActor, vtkPolyDataMapper,
-    vtkRenderer, vtkRenderWindow, vtkRenderWindowInteractor, vtkSuperquadricSource,
-    vtkActor, VTK_MAJOR_VERSION
-)
-from myfunctions import *
+# from volume_rendering_vtk import *
+# from vtk import *
+# from vtk import (
+#     vtkJPEGReader, vtkImageCanvasSource2D, vtkImageActor, vtkPolyDataMapper,
+#     vtkRenderer, vtkRenderWindow, vtkRenderWindowInteractor, vtkSuperquadricSource,
+#     vtkActor, VTK_MAJOR_VERSION
+# )
+# from myfunctions import *
 import re
 colors = vtk.vtkNamedColors()
 renderer = vtk.vtkRenderer()
