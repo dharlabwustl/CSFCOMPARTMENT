@@ -9,7 +9,7 @@ Created on Thu Sep  5 10:26:44 2019
 import os.path
 import sys,argparse,inspect
 
-from utilities_simple import *
+from utilities_simple_trimmed import *
 #_compartments
 
 from  Segmentation_Ventricle_Sulcus_CSF_1_Dec15_2019 import * 
