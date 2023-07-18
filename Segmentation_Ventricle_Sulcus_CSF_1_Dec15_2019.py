@@ -1710,10 +1710,6 @@ def call_call_for_all_files(RAW_DATA_FOLDER,grayscale_suffix,masksuffix,betsuffi
 def divideintozones_v1(latexfilename,SLICE_OUTPUT_DIRECTORY,filename_gray,filename_mask,filename_bet):
     sulci_vol, ventricle_vol,leftcountven,rightcountven,leftcountsul,rightcountsul,sulci_vol_above_vent,sulci_vol_below_vent,sulci_vol_at_vent=(0,0,0,0,0,0,0,0,0) #seg_explicit_thresholds, subtracted_image
 
-#    RAW_DATA_FOLDER=inputdirectory
-#    filename_gray = filename+grayscale_suffix+ ".nii.gz" #'WUSTL_166_05022015_1332.nii.gz'
-#    filename_mask= filename +masksuffix + ".nii.gz"  #+"_unet.nii.gz" #filename[:-9]+"_final_seg.nii.gz" # 'WUSTL_166_05022015_1332_final_seg.nii.gz'
-#    filename_bet= filename +betsuffix + ".nii.gz"  #+ "_levelset_bet.nii.gz" # filename[:-9]+'WUSTL_166_05022015_1332_final_seg.nii.gz'
     file_gray = filename_gray #os.path.join(RAW_DATA_FOLDER,filename_gray)
     reader_gray = sitk.ImageFileReader()
     reader_gray.SetImageIO("NiftiImageIO")
@@ -1732,14 +1728,8 @@ def divideintozones_v1(latexfilename,SLICE_OUTPUT_DIRECTORY,filename_gray,filena
     reader.SetFileName(file)
     img_T1 = reader.Execute();
     img_T1_Copy=img_T1
-#    img_T1_255 = sitk.BinaryDilate(img_T1_255!=0, 5)
-    
-
-#    img_T1 = sitk.BinaryErode(img_T1!=0, 1)
-#
-#    img_T1 = sitk.BinaryDilate(img_T1!=0, 1)
     imagenparray=sitk.GetArrayFromImage(img_T1)
-#    display_2dnumpystack(imagenparray)
+
     initial_seed_point_indexes1=[]
     if np.sum(imagenparray)>200:
         img_T1=img_T1*255
@@ -1752,14 +1742,7 @@ def divideintozones_v1(latexfilename,SLICE_OUTPUT_DIRECTORY,filename_gray,filena
         # Rescale the intensities and map them to [0,255], these are the default values for the output
         # We will use this image to display the results of segmentation
         img_T1_255 = sitk.Cast(sitk.IntensityWindowing(img_T1) ,sitk.sitkUInt8)
-#        img_T1_255_numpy=sitk.GetArrayFromImage(img_T1_255)
-#        img_T1_255=sitk.GetImageFromArray(img_T1_255_numpy, isVector=True)
-#        print(img_T1_255_numpy.shape)
-        ######## In[16]:
-    #    
-    #    print(img_T1_255.GetDepth())
-    #    print(img_T1_255.GetHeight())
-    #    print(img_T1_255.GetWidth())
+
         file1 = filename_bet # os.path.join(RAW_DATA_FOLDER,filename_bet)
         reader1 = sitk.ImageFileReader()
         reader1.SetImageIO("NiftiImageIO")
@@ -1780,19 +1763,14 @@ def divideintozones_v1(latexfilename,SLICE_OUTPUT_DIRECTORY,filename_gray,filena
         for l in range(len(stats1.GetLabels())):  
             if stats1.GetPhysicalSize(stats1.GetLabels()[l])>maxsize_comp_1:
                 maxsize_comp_1=stats1.GetPhysicalSize(stats1.GetLabels()[l])
-#                bet_ids.append([l,maxsize_comp_1])
+
                 id_of_maxsize_comp_1=l
         csf_ids=[]
         for l in range(len(stats.GetLabels())):  
-#            if stats.GetPhysicalSize(stats.GetLabels()[l])>maxsize_comp:
-#            maxsize_comp=stats.GetPhysicalSize(stats.GetLabels()[l])
-#                id_of_maxsize_comp=l
+
             csf_ids.append([l,stats.GetPhysicalSize(stats.GetLabels()[l])])
         csf_ids.sort(key = sortSecond, reverse = True)
-#        print("labels_ID_size 3D")
-#        print(csf_ids)
-        ## 
-#        centroid_image=np.array([256,256,int(gray_image.shape[2]/2)])
+
         first_seg_centroid=np.array(stats.GetCentroid(stats.GetLabels()[csf_ids[0][0]]))
         second_seg_centroid=np.array(stats.GetCentroid(stats.GetLabels()[csf_ids[1][0]]))
         bet_centroid=np.array(stats.GetCentroid(stats.GetLabels()[id_of_maxsize_comp_1]))
@@ -1800,37 +1778,17 @@ def divideintozones_v1(latexfilename,SLICE_OUTPUT_DIRECTORY,filename_gray,filena
         second2bet_centroid=np.linalg.norm(second_seg_centroid - bet_centroid)
         if first2bet_centroid< second2bet_centroid:
             id_of_maxsize_comp=csf_ids[0][0]
-#            print("csf_ids[0][0]")
-#            print(csf_ids[0][0])
+
         else:
             if stats.GetPhysicalSize(stats.GetLabels()[csf_ids[1][0]]) > 10000: 
                 id_of_maxsize_comp=csf_ids[1][0]
-#                print("csf_ids[1][0]")
-#                print(csf_ids[1][0])
+
             else:
                 id_of_maxsize_comp=csf_ids[0][0]
-#                print("csf_ids[0][0]")
-#                print(csf_ids[0][0])
-            
-    #        print("Label: {0} -> Mean: {1} Size: {2} Centroid: {3}".format(stats.GetLabels()[l], stats.GetMean(stats.GetLabels()[l]), stats.GetPhysicalSize(stats.GetLabels()[l]),stats.GetCenterOfGravity(stats.GetLabels()[l])))
-#        print(id_of_maxsize_comp)
-#        id_of_maxsize_comp=csf_ids[1][0]
-        initial_seed_point_indexes=[stats.GetMinimumIndex(stats.GetLabels()[id_of_maxsize_comp])] #img_T1.TransformPhysicalPointToIndex(stats.GetCenterOfGravity(stats.GetLabels()[id_of_maxsize_comp]))]
-#        initial_seed_point_indexes1=stats.GetMinimumIndex(stats.GetLabels()[id_of_maxsize_comp])
-#        initial_seed_point_indexes=[img_T1_bet.TransformPhysicalPointToIndex(stats.GetCenterOfGravity(stats.GetLabels()[id_of_maxsize_comp_1]))] #[stats.GetCentroid(stats.GetLabels()[id_of_maxsize_comp])]
+
+        initial_seed_point_indexes=[stats.GetMinimumIndex(stats.GetLabels()[id_of_maxsize_comp])]
         seg_explicit_thresholds = sitk.ConnectedThreshold(img_T1, seedList=initial_seed_point_indexes, lower=100, upper=255)
-#        seg_explicit_thresholds = sitk.BinaryDilate(seg_explicit_thresholds!=0, 2)
-#        print("seg_explicit_thresholds")
-#        print(sitk.GetArrayFromImage(seg_explicit_thresholds).shape)
-#        print("img_T1")
-#        print(sitk.GetArrayFromImage(img_T1).shape)
-#        seg_explicit_thresholds_numpy1= sitk.GetArrayFromImage(seg_explicit_thresholds) * 255
-#        print(np.max(seg_explicit_thresholds_numpy1))
-#        complete_image_numpy= sitk.GetArrayFromImage(img_T1)
-#        print(np.max(complete_image_numpy))
-#        subtracted_image=complete_image_numpy-seg_explicit_thresholds_numpy1
-##        subtracted_image[subtracted_image<0]=0
-#        print(np.max(subtracted_image))
+
         zoneV_min_z,zoneV_max_z=get_ventricles_range(sitk.GetArrayFromImage(seg_explicit_thresholds))
         subtracted_image=subtract_binary_1(sitk.GetArrayFromImage(img_T1_Copy),sitk.GetArrayFromImage(seg_explicit_thresholds)*255)
         subtracted_image=sitk.GetImageFromArray(subtracted_image)
@@ -1842,30 +1800,6 @@ def divideintozones_v1(latexfilename,SLICE_OUTPUT_DIRECTORY,filename_gray,filena
         below_ventricle_image= sitk.GetArrayFromImage(subtracted_image)
         below_ventricle_image[zoneV_min_z:above_ventricle_image.shape[0],:,:]=0
 
-
-        
-#        seg_explicit_thresholds_numpy=sitk.GetArrayFromImage()
-#        binary_image=np.zeros([512,512,seg_explicit_thresholds_numpy.shape[0]])
-#        for i in range(0,seg_explicit_thresholds_numpy.shape[0]):
-#            binary_image[:,:,i]=seg_explicit_thresholds_numpy[i,:,:]*255
-#        
-#        print("subt_image.shape")
-#        binary_image_subt=np.zeros([512,512,seg_explicit_thresholds_numpy.shape[0]])
-#        for i in range(0,seg_explicit_thresholds_numpy.shape[0]):
-#            binary_image_subt[:,:,i]=subtracted_image[i,:,:]*255
-#        print(subtracted_image.shape)
-#        draw_imageplanes_vtk(binary_image_subt,renderer,zoneV_min_z,zoneV_max_z)
-        
-#        subtractfilter= sitk.SubtractImageFilter()
-#        subtracted_image=subtractfilter.Execute(img_T1,seg_explicit_thresholds)
-#        
-#        xx=sitk.GetArrayFromImage(seg_explicit_thresholds)
-#        print("MASK SIZE")
-#        print(xx.shape)
-##        display_2dnumpystack(sitk.GetArrayFromImage(seg_explicit_thresholds))
-#        subt_image = sitk.GetArrayFromImage(img_T1_255) - sitk.GetArrayFromImage(seg_explicit_thresholds) 
-#        aa= sitk.GetArrayFromImage(img_T1_255) 
-##        divideintozones(img_T1,seg_explicit_thresholds)
         sulci_vol=calculate_volume(gray_image,sitk.GetArrayFromImage(subtracted_image)) 
         ventricle_vol=calculate_volume(gray_image,sitk.GetArrayFromImage(seg_explicit_thresholds))
         sulci_vol_above_vent=calculate_volume(gray_image,above_ventricle_image)
@@ -1876,25 +1810,9 @@ def divideintozones_v1(latexfilename,SLICE_OUTPUT_DIRECTORY,filename_gray,filena
         allinone[above_ventricle_image>0]=180
         allinone[sitk.GetArrayFromImage(seg_explicit_thresholds)>0]=240
         allinone[covering_ventricle_image>0]=255        
-#        array_img = nib.Nifti1Image(allinone, affine_1)
-#        array_img.header['pixdim']=gray_image.header['pixdim']
-#        nib.save(array_img, os.path.join(RAW_DATA_FOLDER,gray_scale_file[:-7]+ "compartments.nii.gz"))
-#        print("Peripheral CSF volume")
-#        print(calculate_volume(gray_image,sitk.GetArrayFromImage(subtracted_image)))
-###        draw_imageplanes_vtk(subt_image,renderer,14,17)
-#        print("Ventricular volume")
-#        print(calculate_volume(gray_image,sitk.GetArrayFromImage(seg_explicit_thresholds)))
-##        display_2dnumpystack(subt_image)
+
         image_slice_jpg_dir=SLICE_OUTPUT_DIRECTORY #"/media/atul/AC0095E80095BA32/WASHU_WORK/PROJECTS/CSF_Compartment/RESULTS/IMAGES"
         filename_gray_data_np= exposure.rescale_intensity(slicenum_at_end(sitk.GetArrayFromImage(filename_gray_data)), in_range=(1000, 1200))
         combine_masks_as_color_v2(latexfilename,filename_gray_data_np,slicenum_at_end(allinone),image_slice_jpg_dir,filename_gray[:-7]) #(allmasks)
-#        leftcountven,rightcountven,leftcountsul,rightcountsul  =   slice_with_ventricles(seg_explicit_thresholds,sitk.GetArrayFromImage(subtracted_image))
 
-#        allmasks=[] #slicenum_at_end(image)
-#        allmasks.append(slicenum_at_end(above_ventricle_image))
-#        allmasks.append(slicenum_at_end(sitk.GetArrayFromImage(seg_explicit_thresholds)))
-#        allmasks.append(slicenum_at_end(below_ventricle_image))
-
-#        start_renderer_1(sitk.GetImageFromArray(above_ventricle_image),seg_explicit_thresholds,img_T1,sitk.GetImageFromArray(below_ventricle_image),filename)
-#        get_slice_zone(gray_image_data,sitk.GetArrayFromImage(seg_explicit_thresholds),filename_gray,OUTPUT_FOLDER,affine_1)
     return sulci_vol, ventricle_vol,leftcountven*resol,rightcountven*resol,leftcountsul*resol,rightcountsul*resol,sulci_vol_above_vent,sulci_vol_below_vent,sulci_vol_at_vent #seg_explicit_thresholds, subtracted_image

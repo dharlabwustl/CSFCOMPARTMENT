@@ -44,6 +44,12 @@ def csf_compartments(filename_gray,filename_mask,filename_bet):
         latex_begin_document(latexfilename)
         # latex_insert_line_nodek(latexfilename,"\\input{"+latexfilename1+"}")
         sulci_vol, ventricle_vol,leftcountven,rightcountven,leftcountsul,rightcountsul,sulci_vol_above_vent,sulci_vol_below_vent,sulci_vol_at_vent = divideintozones_v1(latexfilename,SLICE_OUTPUT_DIRECTORY,filename_gray,filename_mask,filename_bet)
+        # col_names=[sulci_vol, ventricle_vol,leftcountven,rightcountven,"leftcountsul","rightcountsul","sulci_vol_above_vent","sulci_vol_below_vent","sulci_vol_at_vent" ]
+        # values_in_table=[]
+        # for x in range(0,col_names.shape[0]):
+        #     #                 text1=[]
+        #     values_in_table.append([(str(col_names[x])).replace("_"," "),(str(values_in_col[x])).replace("_","")])
+
     #     latex_insert_line_nodek(latexfilename1,text=values_in_table_df.to_latex(index=False))
     # latex_end_table2c(latexfilename1)
         # print("sulci_vol::{}, ventricle_vol::{},leftcountven::{},rightcountven::{},leftcountsul::{},rightcountsul::{},sulci_vol_above_vent::{},sulci_vol_below_vent::{},sulci_vol_at_vent::{}".format(sulci_vol, ventricle_vol,leftcountven,rightcountven,leftcountsul,rightcountsul,sulci_vol_above_vent,sulci_vol_below_vent,sulci_vol_at_vent))
