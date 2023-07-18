@@ -197,7 +197,7 @@ def divideintozones_v1(filename_gray,filename_mask,filename_bet):
     #         allinone[above_ventricle_image>0]=180
     #         allinone[sitk.GetArrayFromImage(seg_explicit_thresholds)>0]=240
     #         allinone[covering_ventricle_image>0]=255
-            subprocess.call("echo " + "FAILED AT ::{}  >> error.txt".format(inspect.stack()[0][3]) ,shell=True )
+        subprocess.call("echo " + "FAILED AT ::{}  >> error.txt".format(inspect.stack()[0][3]) ,shell=True )
     except:
         subprocess.call("echo " + "FAILED AT ::{}  >> error.txt".format(inspect.stack()[0][3]) ,shell=True )
 
