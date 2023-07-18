@@ -85,10 +85,10 @@ SLICE_OUTPUT_DIRECTORY="/media/atul/AC0095E80095BA32/WASHU_WORK/PROJECTS/SAH_N_C
 latexfilename=os.path.join(os.path.dirname(SLICE_OUTPUT_DIRECTORY),ANAYLYSIS_TYPE+".tex")
 grayscalefilextension="_levelset.nii.gz"
 
-allgrayscalefolder = os.listdir(NECT_directory_name_parent)
-file1=latex_start(latexfilename)
-latex_start(latexfilename)
-latex_begin_document(latexfilename)
+#allgrayscalefolder = os.listdir(NECT_directory_name_parent)
+#file1=latex_start(latexfilename)
+#latex_start(latexfilename)
+#latex_begin_document(latexfilename)
 dict_for_csv=[]
 dict_for_csv_perslice=[]
 count =0
