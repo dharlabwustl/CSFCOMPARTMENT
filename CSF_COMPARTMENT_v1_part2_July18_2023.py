@@ -60,9 +60,9 @@ def csf_compartments(filename_gray,filename_mask,filename_bet):
         # csvfile_with_vol=csv_filename+'.csv'
         # csv_columns=['Subject','Sulci_VolTotal','Ventricles_Vol','Sulci_VolL','Sulci_VolR','Ventricles_VolL','Ventricles_VolR','sulci_vol_above_vent','sulci_vol_below_vent','sulci_vol_at_vent']
         # write_csv(csvfile_with_vol,csv_columns,dict_for_csv)
-        # latex_end(latexfilename)
-        # print("latexfilename::{}".format(latexfilename))
-        # latex_file_build(latexfilename)
+        latex_end(latexfilename)
+        print("latexfilename::{}".format(latexfilename))
+        latex_file_build(latexfilename)
         print("I SUCCEED AT ::{}".format(inspect.stack()[0][3]))
         returnvalue=1
     except:
