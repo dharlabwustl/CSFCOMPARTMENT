@@ -39,7 +39,7 @@ def csf_compartments(filename_gray,filename_mask,filename_bet):
     try:
         latexfilename=os.path.join(os.path.dirname(SLICE_OUTPUT_DIRECTORY),'test'+".tex")
         latex_start(latexfilename)
-        latex_begin_document(latexfilename)
+        # latex_begin_document(latexfilename)
         sulci_vol, ventricle_vol,leftcountven,rightcountven,leftcountsul,rightcountsul,sulci_vol_above_vent,sulci_vol_below_vent,sulci_vol_at_vent = divideintozones_v1(latexfilename,SLICE_OUTPUT_DIRECTORY,filename_gray,filename_mask,filename_bet)
         print("sulci_vol::{}, ventricle_vol::{},leftcountven::{},rightcountven::{},leftcountsul::{},rightcountsul::{},sulci_vol_above_vent::{},sulci_vol_below_vent::{},sulci_vol_at_vent::{}".format(sulci_vol, ventricle_vol,leftcountven,rightcountven,leftcountsul,rightcountsul,sulci_vol_above_vent,sulci_vol_below_vent,sulci_vol_at_vent))
         print("latexfilename::{}".format(latexfilename))
