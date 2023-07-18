@@ -39,26 +39,27 @@ def csf_compartments(filename_gray,filename_mask,filename_bet):
     try:
         latexfilename=os.path.join(os.path.dirname(SLICE_OUTPUT_DIRECTORY),'test'+".tex")
         sulci_vol, ventricle_vol,leftcountven,rightcountven,leftcountsul,rightcountsul,sulci_vol_above_vent,sulci_vol_below_vent,sulci_vol_at_vent = divideintozones_v1(latexfilename,SLICE_OUTPUT_DIRECTORY,filename_gray,filename_mask,filename_bet)
-        latex_start_table2c(latexfilename)
-        latex_inserttext_table2c(latexfilename,text1='SulciVol:', text2=str(sulci_vol))
-        latex_insert_line(latexfilename,text='\\\\')
-        latex_inserttext_table2c(latexfilename,text1='VentricleVol:', text2=str(ventricle_vol))
-        latex_insert_line(latexfilename,text="\\\\")
-        latex_inserttext_table2c(latexfilename,text1='SulciVolAboveVent:', text2=str(sulci_vol_above_vent))
-        latex_insert_line(latexfilename,text="\\\\")
-        latex_inserttext_table2c(latexfilename,text1='SulciVolBelowVent:', text2=str(sulci_vol_below_vent))
-        latex_insert_line(latexfilename,text="\\\\")
-        latex_inserttext_table2c(latexfilename,text1='SulciVolAtVent:', text2=str(sulci_vol_at_vent))
-        latex_end_table2c(latexfilename)
-        this_dict={"Subject": nect_file_basename[:-7],"Sulci_VolTotal":sulci_vol,"Ventricles_Vol":ventricle_vol,"Sulci_VolL":leftcountsul,"Sulci_VolR":rightcountsul,"Ventricles_VolL":leftcountven,"Ventricles_VolR":rightcountven,"sulci_vol_above_vent": sulci_vol_above_vent,"sulci_vol_below_vent" :sulci_vol_below_vent,"sulci_vol_at_vent":sulci_vol_at_vent}
-        dict_for_csv.append(this_dict)
-        csv_filename=os.path.join(RESULT_DIRECTORY,ANAYLYSIS_TYPE)
-        csvfile_with_vol=csv_filename+'.csv'
-        csv_columns=['Subject','Sulci_VolTotal','Ventricles_Vol','Sulci_VolL','Sulci_VolR','Ventricles_VolL','Ventricles_VolR','sulci_vol_above_vent','sulci_vol_below_vent','sulci_vol_at_vent']
-        write_csv(csvfile_with_vol,csv_columns,dict_for_csv)
-        latex_end(latexfilename)
-        print("latexfilename::{}".format(latexfilename))
-        latex_file_build(latexfilename)
+        print("sulci_vol::{}, ventricle_vol::{},leftcountven::{},rightcountven::{},leftcountsul::{},rightcountsul::{},sulci_vol_above_vent::{},sulci_vol_below_vent::{},sulci_vol_at_vent::{}".format(sulci_vol, ventricle_vol,leftcountven,rightcountven,leftcountsul,rightcountsul,sulci_vol_above_vent,sulci_vol_below_vent,sulci_vol_at_vent))
+        # latex_start_table2c(latexfilename)
+        # latex_inserttext_table2c(latexfilename,text1='SulciVol:', text2=str(sulci_vol))
+        # latex_insert_line(latexfilename,text='\\\\')
+        # latex_inserttext_table2c(latexfilename,text1='VentricleVol:', text2=str(ventricle_vol))
+        # latex_insert_line(latexfilename,text="\\\\")
+        # latex_inserttext_table2c(latexfilename,text1='SulciVolAboveVent:', text2=str(sulci_vol_above_vent))
+        # latex_insert_line(latexfilename,text="\\\\")
+        # latex_inserttext_table2c(latexfilename,text1='SulciVolBelowVent:', text2=str(sulci_vol_below_vent))
+        # latex_insert_line(latexfilename,text="\\\\")
+        # latex_inserttext_table2c(latexfilename,text1='SulciVolAtVent:', text2=str(sulci_vol_at_vent))
+        # latex_end_table2c(latexfilename)
+        # this_dict={"Subject": nect_file_basename[:-7],"Sulci_VolTotal":sulci_vol,"Ventricles_Vol":ventricle_vol,"Sulci_VolL":leftcountsul,"Sulci_VolR":rightcountsul,"Ventricles_VolL":leftcountven,"Ventricles_VolR":rightcountven,"sulci_vol_above_vent": sulci_vol_above_vent,"sulci_vol_below_vent" :sulci_vol_below_vent,"sulci_vol_at_vent":sulci_vol_at_vent}
+        # dict_for_csv.append(this_dict)
+        # csv_filename=os.path.join(RESULT_DIRECTORY,ANAYLYSIS_TYPE)
+        # csvfile_with_vol=csv_filename+'.csv'
+        # csv_columns=['Subject','Sulci_VolTotal','Ventricles_Vol','Sulci_VolL','Sulci_VolR','Ventricles_VolL','Ventricles_VolR','sulci_vol_above_vent','sulci_vol_below_vent','sulci_vol_at_vent']
+        # write_csv(csvfile_with_vol,csv_columns,dict_for_csv)
+        # latex_end(latexfilename)
+        # print("latexfilename::{}".format(latexfilename))
+        # latex_file_build(latexfilename)
         print("I SUCCEED AT ::{}".format(inspect.stack()[0][3]))
         returnvalue=1
     except:
