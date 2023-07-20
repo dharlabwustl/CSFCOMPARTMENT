@@ -34,7 +34,7 @@ while IFS=',' read -ra array; do
 #xx=0
 #
 ##if [ ${array[1]} == "SNIPR01_E00894" ]  ; then
-  echo "${array[1]}"
+  echo "${array[6]}"
 #  echo "${array[5]}"
 #if [ ${array[4]} == "xnat:ctSessionData" ] ; then
 #    echo "${array[1]}"
