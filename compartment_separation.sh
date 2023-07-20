@@ -14,7 +14,7 @@ function call_get_resourcefiles_metadata_saveascsv_args() {
 
   local URI=${1} #{array[0]}
 #  local file_ext=${5}
-  local output_csvfile=${output_csvfile%.*}${resource_dir}.csv
+#  local output_csvfile=${output_csvfile%.*}${resource_dir}.csv
 
   local final_output_directory=${3}
   local call_download_files_in_a_resource_in_a_session_arguments=('call_get_resourcefiles_metadata_saveascsv_args' ${URI} ${resource_dir} ${final_output_directory} ${output_csvfile})
@@ -27,7 +27,7 @@ echo " I AM RUNNING "
 ## METADATA in the MASK directory
 URI=/data/experiments/${sessionID}
 resource_dir="NIFTI_LOCATION"
-output_csvfile=${sessionID}.csv
+output_csvfile=${sessionID}_NIFTI_LOCATION_METADATA.csv
 call_get_resourcefiles_metadata_saveascsv_args ${URI} ${resource_dir}  ${final_output_directory}
 
 
