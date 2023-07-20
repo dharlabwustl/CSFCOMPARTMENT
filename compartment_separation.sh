@@ -28,7 +28,7 @@ echo " I AM RUNNING "
 URI=/data/experiments/${sessionID}
 resource_dir="NIFTI_LOCATION"
 output_csvfile=${sessionID}_NIFTI_LOCATION_METADATA.csv
-call_get_resourcefiles_metadata_saveascsv_args ${URI} ${resource_dir}  ${final_output_directory} ${output_csvfile}
+call_get_resourcefiles_metadata_saveascsv_args ${URI} ${resource_dir}  ${final_output_directory}  ${output_csvfile}
 
 
 # single filename NECT, its CSF mask and other relevant files
