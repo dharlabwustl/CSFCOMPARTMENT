@@ -10,7 +10,7 @@ final_output_directory=/outputinsidedocker
 function call_get_resourcefiles_metadata_saveascsv_args() {
 
   local resource_dir=${2}   #"NIFTI"
-  local output_csvfile=${3} #{array[1]}
+  local output_csvfile=${4} #{array[1]}
 
   local URI=${1} #{array[0]}
 #  local file_ext=${5}
@@ -28,7 +28,7 @@ echo " I AM RUNNING "
 URI=/data/experiments/${sessionID}
 resource_dir="NIFTI_LOCATION"
 output_csvfile=${sessionID}_NIFTI_LOCATION_METADATA.csv
-call_get_resourcefiles_metadata_saveascsv_args ${URI} ${resource_dir}  ${final_output_directory}
+call_get_resourcefiles_metadata_saveascsv_args ${URI} ${resource_dir}  ${final_output_directory} ${output_csvfile}
 
 
 # single filename NECT, its CSF mask and other relevant files
