@@ -10,7 +10,7 @@ final_output_directory=/outputinsidedocker
 function call_get_resourcefiles_metadata_saveascsv_args() {
 
   local resource_dir=${2}   #"NIFTI"
-  local output_csvfile=${4} #{array[1]}
+  local output_csvfile=${3} #{array[1]}
 
   local URI=${1} #{array[0]}
 #  local file_ext=${5}
