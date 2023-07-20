@@ -27,7 +27,7 @@ echo " I AM RUNNING "
 ## METADATA in the MASK directory
 URI=/data/experiments/${sessionID}
 resource_dir="NIFTI_LOCATION"
-output_csvfile=${sessionID}_NIFTI_LOCATION_METADATA.csv
+output_csvfile=${sessionID}_SCANSELECTION_METADATA.csv
 call_get_resourcefiles_metadata_saveascsv_args ${URI} ${resource_dir} ${working_dir} ${output_csvfile}
 
 while IFS=',' read -ra array; do
@@ -44,6 +44,9 @@ while IFS=',' read -ra array; do
   #    dir_to_save=args.stuff[3]
   call_download_a_singlefile_with_URIString_arguments=('call_download_a_singlefile_with_URIString' ${url} ${filename} ${dir_to_save})
   outputfiles_present=$(python3 download_with_session_ID.py "${call_download_a_singlefile_with_URIString_arguments[@]}")
+  while IFS=',' read -ra array1; do
+      echo "${array1[0]}"
+    done < <(tail -n +2 "${dir_to_save}/${filename}")
   #  echo "${array[5]}"
   #if [ ${array[4]} == "xnat:ctSessionData" ] ; then
   #    echo "${array[1]}"
