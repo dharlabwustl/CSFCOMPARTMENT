@@ -46,6 +46,10 @@ while IFS=',' read -ra array; do
   outputfiles_present=$(python3 download_with_session_ID.py "${call_download_a_singlefile_with_URIString_arguments[@]}")
   while IFS=',' read -ra array1; do
       echo "${array1[0]}"
+      url1=${array1[0]}
+      filename1=$(basename ${url1})
+  call_download_a_singlefile_with_URIString_arguments=('call_download_a_singlefile_with_URIString' ${url1} ${filename1} ${dir_to_save})
+  outputfiles_present=$(python3 download_with_session_ID.py "${call_download_a_singlefile_with_URIString_arguments[@]}")
     done < <(tail -n +2 "${dir_to_save}/${filename}")
   #  echo "${array[5]}"
   #if [ ${array[4]} == "xnat:ctSessionData" ] ; then
