@@ -26,7 +26,7 @@ echo " I AM RUNNING "
 ################ DOWNLOAD MASKS ###############################
 ## METADATA in the MASK directory
 URI=/data/experiments/${sessionID}
-resource_dir="MASKS"
+resource_dir="NIFTI_LOCATION"
 output_csvfile=${sessionID}.csv
 call_get_resourcefiles_metadata_saveascsv_args ${URI} ${resource_dir}  ${final_output_directory}
 
