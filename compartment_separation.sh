@@ -13,8 +13,8 @@ function call_get_resourcefiles_metadata_saveascsv_args() {
   local output_csvfile=${4} #{array[1]}
 
   local URI=${1} #{array[0]}
-#  local file_ext=${5}
-#  local output_csvfile=${output_csvfile%.*}${resource_dir}.csv
+  #  local file_ext=${5}
+  #  local output_csvfile=${output_csvfile%.*}${resource_dir}.csv
 
   local final_output_directory=${3}
   local call_download_files_in_a_resource_in_a_session_arguments=('call_get_resourcefiles_metadata_saveascsv_args' ${URI} ${resource_dir} ${final_output_directory} ${output_csvfile})
@@ -28,35 +28,38 @@ echo " I AM RUNNING "
 URI=/data/experiments/${sessionID}
 resource_dir="NIFTI_LOCATION"
 output_csvfile=${sessionID}_NIFTI_LOCATION_METADATA.csv
-call_get_resourcefiles_metadata_saveascsv_args ${URI} ${resource_dir}  ${working_dir}  ${output_csvfile}
+call_get_resourcefiles_metadata_saveascsv_args ${URI} ${resource_dir} ${working_dir} ${output_csvfile}
 
 while IFS=',' read -ra array; do
-#xx=0
-#
-##if [ ${array[1]} == "SNIPR01_E00894" ]  ; then
+  #xx=0
+  #
+  ##if [ ${array[1]} == "SNIPR01_E00894" ]  ; then
   echo "${array[6]}"
-#  echo "${array[5]}"
-#if [ ${array[4]} == "xnat:ctSessionData" ] ; then
-#    echo "${array[1]}"
-#    echo "${array[5]}"
-#call_fill_sniprsession_list_arguments=('call_fill_sniprsession_list' ${copy_session} ${array[1]} ) ##
-### ${working_dir}/${project_ID}_SNIPER_ANALYTICS.csv  ${project_ID} ${output_directory} )
-#outputfiles_present=$(python3 fillmaster_session_list.py "${call_fill_sniprsession_list_arguments[@]}")
-#call_creat_analytics_onesessionscanasID_arguments=('call_creat_analytics_onesessionscanasID' ${array[1]} ${array[5]} ${scan_analytics}  ${scan_analytics_nofilename})
-#outputfiles_present=$(python3 fillmaster_session_list.py "${call_creat_analytics_onesessionscanasID_arguments[@]}")
-##def creat_analytics_onesessionscanasID(sessionId,sessionLabel,csvfilename,csvfilename_withoutfilename)
-##counter=$((counter + 1))
-#fi
-##if [ $counter -eq 7 ] ; then
-##  break
-##fi
+  url=${array[6]}
+  filename=$(basename ${url})
+  dir_to_save=${working_dir}
+  #def call_download_a_singlefile_with_URIString(args):
+  #    url=args.stuff[1]
+  #    filename=args.stuff[2]
+  #    dir_to_save=args.stuff[3]
+  call_download_a_singlefile_with_URIString_arguments=('call_download_a_singlefile_with_URIString' ${url} ${filename} ${dir_to_save})
+  outputfiles_present=$(python3 download_with_session_ID.py "${call_download_a_singlefile_with_URIString_arguments[@]}")
+  #  echo "${array[5]}"
+  #if [ ${array[4]} == "xnat:ctSessionData" ] ; then
+  #    echo "${array[1]}"
+  #    echo "${array[5]}"
+  #call_fill_sniprsession_list_arguments=('call_fill_sniprsession_list' ${copy_session} ${array[1]} ) ##
+  ### ${working_dir}/${project_ID}_SNIPER_ANALYTICS.csv  ${project_ID} ${output_directory} )
+  #outputfiles_present=$(python3 fillmaster_session_list.py "${call_fill_sniprsession_list_arguments[@]}")
+  #call_creat_analytics_onesessionscanasID_arguments=('call_creat_analytics_onesessionscanasID' ${array[1]} ${array[5]} ${scan_analytics}  ${scan_analytics_nofilename})
+  #outputfiles_present=$(python3 fillmaster_session_list.py "${call_creat_analytics_onesessionscanasID_arguments[@]}")
+  ##def creat_analytics_onesessionscanasID(sessionId,sessionLabel,csvfilename,csvfilename_withoutfilename)
+  ##counter=$((counter + 1))
+  #fi
+  ##if [ $counter -eq 7 ] ; then
+  ##  break
+  ##fi
 done < <(tail -n +2 "${working_dir}/${output_csvfile}")
-
-#def call_download_a_singlefile_with_URIString(args):
-#    url=args.stuff[1]
-#    filename=args.stuff[2]
-#    dir_to_save=args.stuff[3]
-
 
 # single filename NECT, its CSF mask and other relevant files
 #rm /media/atul/WDJan2022/WASHU_WORKS/PROJECTS/DOCKERIZE/CSFSEPERATION/TESTING_CSF_SEPERATION/error.txt
