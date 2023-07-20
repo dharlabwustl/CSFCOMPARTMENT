@@ -1,6 +1,32 @@
 #!/bin/bash
+export XNAT_USER=${2}
+export XNAT_PASS=${3}
+export XNAT_HOST=${4}
+sessionID=${1}
+working_dir=/workinginput
+output_directory=/workingoutput
 
+final_output_directory=/outputinsidedocker
+function call_get_resourcefiles_metadata_saveascsv_args() {
+  local resource_dir=${2}   #"NIFTI"
+  local output_csvfile=${4} #{array[1]}
+
+  local URI=${1} #{array[0]}
+#  local file_ext=${5}
+  local output_csvfile=${output_csvfile%.*}${resource_dir}.csv
+
+  local final_output_directory=${3}
+  local call_download_files_in_a_resource_in_a_session_arguments=('call_get_resourcefiles_metadata_saveascsv_args' ${URI} ${resource_dir} ${final_output_directory} ${output_csvfile})
+  outputfiles_present=$(python3 download_with_session_ID.py "${call_download_files_in_a_resource_in_a_session_arguments[@]}")
+
+}
 echo " I AM RUNNING "
+################ DOWNLOAD MASKS ###############################
+## METADATA in the MASK directory
+URI=/data/experiments/${sessionID}
+resource_dir="MASKS"
+output_csvfile=${sessionID}.csv
+call_get_resourcefiles_metadata_saveascsv_args ${URI} ${resource_dir}  ${final_output_directory}
 
 
 # single filename NECT, its CSF mask and other relevant files
