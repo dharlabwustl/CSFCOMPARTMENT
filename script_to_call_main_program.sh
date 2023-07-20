@@ -8,8 +8,8 @@ export XNAT_HOST=${5}
 echo ${TYPE_OF_PROGRAM}::TYPE_OF_PROGRAM
 export XNAT_USER=$XNAT_USER
 export XNAT_PASS=$XNAT_PASS
-echo XNAT_USER=$XNAT_USER
-echo XNAT_PASS=$XNAT_PASS
+#echo XNAT_USER=$XNAT_USER
+#echo XNAT_PASS=$XNAT_PASS
 echo "I am HERE"
 if [[ ${TYPE_OF_PROGRAM} == 1 ]] ;
 then
