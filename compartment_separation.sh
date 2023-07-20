@@ -8,6 +8,7 @@ output_directory=/workingoutput
 
 final_output_directory=/outputinsidedocker
 function call_get_resourcefiles_metadata_saveascsv_args() {
+
   local resource_dir=${2}   #"NIFTI"
   local output_csvfile=${4} #{array[1]}
 
@@ -18,6 +19,7 @@ function call_get_resourcefiles_metadata_saveascsv_args() {
   local final_output_directory=${3}
   local call_download_files_in_a_resource_in_a_session_arguments=('call_get_resourcefiles_metadata_saveascsv_args' ${URI} ${resource_dir} ${final_output_directory} ${output_csvfile})
   outputfiles_present=$(python3 download_with_session_ID.py "${call_download_files_in_a_resource_in_a_session_arguments[@]}")
+  echo " I AM AT call_get_resourcefiles_metadata_saveascsv_args"
 
 }
 echo " I AM RUNNING "
