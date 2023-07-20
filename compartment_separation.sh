@@ -50,7 +50,7 @@ while IFS=',' read -ra array; do
 ##if [ $counter -eq 7 ] ; then
 ##  break
 ##fi
-done < <(tail -n +2 "${output_csvfile}")
+done < <(tail -n +2 "${working_dir}/${output_csvfile}")
 
 #def call_download_a_singlefile_with_URIString(args):
 #    url=args.stuff[1]
