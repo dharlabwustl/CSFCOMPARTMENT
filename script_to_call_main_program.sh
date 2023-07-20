@@ -10,7 +10,7 @@ export XNAT_USER=$XNAT_USER
 export XNAT_PASS=$XNAT_PASS
 echo XNAT_USER=$XNAT_USER
 echo XNAT_PASS=$XNAT_PASS
-
+echo "I am HERE"
 if [[ ${TYPE_OF_PROGRAM} == 1 ]] ;
 then
 echo " I AM IN TYPE_OF_PROGRAM == 1"
