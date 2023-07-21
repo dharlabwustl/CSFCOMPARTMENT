@@ -17,27 +17,27 @@
 
 # To use interactive plots (mouse clicks, zooming, panning) we use the notebook back end. We want our graphs 
 # to be embedded in the notebook, inline mode, this combination is defined by the magic "%matplotlib notebook".
-import numpy as np
-import scipy.linalg
-from mpl_toolkits.mplot3d import Axes3D
-import matplotlib.pyplot as plt
-from vtk import * 
-import sys,inspect
-import six
+# import numpy as np
+# import scipy.linalg
+# from mpl_toolkits.mplot3d import Axes3D
+# import matplotlib.pyplot as plt
+# from vtk import *
+import sys,inspect,subprocess
+# import six
 import SimpleITK as sitk
 import os
 import nibabel as nib
 import numpy as np
 import glob
-from scipy import ndimage as ndi
-import np_obb
-# from sympy import *
-from skimage import exposure
-from scipy import ndimage
-from skimage.morphology import skeletonize
-from skimage.util import invert
-# sys.path.append('/media/atul/AC0095E80095BA32/WASHU_WORK/PROJECTS/CommonPrograms/pyscripts/imagedisplay')
-# sys.path.append('/media/atul/AC0095E80095BA32/WASHU_WORK/PROJECTS/MIDLINE/SOFTWARE/pyscripts/csfbased')
+# from scipy import ndimage as ndi
+# import np_obb
+# # from sympy import *
+# from skimage import exposure
+# from scipy import ndimage
+# from skimage.morphology import skeletonize
+# from skimage.util import invert
+# # sys.path.append('/media/atul/AC0095E80095BA32/WASHU_WORK/PROJECTS/CommonPrograms/pyscripts/imagedisplay')
+# # sys.path.append('/media/atul/AC0095E80095BA32/WASHU_WORK/PROJECTS/MIDLINE/SOFTWARE/pyscripts/csfbased')
 sys.path.append('/media/atul/AC0095E80095BA32/WASHU_WORK/PROJECTS/CommonPrograms/pyscripts')
 # sys.path.append('/media/atul/AC0095E80095BA32/WASHU_WORK/PROJECTS/HEMORRHAGE/SOFTWARE/pyScripts')
 from utilities import *
