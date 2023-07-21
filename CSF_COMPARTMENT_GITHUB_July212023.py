@@ -120,16 +120,16 @@ for dirname in os.listdir(NECT_directory_name_parent):
 # latex_end(latexfilename)
 # latex_file_build(latexfilename)
 # print("latexfilename::{}".format(latexfilename))
-def main():
-    print("WO ZAI ::{}".format("main"))
-    parser = argparse.ArgumentParser()
-    parser.add_argument('stuff', nargs='+')
-    args = parser.parse_args()
-    name_of_the_function=args.stuff[0]
-    return_value=0
-    if name_of_the_function == "call_csf_compartments":
-        return_value=call_csf_compartments(args)
-    return return_value
-
-if __name__ == '__main__':
-    main()
+# def main():
+#     print("WO ZAI ::{}".format("main"))
+#     parser = argparse.ArgumentParser()
+#     parser.add_argument('stuff', nargs='+')
+#     args = parser.parse_args()
+#     name_of_the_function=args.stuff[0]
+#     return_value=0
+#     if name_of_the_function == "call_csf_compartments":
+#         return_value=call_csf_compartments(args)
+#     return return_value
+#
+# if __name__ == '__main__':
+#     main()
