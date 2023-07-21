@@ -50,7 +50,7 @@ while IFS=',' read -ra array; do
 #      URI=/data/experiments/${sessionID}
       resource_dir="MASKS"
       output_csvfile=${sessionID}_SCANSELECTION_METADATA.csv
-      call_get_resourcefiles_metadata_saveascsv_args ${URI} ${resource_dir} ${working_dir} ${output_csvfile}
+      call_get_resourcefiles_metadata_saveascsv_args ${url1} ${resource_dir} ${working_dir} ${output_csvfile}
 #      filename1=$(basename ${url1})
 #  call_download_a_singlefile_with_URIString_arguments=('call_download_a_singlefile_with_URIString' ${url1} ${filename1} ${dir_to_save})
 #  outputfiles_present=$(python3 download_with_session_ID.py "${call_download_a_singlefile_with_URIString_arguments[@]}")
