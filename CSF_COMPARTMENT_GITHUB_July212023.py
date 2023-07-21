@@ -13,11 +13,11 @@ from utilities_simple_trimmed import *
 #_compartments
 
 from  Segmentation_Ventricle_Sulcus_CSF_1_Dec15_2019 import * 
-colors = vtk.vtkNamedColors()
-renderer = vtk.vtkRenderer()
+# colors = vtk.vtkNamedColors()
+# renderer = vtk.vtkRenderer()
 
 ANAYLYSIS_TYPE="CSF_COMPARTMENT_VEN_SUL_AB"
-project_folder="/media/atul/WDJan2022/WASHU_WORKS/PROJECTS/DOCKERIZE/CSFSEPERATION/TESTING_CSF_SEPERATION"
+# project_folder="/media/atul/WDJan2022/WASHU_WORKS/PROJECTS/DOCKERIZE/CSFSEPERATION/TESTING_CSF_SEPERATION"
 
 
 NECT_directory_name_parent="/media/atul/AC0095E80095BA32/WASHU_WORK/PROJECTS/SAH_N_CSF_Compartment/DATA/NECT"
