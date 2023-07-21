@@ -62,9 +62,9 @@ def call_csf_compartments(args):
         print("I FAILED AT ::{}".format(inspect.stack()[0][3]))
         pass
     return returnvalue
-filename_gray="/media/atul/AC0095E80095BA32/WASHU_WORK/PROJECTS/SAH_N_CSF_Compartment/DATA/NECT/ALLCOHORTINONE/Krak_003_09042014_0949_MOZG_6.0_H31s_levelset.nii.gz"
-filename_mask="/media/atul/AC0095E80095BA32/WASHU_WORK/PROJECTS/SAH_N_CSF_Compartment/DATA/NECT/ALLCOHORTINONE/Krak_003_09042014_0949_MOZG_6.0_H31s_final_seg.nii.gz"
-filename_bet="/media/atul/AC0095E80095BA32/WASHU_WORK/PROJECTS/SAH_N_CSF_Compartment/DATA/BET/ALLCOHORTINONE/Krak_003_09042014_0949_MOZG_6.0_H31s_levelset_bet.nii.gz"
+filename_gray="/media/atul/WDJan2022/WASHU_WORKS/PROJECTS/DOCKERIZE/CSFSEPERATION/TESTING_CSF_SEPERATION/Krak_003_09042014_0949_MOZG_6.0_H31s_levelset.nii.gz"
+filename_mask="/media/atul/WDJan2022/WASHU_WORKS/PROJECTS/DOCKERIZE/CSFSEPERATION/TESTING_CSF_SEPERATION/Krak_003_09042014_0949_MOZG_6.0_H31s_final_seg.nii.gz"
+filename_bet="/media/atul/WDJan2022/WASHU_WORKS/PROJECTS/DOCKERIZE/CSFSEPERATION/TESTING_CSF_SEPERATION/Krak_003_09042014_0949_MOZG_6.0_H31s_levelset_bet.nii.gz"
 csf_compartments(filename_gray,filename_mask,filename_bet)
 # for dirname in os.listdir(NECT_directory_name_parent):
 #     if count <1 and  os.path.isdir(os.path.join(NECT_directory_name_parent,dirname)): # and dirname=="WUSTL_664"
