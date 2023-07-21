@@ -20,10 +20,10 @@ ANAYLYSIS_TYPE="CSF_COMPARTMENT_VEN_SUL_AB"
 # project_folder="/media/atul/WDJan2022/WASHU_WORKS/PROJECTS/DOCKERIZE/CSFSEPERATION/TESTING_CSF_SEPERATION"
 
 
-NECT_directory_name_parent='/media/atul/WDJan2022/WASHU_WORKS/PROJECTS/DOCKERIZE/CSFSEPERATION/TESTING_CSF_SEPERATION' #"/media/atul/AC0095E80095BA32/WASHU_WORK/PROJECTS/SAH_N_CSF_Compartment/DATA/NECT"
-NECT_BET_directory_name_parent='/media/atul/WDJan2022/WASHU_WORKS/PROJECTS/DOCKERIZE/CSFSEPERATION/TESTING_CSF_SEPERATION' #"/media/atul/AC0095E80095BA32/WASHU_WORK/PROJECTS/SAH_N_CSF_Compartment/DATA/BET"
-RESULT_DIRECTORY='/media/atul/WDJan2022/WASHU_WORKS/PROJECTS/DOCKERIZE/CSFSEPERATION/TESTING_CSF_SEPERATION/RESULTS' #"/media/atul/AC0095E80095BA32/WASHU_WORK/PROJECTS/SAH_N_CSF_Compartment/RESULTS"
-SLICE_OUTPUT_DIRECTORY='/media/atul/WDJan2022/WASHU_WORKS/PROJECTS/DOCKERIZE/CSFSEPERATION/TESTING_CSF_SEPERATION/IMAGES' #"/media/atul/AC0095E80095BA32/WASHU_WORK/PROJECTS/SAH_N_CSF_Compartment/RESULTS/IMAGES"
+NECT_directory_name_parent="/media/atul/AC0095E80095BA32/WASHU_WORK/PROJECTS/SAH_N_CSF_Compartment/DATA/NECT"
+NECT_BET_directory_name_parent="/media/atul/AC0095E80095BA32/WASHU_WORK/PROJECTS/SAH_N_CSF_Compartment/DATA/BET"
+RESULT_DIRECTORY="/media/atul/AC0095E80095BA32/WASHU_WORK/PROJECTS/SAH_N_CSF_Compartment/RESULTS"
+SLICE_OUTPUT_DIRECTORY="/media/atul/AC0095E80095BA32/WASHU_WORK/PROJECTS/SAH_N_CSF_Compartment/RESULTS/IMAGES"
 grayscalefilextension="_levelset.nii.gz"
 
 
@@ -85,12 +85,8 @@ for dirname in os.listdir(NECT_directory_name_parent):
                 filename_gray = NECT_filename
                 filename_mask = CSF_Mask_filename
                 filename_bet = NECT_HET_filename
+                csf_compartments(filename_gray,filename_mask,filename_bet)
                 subprocess.call("echo " + "NECT_filename AT ::{}  >> error.txt".format(NECT_filename) ,shell=True )
-                subprocess.call("echo " + "filename_mask AT ::{}  >> error.txt".format(filename_mask) ,shell=True )
-                subprocess.call("echo " + "filename_bet AT ::{}  >> error.txt".format(filename_bet) ,shell=True )
-                # subprocess.call("echo " + "NECT_filename AT ::{}  >> error.txt".format(NECT_filename) ,shell=True )
-                # csf_compartments(filename_gray,filename_mask,filename_bet)
-                # subprocess.call("echo " + "NECT_filename AT ::{}  >> error.txt".format(NECT_filename) ,shell=True )
                 count=count+1
 
                 # print("filename_gray")
@@ -120,16 +116,16 @@ for dirname in os.listdir(NECT_directory_name_parent):
 # latex_end(latexfilename)
 # latex_file_build(latexfilename)
 # print("latexfilename::{}".format(latexfilename))
-# def main():
-#     print("WO ZAI ::{}".format("main"))
-#     parser = argparse.ArgumentParser()
-#     parser.add_argument('stuff', nargs='+')
-#     args = parser.parse_args()
-#     name_of_the_function=args.stuff[0]
-#     return_value=0
-#     if name_of_the_function == "call_csf_compartments":
-#         return_value=call_csf_compartments(args)
-#     return return_value
-#
-# if __name__ == '__main__':
-#     main()
+def main():
+    print("WO ZAI ::{}".format("main"))
+    parser = argparse.ArgumentParser()
+    parser.add_argument('stuff', nargs='+')
+    args = parser.parse_args()
+    name_of_the_function=args.stuff[0]
+    return_value=0
+    if name_of_the_function == "call_csf_compartments":
+        return_value=call_csf_compartments(args)
+    return return_value
+
+if __name__ == '__main__':
+    main()
