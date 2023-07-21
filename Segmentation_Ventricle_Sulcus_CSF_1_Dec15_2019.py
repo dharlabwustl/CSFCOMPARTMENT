@@ -31,7 +31,7 @@ import numpy as np
 import glob
 from scipy import ndimage as ndi
 import np_obb
-from sympy import *
+# from sympy import *
 from skimage import exposure
 from scipy import ndimage
 from skimage.morphology import skeletonize
