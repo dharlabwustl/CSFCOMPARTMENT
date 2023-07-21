@@ -50,33 +50,44 @@ def csf_compartments(filename_gray,filename_mask,filename_bet):
 def call_csf_compartments(args):
     returnvalue=0
 
+
+    try:
+        filename_gray=args.stuff[1]
+        filename_mask=args.stuff[2]
+        filename_bet=args.stuff[3]
+        csf_compartments(filename_gray,filename_mask,filename_bet)
+        print("I SUCCEED AT ::{}".format(inspect.stack()[0][3]))
+        returnvalue=1
+    except:
+        print("I FAILED AT ::{}".format(inspect.stack()[0][3]))
+        pass
     return returnvalue
 
-for dirname in os.listdir(NECT_directory_name_parent): 
-    if count <1 and  os.path.isdir(os.path.join(NECT_directory_name_parent,dirname)): # and dirname=="WUSTL_664"        
-
-        NECT_directory_name=os.path.join(NECT_directory_name_parent,dirname) 
-        NECT_filenames=glob.glob(NECT_directory_name+"/*" + grayscalefilextension) 
-        for   NECT_filename in NECT_filenames:
-            if count <1 and "Krak" in os.path.basename(NECT_filename) :
-                nect_file_basename=os.path.basename(NECT_filename)
-                nect_file_basename_forimagename=nect_file_basename.split('.')[0]
-                NECT_HET_filename=os.path.join(NECT_BET_directory_name_parent,dirname,nect_file_basename[:-16]+"_levelset_bet.nii.gz" )
-                CSF_Mask_filename=os.path.join(NECT_directory_name_parent,dirname,nect_file_basename[:-16]+"_final_seg.nii.gz" )
-                RAW_DATA_FOLDER=NECT_directory_name
-                # command= "cp  " + NECT_HET_filename+  "  /media/atul/WDJan2022/WASHU_WORKS/PROJECTS/DOCKERIZE/CSFSEPERATION/TESTING_CSF_SEPERATION/"
-                # subprocess.call(command,shell=True)
-                # command= "cp  " + CSF_Mask_filename+  "  /media/atul/WDJan2022/WASHU_WORKS/PROJECTS/DOCKERIZE/CSFSEPERATION/TESTING_CSF_SEPERATION/"
-                # subprocess.call(command,shell=True)
-                # command= "cp  " + NECT_filename+  "  /media/atul/WDJan2022/WASHU_WORKS/PROJECTS/DOCKERIZE/CSFSEPERATION/TESTING_CSF_SEPERATION/"
-                # subprocess.call(command,shell=True)
-                each_unique_names_file_pattern=dirname
-                filename_gray = NECT_filename
-                filename_mask = CSF_Mask_filename
-                filename_bet = NECT_HET_filename
-                csf_compartments(filename_gray,filename_mask,filename_bet)
-                subprocess.call("echo " + "NECT_filename AT ::{}  >> error.txt".format(NECT_filename) ,shell=True )
-                count=count+1
+# for dirname in os.listdir(NECT_directory_name_parent):
+#     if count <1 and  os.path.isdir(os.path.join(NECT_directory_name_parent,dirname)): # and dirname=="WUSTL_664"
+#
+#         NECT_directory_name=os.path.join(NECT_directory_name_parent,dirname)
+#         NECT_filenames=glob.glob(NECT_directory_name+"/*" + grayscalefilextension)
+#         for   NECT_filename in NECT_filenames:
+#             if count <1 and "Krak" in os.path.basename(NECT_filename) :
+#                 nect_file_basename=os.path.basename(NECT_filename)
+#                 nect_file_basename_forimagename=nect_file_basename.split('.')[0]
+#                 NECT_HET_filename=os.path.join(NECT_BET_directory_name_parent,dirname,nect_file_basename[:-16]+"_levelset_bet.nii.gz" )
+#                 CSF_Mask_filename=os.path.join(NECT_directory_name_parent,dirname,nect_file_basename[:-16]+"_final_seg.nii.gz" )
+#                 RAW_DATA_FOLDER=NECT_directory_name
+#                 # command= "cp  " + NECT_HET_filename+  "  /media/atul/WDJan2022/WASHU_WORKS/PROJECTS/DOCKERIZE/CSFSEPERATION/TESTING_CSF_SEPERATION/"
+#                 # subprocess.call(command,shell=True)
+#                 # command= "cp  " + CSF_Mask_filename+  "  /media/atul/WDJan2022/WASHU_WORKS/PROJECTS/DOCKERIZE/CSFSEPERATION/TESTING_CSF_SEPERATION/"
+#                 # subprocess.call(command,shell=True)
+#                 # command= "cp  " + NECT_filename+  "  /media/atul/WDJan2022/WASHU_WORKS/PROJECTS/DOCKERIZE/CSFSEPERATION/TESTING_CSF_SEPERATION/"
+#                 # subprocess.call(command,shell=True)
+#                 each_unique_names_file_pattern=dirname
+#                 filename_gray = NECT_filename
+#                 filename_mask = CSF_Mask_filename
+#                 filename_bet = NECT_HET_filename
+#                 csf_compartments(filename_gray,filename_mask,filename_bet)
+#                 subprocess.call("echo " + "NECT_filename AT ::{}  >> error.txt".format(NECT_filename) ,shell=True )
+#                 count=count+1
 #
 #                 print("filename_gray")
 #                 print(filename_gray)
