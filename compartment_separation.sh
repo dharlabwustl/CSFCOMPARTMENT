@@ -86,7 +86,7 @@ while IFS=',' read -ra array; do
         csffile=${dir_to_save}/${filename2}
       fi
     done < <(tail -n +2 "${working_dir}/${output_csvfile}")
-    if [[ -f "$FILE" ]] && [[ -f "$FILE" ]] && [[ -f "$FILE" ]]; then
+    if [[ -f "${greyfile}" ]] && [[ -f "${betfile}" ]] && [[ -f "${csffile}" ]]; then
       call_csf_compartments_arguments=('call_csf_compartments' ${greyfile} ${csffile} ${betfile})
       outputfiles_present=$(python /media/atul/WDJan2022/WASHU_WORKS/PROJECTS/DOCKERIZE/CSFSEPERATION/CSFCOMPARTMENT/CSF_COMPARTMENT_GITHUB_July212023.py "${call_csf_compartments_arguments[@]}")
     fi
