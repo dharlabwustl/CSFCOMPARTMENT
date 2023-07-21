@@ -125,6 +125,7 @@ def main():
     return_value=0
     if name_of_the_function == "call_csf_compartments":
         return_value=call_csf_compartments(args)
+    return return_value
 
 if __name__ == '__main__':
     main()
