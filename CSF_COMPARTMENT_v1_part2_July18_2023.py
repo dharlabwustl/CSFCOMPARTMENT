@@ -20,10 +20,10 @@ ANAYLYSIS_TYPE="CSF_COMPARTMENT_VEN_SUL_AB"
 project_folder="/media/atul/AC0095E80095BA32/WASHU_WORK/PROJECTS/SAH_N_CSF_Compartment"
 
 
-NECT_directory_name_parent="/media/atul/WDJan2022/WASHU_WORKS/PROJECTS/DOCKERIZE/CSFSEPERATION/TESTING_CSF_SEPERATION/" #"/media/atul/AC0095E80095BA32/WASHU_WORK/PROJECTS/SAH_N_CSF_Compartment/DATA/NECT"
-NECT_BET_directory_name_parent="/media/atul/WDJan2022/WASHU_WORKS/PROJECTS/DOCKERIZE/CSFSEPERATION/TESTING_CSF_SEPERATION/" #"/media/atul/AC0095E80095BA32/WASHU_WORK/PROJECTS/SAH_N_CSF_Compartment/DATA/BET"
-RESULT_DIRECTORY="/media/atul/WDJan2022/WASHU_WORKS/PROJECTS/DOCKERIZE/CSFSEPERATION/TESTING_CSF_SEPERATION/RESULTS" #"/media/atul/AC0095E80095BA32/WASHU_WORK/PROJECTS/SAH_N_CSF_Compartment/RESULTS"
-SLICE_OUTPUT_DIRECTORY="/media/atul/WDJan2022/WASHU_WORKS/PROJECTS/DOCKERIZE/CSFSEPERATION/TESTING_CSF_SEPERATION/IMAGES" #"/media/atul/AC0095E80095BA32/WASHU_WORK/PROJECTS/SAH_N_CSF_Compartment/RESULTS/IMAGES"
+NECT_directory_name_parent="/media/atul/AC0095E80095BA32/WASHU_WORK/PROJECTS/SAH_N_CSF_Compartment/DATA/NECT"
+NECT_BET_directory_name_parent="/media/atul/AC0095E80095BA32/WASHU_WORK/PROJECTS/SAH_N_CSF_Compartment/DATA/BET"
+RESULT_DIRECTORY="/media/atul/AC0095E80095BA32/WASHU_WORK/PROJECTS/SAH_N_CSF_Compartment/RESULTS"
+SLICE_OUTPUT_DIRECTORY="/media/atul/AC0095E80095BA32/WASHU_WORK/PROJECTS/SAH_N_CSF_Compartment/RESULTS/IMAGES"
 grayscalefilextension="_levelset.nii.gz"
 
 
@@ -64,12 +64,12 @@ for dirname in os.listdir(NECT_directory_name_parent):
                 NECT_HET_filename=os.path.join(NECT_BET_directory_name_parent,dirname,nect_file_basename[:-16]+"_levelset_bet.nii.gz" )
                 CSF_Mask_filename=os.path.join(NECT_directory_name_parent,dirname,nect_file_basename[:-16]+"_final_seg.nii.gz" )
                 RAW_DATA_FOLDER=NECT_directory_name
-                # command= "cp  " + NECT_HET_filename+  "  /media/atul/WDJan2022/WASHU_WORKS/PROJECTS/DOCKERIZE/CSFSEPERATION/TESTING_CSF_SEPERATION/"
-                # subprocess.call(command,shell=True)
-                # command= "cp  " + CSF_Mask_filename+  "  /media/atul/WDJan2022/WASHU_WORKS/PROJECTS/DOCKERIZE/CSFSEPERATION/TESTING_CSF_SEPERATION/"
-                # subprocess.call(command,shell=True)
-                # command= "cp  " + NECT_filename+  "  /media/atul/WDJan2022/WASHU_WORKS/PROJECTS/DOCKERIZE/CSFSEPERATION/TESTING_CSF_SEPERATION/"
-                # subprocess.call(command,shell=True)
+                command= "cp  " + NECT_HET_filename+  "  /media/atul/WDJan2022/WASHU_WORKS/PROJECTS/DOCKERIZE/CSFSEPERATION/TESTING_CSF_SEPERATION/"
+                subprocess.call(command,shell=True)
+                command= "cp  " + CSF_Mask_filename+  "  /media/atul/WDJan2022/WASHU_WORKS/PROJECTS/DOCKERIZE/CSFSEPERATION/TESTING_CSF_SEPERATION/"
+                subprocess.call(command,shell=True)
+                command= "cp  " + NECT_filename+  "  /media/atul/WDJan2022/WASHU_WORKS/PROJECTS/DOCKERIZE/CSFSEPERATION/TESTING_CSF_SEPERATION/"
+                subprocess.call(command,shell=True)
                 # each_unique_names_file_pattern=dirname
                 # filename_gray = NECT_filename
                 # filename_mask = CSF_Mask_filename
