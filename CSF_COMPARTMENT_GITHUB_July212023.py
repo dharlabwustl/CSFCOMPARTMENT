@@ -87,6 +87,8 @@ for dirname in os.listdir(NECT_directory_name_parent):
                 filename_bet = NECT_HET_filename
                 csf_compartments(filename_gray,filename_mask,filename_bet)
                 subprocess.call("echo " + "NECT_filename AT ::{}  >> error.txt".format(NECT_filename) ,shell=True )
+                subprocess.call("echo " + "CSF_Mask_filename AT ::{}  >> error.txt".format(CSF_Mask_filename) ,shell=True )
+                subprocess.call("echo " + "NECT_HET_filename AT ::{}  >> error.txt".format(NECT_HET_filename) ,shell=True )
                 count=count+1
 
                 # print("filename_gray")
