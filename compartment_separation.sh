@@ -88,7 +88,7 @@ while IFS=',' read -ra array; do
     done < <(tail -n +2 "${working_dir}/${output_csvfile}")
     if [[ -f "${greyfile}" ]] && [[ -f "${betfile}" ]] && [[ -f "${csffile}" ]]; then
       call_csf_compartments_arguments=('call_csf_compartments' ${greyfile} ${csffile} ${betfile})
-      outputfiles_present=$(python /software/CSF_COMPARTMENT_GITHUB_July212023.py "${call_csf_compartments_arguments[@]}")
+      outputfiles_present=$(python3 /software/CSF_COMPARTMENT_GITHUB_July212023.py "${call_csf_compartments_arguments[@]}")
     fi
 
   done < <(tail -n +2 "${dir_to_save}/${filename}")
