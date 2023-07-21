@@ -55,8 +55,12 @@ while IFS=',' read -ra array; do
 #  call_download_a_singlefile_with_URIString_arguments=('call_download_a_singlefile_with_URIString' ${url1} ${filename1} ${dir_to_save})
 #  outputfiles_present=$(python3 download_with_session_ID.py "${call_download_a_singlefile_with_URIString_arguments[@]}")
   while IFS=',' read -ra array2; do
-      echo "${array2[6]}"
+
       url2=${array2[6]}
+      if [[ ${url2} == *"_levelset"* ]]  || [[ ${url2} == *"_levelset_bet"* ]]  || [[ ${url2} == *"csf_unet"* ]]  ; then ##[[ $string == *"My long"* ]]; then
+        echo "It's there!"
+        echo "${array2[6]}"
+      fi
 #      URI=/data/experiments/${sessionID}
 #      resource_dir="MASKS"
 #      output_csvfile=${sessionID}_SCANSELECTION_METADATA.csv
