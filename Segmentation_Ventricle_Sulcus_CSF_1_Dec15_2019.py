@@ -41,32 +41,32 @@ from skimage.util import invert
 sys.path.append('/media/atul/AC0095E80095BA32/WASHU_WORK/PROJECTS/CommonPrograms/pyscripts')
 # sys.path.append('/media/atul/AC0095E80095BA32/WASHU_WORK/PROJECTS/HEMORRHAGE/SOFTWARE/pyScripts')
 from utilities import *
-# from utilities_simple_trimmed import *
-# from vtk_python_functions import *
-# from csf_bounding_box import *
-# from matplotlib.patches import Circle
-# import subprocess
-# import cv2
-# from savenumpymatrix import *
-# identify the slice which contains the
-import vtk
-import itk
-from mpl_toolkits.mplot3d import Axes3D
-import numpy as np
-from numpy.linalg import svd
-from mpl_toolkits import mplot3d
-import matplotlib.pyplot as plt
-from mpl_toolkits.mplot3d import Axes3D
-import numpy as np
-from matplotlib import cm
-
-import re
-colors = vtk.vtkNamedColors()
-renderer = vtk.vtkRenderer()
-renderWindow = vtk.vtkRenderWindow()
-renderWindow.AddRenderer(renderer)
-renderWindowInteractor = vtk.vtkRenderWindowInteractor()
-renderWindowInteractor.SetRenderWindow(renderWindow)
+# # from utilities_simple_trimmed import *
+# # from vtk_python_functions import *
+# # from csf_bounding_box import *
+# # from matplotlib.patches import Circle
+# # import subprocess
+# # import cv2
+# # from savenumpymatrix import *
+# # identify the slice which contains the
+# import vtk
+# import itk
+# from mpl_toolkits.mplot3d import Axes3D
+# import numpy as np
+# from numpy.linalg import svd
+# from mpl_toolkits import mplot3d
+# import matplotlib.pyplot as plt
+# from mpl_toolkits.mplot3d import Axes3D
+# import numpy as np
+# from matplotlib import cm
+#
+# import re
+# colors = vtk.vtkNamedColors()
+# renderer = vtk.vtkRenderer()
+# renderWindow = vtk.vtkRenderWindow()
+# renderWindow.AddRenderer(renderer)
+# renderWindowInteractor = vtk.vtkRenderWindowInteractor()
+# renderWindowInteractor.SetRenderWindow(renderWindow)
 def sortSecond(val):
     return val[1]
 def calculate_volume(nii_img,mask_img):
