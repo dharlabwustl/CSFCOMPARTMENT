@@ -34,7 +34,7 @@ while IFS=',' read -ra array; do
   #xx=0
   #
   ##if [ ${array[1]} == "SNIPR01_E00894" ]  ; then
-  echo "${array[6]}"
+#  echo "${array[6]}"
   url=${array[6]}
   filename=$(basename ${url})
   dir_to_save=${working_dir}
