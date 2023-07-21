@@ -17,7 +17,7 @@ colors = vtk.vtkNamedColors()
 renderer = vtk.vtkRenderer()
 
 ANAYLYSIS_TYPE="CSF_COMPARTMENT_VEN_SUL_AB"
-project_folder="/media/atul/AC0095E80095BA32/WASHU_WORK/PROJECTS/SAH_N_CSF_Compartment"
+project_folder="/media/atul/WDJan2022/WASHU_WORKS/PROJECTS/DOCKERIZE/CSFSEPERATION/TESTING_CSF_SEPERATION"
 
 
 NECT_directory_name_parent="/media/atul/AC0095E80095BA32/WASHU_WORK/PROJECTS/SAH_N_CSF_Compartment/DATA/NECT"
