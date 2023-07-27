@@ -49,6 +49,7 @@ while IFS=',' read -ra array; do
 #  #    dir_to_save=args.stuff[3]
   call_download_a_singlefile_with_URIString_arguments=('call_download_a_singlefile_with_URIString' ${url} ${filename} ${dir_to_save})
   outputfiles_present=$(python3 download_with_session_ID.py "${call_download_a_singlefile_with_URIString_arguments[@]}")
+  echo ${outputfiles_present}
 #
 #  while IFS=',' read -ra array1; do
 #    #      echo "${array1[0]}"
