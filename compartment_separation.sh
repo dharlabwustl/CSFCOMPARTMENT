@@ -16,8 +16,8 @@ function call_get_resourcefiles_metadata_saveascsv_args() {
   #  local file_ext=${5}
   #  local output_csvfile=${output_csvfile%.*}${resource_dir}.csv
 
-  local final_output_directory=${3}
-  local call_download_files_in_a_resource_in_a_session_arguments=('call_get_resourcefiles_metadata_saveascsv_args' ${URI} ${resource_dir} ${final_output_directory} ${output_csvfile})
+  local working_dir=${3}
+  local call_download_files_in_a_resource_in_a_session_arguments=('call_get_resourcefiles_metadata_saveascsv_args' ${URI} ${resource_dir} ${working_dir} ${output_csvfile})
   outputfiles_present=$(python3 download_with_session_ID.py "${call_download_files_in_a_resource_in_a_session_arguments[@]}")
   echo " I AM AT call_get_resourcefiles_metadata_saveascsv_args"
 
