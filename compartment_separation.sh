@@ -51,9 +51,10 @@ while IFS=',' read -ra array; do
   outputfiles_present=$(python3 download_with_session_ID.py "${call_download_a_singlefile_with_URIString_arguments[@]}")
   echo ${outputfiles_present}
   #
-  #  while IFS=',' read -ra array1; do
+    while IFS=',' read -ra array1; do
   #    #      echo "${array1[0]}"
-  #    url1=${array1[0]}
+      url1=${array1[0]}
+      echo url1::${url1}
   #    #      URI=/data/experiments/${sessionID}
   #    resource_dir="MASKS"
   #    output_csvfile=${sessionID}_SCANSELECTION_METADATA.csv
@@ -95,7 +96,7 @@ while IFS=',' read -ra array; do
   #    done < <(tail -n +2 "${working_dir}/${output_csvfile}")
   #
   #  done \
-  #    < <(tail -n +2 "${dir_to_save}/${filename}")
+      < <(tail -n +2 "${dir_to_save}/${filename}")
   #
 done < <(tail -n +2 "${working_dir}/${output_csvfile}")
 #
