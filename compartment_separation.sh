@@ -105,7 +105,7 @@ csffile='/workinginput/SAH_1_01052014_2003_2_resaved_csf_unet.nii.gz'
 #'/media/atul/WDJan2022/WASHU_WORKS/PROJECTS/DOCKERIZE/CSFSEPERATION/TESTING_CSF_SEPERATION/Krak_003_09042014_0949_MOZG_6.0_H31s_final_seg.nii.gz'
 
 call_csf_compartments_arguments=('call_csf_compartments' ${greyfile} ${csffile} ${betfile} )
-outputfiles_present=$(python /software/CSF_COMPARTMENT_GITHUB_July212023.py "${call_csf_compartments_arguments[@]}" )
+outputfiles_present=$(python3 /software/CSF_COMPARTMENT_GITHUB_July212023.py "${call_csf_compartments_arguments[@]}" )
 echo ${outputfiles_present}
 ###python /media/atul/WDJan2022/WASHU_WORKS/PROJECTS/DOCKERIZE/CSFSEPERATION/CSFCOMPARTMENT/CSF_COMPARTMENT_v1_part2_July18_2023.py
 ##
