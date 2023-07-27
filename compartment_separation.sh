@@ -63,10 +63,10 @@ while IFS=',' read -ra array; do
   #    #  call_download_a_singlefile_with_URIString_arguments=('call_download_a_singlefile_with_URIString' ${url1} ${filename1} ${dir_to_save})
   #    #  outputfiles_present=$(python3 download_with_session_ID.py "${call_download_a_singlefile_with_URIString_arguments[@]}")
   #
-      while IFS=',' read -ra array2; do
-  #
-        url2=${array2[6]}
-        echo url2::${url2}
+#      while IFS=',' read -ra array2; do
+#  #
+#        url2=${array2[6]}
+#        echo url2::${url2}
   #      if [[ ${url2} == *"_levelset.nii.gz"* ]]; then #  || [[ ${url2} == *"_levelset_bet"* ]]  || [[ ${url2} == *"csf_unet"* ]]  ; then ##[[ $string == *"My long"* ]]; then
   #        echo "It's there!"
   #        echo "${array2[6]}"
@@ -94,7 +94,7 @@ while IFS=',' read -ra array; do
   #        csffile=${dir_to_save}/${filename2}
   #        echo "${csffile}"
   #      fi
-      done < <(tail -n +2 "${working_dir}/${output_csvfile_1}")
+#      done < <(tail -n +2 "${working_dir}/${output_csvfile_1}")
   #
     done < <(tail -n +2 "${dir_to_save}/${filename}")
   #
