@@ -29,17 +29,19 @@ URI=/data/experiments/${sessionID}
 resource_dir="NIFTI_LOCATION"
 output_csvfile=${sessionID}_SCANSELECTION_METADATA.csv
 call_get_resourcefiles_metadata_saveascsv_args ${URI} ${resource_dir} ${working_dir} ${output_csvfile}
-#dir_to_save=${working_dir}
-#greyfile="NONE" ##'/media/atul/WDJan2022/WASHU_WORKS/PROJECTS/DOCKERIZE/CSFSEPERATION/TESTING_CSF_SEPERATION/Krak_003_09042014_0949_MOZG_6.0_H31s_levelset.nii.gz'
-#betfile="NONE"  ##'/media/atul/WDJan2022/WASHU_WORKS/PROJECTS/DOCKERIZE/CSFSEPERATION/TESTING_CSF_SEPERATION/Krak_003_09042014_0949_MOZG_6.0_H31s_levelset_bet.nii.gz'
-#csffile="NONE"  ##'/media/atul/WDJan2022/WASHU_WORKS/PROJECTS/DOCKERIZE/CSFSEPERATION/TESTING_CSF_SEPERATION/Krak_003_09042014_0949_MOZG_6.0_H31s_final_seg.nii.gz'
-#while IFS=',' read -ra array; do
+dir_to_save=${working_dir}
+greyfile="NONE" ##'/media/atul/WDJan2022/WASHU_WORKS/PROJECTS/DOCKERIZE/CSFSEPERATION/TESTING_CSF_SEPERATION/Krak_003_09042014_0949_MOZG_6.0_H31s_levelset.nii.gz'
+betfile="NONE"  ##'/media/atul/WDJan2022/WASHU_WORKS/PROJECTS/DOCKERIZE/CSFSEPERATION/TESTING_CSF_SEPERATION/Krak_003_09042014_0949_MOZG_6.0_H31s_levelset_bet.nii.gz'
+csffile="NONE"  ##'/media/atul/WDJan2022/WASHU_WORKS/PROJECTS/DOCKERIZE/CSFSEPERATION/TESTING_CSF_SEPERATION/Krak_003_09042014_0949_MOZG_6.0_H31s_final_seg.nii.gz'
+while IFS=',' read -ra array; do
 #  #xx=0
 #  #
 #  ##if [ ${array[1]} == "SNIPR01_E00894" ]  ; then
 #  #  echo "${array[6]}"
-#  url=${array[6]}
-#  filename=$(basename ${url})
+  url=${array[6]}
+  filename=$(basename ${url})
+  echo ${filename}
+  echo ${url}
 #
 #  #def call_download_a_singlefile_with_URIString(args):
 #  #    url=args.stuff[1]
@@ -94,8 +96,7 @@ call_get_resourcefiles_metadata_saveascsv_args ${URI} ${resource_dir} ${working_
 #  done \
 #    < <(tail -n +2 "${dir_to_save}/${filename}")
 #
-#done \
-#  < <(tail -n +2 "${working_dir}/${output_csvfile}")
+done < <(tail -n +2 "${working_dir}/${output_csvfile}")
 #
 #if [[ -f "${greyfile}" ]] && [[ -f "${betfile}" ]] && [[ -f "${csffile}" ]]; then
 #  call_csf_compartments_arguments=('call_csf_compartments' ${greyfile} ${csffile} ${betfile})
