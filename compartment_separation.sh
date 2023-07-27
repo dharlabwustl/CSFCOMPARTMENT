@@ -100,6 +100,7 @@ done \
 if [[ -f "${greyfile}" ]] && [[ -f "${betfile}" ]] && [[ -f "${csffile}" ]]; then
   call_csf_compartments_arguments=('call_csf_compartments' ${greyfile} ${csffile} ${betfile})
   outputfiles_present=$(python3 /software/CSF_COMPARTMENT_GITHUB_July212023.py "${call_csf_compartments_arguments[@]}")
+  echo ${outputfiles_present}
 fi
 ## single filename NECT, its CSF mask and other relevant files
 #rm /media/atul/WDJan2022/WASHU_WORKS/PROJECTS/DOCKERIZE/CSFSEPERATION/TESTING_CSF_SEPERATION/error.txt
