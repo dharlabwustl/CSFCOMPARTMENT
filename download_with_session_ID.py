@@ -861,7 +861,7 @@ def get_resourcefiles_metadata(URI,resource_dir):
 def get_resourcefiles_metadata_saveascsv(URI,resource_dir,dir_to_receive_the_data,output_csvfile):
 
     url = (URI+'/resources/' + resource_dir +'/files?format=json')
-    # print("url::{}".format(url))
+    print("url::{}".format(url))
     xnatSession = XnatSession(username=XNAT_USER, password=XNAT_PASS, host=XNAT_HOST)
     xnatSession.renew_httpsession()
     response = xnatSession.httpsess.get(xnatSession.host + url)
