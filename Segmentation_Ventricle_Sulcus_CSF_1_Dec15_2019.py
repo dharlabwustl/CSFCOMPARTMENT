@@ -29,55 +29,14 @@ import os
 import nibabel as nib
 import numpy as np
 import glob
-# from scipy import ndimage as ndi
-# import np_obb
-# # from sympy import *
-# from skimage import exposure
-# from scipy import ndimage
-# from skimage.morphology import skeletonize
-# from skimage.util import invert
-# # sys.path.append('/media/atul/AC0095E80095BA32/WASHU_WORK/PROJECTS/CommonPrograms/pyscripts/imagedisplay')
-# # sys.path.append('/media/atul/AC0095E80095BA32/WASHU_WORK/PROJECTS/MIDLINE/SOFTWARE/pyscripts/csfbased')
-# sys.path.append('/media/atul/AC0095E80095BA32/WASHU_WORK/PROJECTS/CommonPrograms/pyscripts')
-# sys.path.append('/media/atul/AC0095E80095BA32/WASHU_WORK/PROJECTS/HEMORRHAGE/SOFTWARE/pyScripts')
-# from utilities import *
-# # from utilities_simple_trimmed import *
-# # from vtk_python_functions import *
-# # from csf_bounding_box import *
-# # from matplotlib.patches import Circle
-# # import subprocess
-# # import cv2
-# # from savenumpymatrix import *
-# # identify the slice which contains the
-# import vtk
-# import itk
-# from mpl_toolkits.mplot3d import Axes3D
-# import numpy as np
-# from numpy.linalg import svd
-# from mpl_toolkits import mplot3d
-# import matplotlib.pyplot as plt
-# from mpl_toolkits.mplot3d import Axes3D
-# import numpy as np
-# from matplotlib import cm
-#
-# import re
-# colors = vtk.vtkNamedColors()
-# renderer = vtk.vtkRenderer()
-# renderWindow = vtk.vtkRenderWindow()
-# renderWindow.AddRenderer(renderer)
-# renderWindowInteractor = vtk.vtkRenderWindowInteractor()
-# renderWindowInteractor.SetRenderWindow(renderWindow)
+
 def sortSecond(val):
     return val[1]
 def calculate_volume(nii_img,mask_img):
-    #    mask_data=myfunctions.analyze_stack(mask_file)
-    #    img = nib.load(nii_file)
+
     resol= np.prod(np.array(nii_img.header["pixdim"][1:4]))
-    #    print("header[pixdim][1:4]")
-    #    print(nii_img.header["pixdim"][1:4])
     mask_data_flatten= mask_img.flatten()
     num_pixel_gt_0=mask_data_flatten[np.where(mask_data_flatten>0)]
-    #    print(num_pixel_gt_0)
     return (resol * num_pixel_gt_0.size)/1000
 
 def slicenum_at_end(image):
@@ -198,10 +157,6 @@ def divideintozones_v1(filename_gray,filename_mask,filename_bet):
             covering_ventricle_image[zoneV_max_z+1:above_ventricle_image.shape[0],:,:]=0
             below_ventricle_image= sitk.GetArrayFromImage(subtracted_image)
             below_ventricle_image[zoneV_min_z:above_ventricle_image.shape[0],:,:]=0
-
-            # sulci_vol=calculate_volume(gray_image,sitk.GetArrayFromImage(subtracted_image))
-            # ventricle_vol=calculate_volume(gray_image,sitk.GetArrayFromImage(seg_explicit_thresholds))
-            # sulci_vol_above_vent=calculate_volume(gray_image,above_ventricle_image)
 
             above_ventricle_image_sitkimg=sitk.GetImageFromArray(above_ventricle_image)
             above_ventricle_image_sitkimg.CopyInformation(img_T1_bet)
