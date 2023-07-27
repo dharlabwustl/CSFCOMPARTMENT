@@ -1,0 +1,130 @@
+{
+  "name": "CSF_COMPARTMENTS",
+  "description": "Apply CSF_COMPARTMENTS",
+  "version": "1.0",
+  "schema-version": "1.0",
+  "image": "registry.nrg.wustl.edu/docker/nrg-repo/sharmaatul11/fsl502py369withpacksnltx:latest",
+  "type": "docker",
+  "working-directory": "/callfromgithub",
+  "command-line": " /callfromgithub/downloadcodefromgithub.sh #SESSION_ID# $XNAT_USER $XNAT_PASS https://github.com/dharlabwustl/CSFCOMPARTMENT.git 1  https://snipr.wustl.edu",
+  "override-entrypoint": true,
+  "mounts": [
+    {
+      "name": "out",
+      "writable": true,
+      "path": "/output"
+    },
+    {
+      "name": "in",
+      "writable": false,
+      "path": "/input"
+    },
+    {
+      "name": "ZIPFILEDIR",
+      "writable": true,
+      "path": "/ZIPFILEDIR"
+    },
+    {
+      "name": "software",
+      "writable": true,
+      "path": "/software"
+    },
+    {
+      "name": "NIFTIFILEDIR",
+      "writable": true,
+      "path": "/NIFTIFILEDIR"
+    },
+    {
+      "name": "DICOMFILEDIR",
+      "writable": true,
+      "path": "/DICOMFILEDIR"
+    },
+    {
+      "name": "working",
+      "writable": true,
+      "path": "/working"
+    },
+    {
+      "name": "workinginput",
+      "writable": true,
+      "path": "/workinginput"
+    },
+    {
+      "name": "workingoutput",
+      "writable": true,
+      "path": "/workingoutput"
+    },
+    {
+      "name": "outputinsidedocker",
+      "writable": true,
+      "path": "/outputinsidedocker"
+    }
+  ],
+  "environment-variables": {},
+  "ports": {},
+  "inputs": [
+    {
+      "name": "SESSION_ID",
+      "type": "string",
+      "required": true,
+      "select-values": []
+    },
+    {
+      "name": "PROJECT",
+      "type": "string",
+      "required": true,
+      "select-values": []
+    }
+  ],
+  "outputs": [],
+  "xnat": [
+    {
+      "name": "CSF_COMPARTMENTS",
+      "label": "CSF_COMPARTMENTS batch",
+      "description": "CSF_COMPARTMENTS",
+      "contexts": [
+        "xnat:imageSessionData"
+      ],
+      "external-inputs": [
+        {
+          "name": "session",
+          "description": "Input session",
+          "type": "Session",
+          "required": true,
+          "load-children": false
+        }
+      ],
+      "derived-inputs": [
+        {
+          "name": "project",
+          "type": "string",
+          "required": true,
+          "provides-value-for-command-input": "PROJECT",
+          "user-settable": false,
+          "load-children": true,
+          "derived-from-wrapper-input": "session",
+          "derived-from-xnat-object-property": "project-id",
+          "multiple": false
+        },
+        {
+          "name": "session-id",
+          "type": "string",
+          "required": true,
+          "provides-value-for-command-input": "SESSION_ID",
+          "user-settable": false,
+          "load-children": true,
+          "derived-from-wrapper-input": "session",
+          "derived-from-xnat-object-property": "id",
+          "multiple": false
+        }
+      ],
+      "output-handlers": []
+    }
+  ],
+  "reserve-memory": 8000,
+  "limit-memory": 16000,
+  "container-labels": {},
+  "generic-resources": {},
+  "ulimits": {},
+  "secrets": []
+}
