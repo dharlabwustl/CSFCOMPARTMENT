@@ -30,6 +30,9 @@ resource_dir="NIFTI_LOCATION"
 output_csvfile=${sessionID}_SCANSELECTION_METADATA.csv
 call_get_resourcefiles_metadata_saveascsv_args ${URI} ${resource_dir} ${working_dir} ${output_csvfile}
 dir_to_save=${working_dir}
+greyfile="NONE" ##'/media/atul/WDJan2022/WASHU_WORKS/PROJECTS/DOCKERIZE/CSFSEPERATION/TESTING_CSF_SEPERATION/Krak_003_09042014_0949_MOZG_6.0_H31s_levelset.nii.gz'
+betfile="NONE"  ##'/media/atul/WDJan2022/WASHU_WORKS/PROJECTS/DOCKERIZE/CSFSEPERATION/TESTING_CSF_SEPERATION/Krak_003_09042014_0949_MOZG_6.0_H31s_levelset_bet.nii.gz'
+csffile="NONE"  ##'/media/atul/WDJan2022/WASHU_WORKS/PROJECTS/DOCKERIZE/CSFSEPERATION/TESTING_CSF_SEPERATION/Krak_003_09042014_0949_MOZG_6.0_H31s_final_seg.nii.gz'
 while IFS=',' read -ra array; do
   #xx=0
   #
@@ -44,6 +47,7 @@ while IFS=',' read -ra array; do
   #    dir_to_save=args.stuff[3]
   call_download_a_singlefile_with_URIString_arguments=('call_download_a_singlefile_with_URIString' ${url} ${filename} ${dir_to_save})
   outputfiles_present=$(python3 download_with_session_ID.py "${call_download_a_singlefile_with_URIString_arguments[@]}")
+
   while IFS=',' read -ra array1; do
     #      echo "${array1[0]}"
     url1=${array1[0]}
@@ -54,9 +58,6 @@ while IFS=',' read -ra array; do
     #      filename1=$(basename ${url1})
     #  call_download_a_singlefile_with_URIString_arguments=('call_download_a_singlefile_with_URIString' ${url1} ${filename1} ${dir_to_save})
     #  outputfiles_present=$(python3 download_with_session_ID.py "${call_download_a_singlefile_with_URIString_arguments[@]}")
-    greyfile="NONE" ##'/media/atul/WDJan2022/WASHU_WORKS/PROJECTS/DOCKERIZE/CSFSEPERATION/TESTING_CSF_SEPERATION/Krak_003_09042014_0949_MOZG_6.0_H31s_levelset.nii.gz'
-    betfile="NONE"  ##'/media/atul/WDJan2022/WASHU_WORKS/PROJECTS/DOCKERIZE/CSFSEPERATION/TESTING_CSF_SEPERATION/Krak_003_09042014_0949_MOZG_6.0_H31s_levelset_bet.nii.gz'
-    csffile="NONE"  ##'/media/atul/WDJan2022/WASHU_WORKS/PROJECTS/DOCKERIZE/CSFSEPERATION/TESTING_CSF_SEPERATION/Krak_003_09042014_0949_MOZG_6.0_H31s_final_seg.nii.gz'
 
     while IFS=',' read -ra array2; do
 
@@ -89,15 +90,17 @@ while IFS=',' read -ra array; do
         echo "${csffile}"
       fi
     done < <(tail -n +2 "${working_dir}/${output_csvfile}")
-    if [[ -f "${greyfile}" ]] && [[ -f "${betfile}" ]] && [[ -f "${csffile}" ]]; then
-      call_csf_compartments_arguments=('call_csf_compartments' ${greyfile} ${csffile} ${betfile})
-      outputfiles_present=$(python3 /software/CSF_COMPARTMENT_GITHUB_July212023.py "${call_csf_compartments_arguments[@]}")
-    fi
 
-  done < <(tail -n +2 "${dir_to_save}/${filename}")
+  done \
+    < <(tail -n +2 "${dir_to_save}/${filename}")
 
 done \
   < <(tail -n +2 "${working_dir}/${output_csvfile}")
+
+if [[ -f "${greyfile}" ]] && [[ -f "${betfile}" ]] && [[ -f "${csffile}" ]]; then
+  call_csf_compartments_arguments=('call_csf_compartments' ${greyfile} ${csffile} ${betfile})
+  outputfiles_present=$(python3 /software/CSF_COMPARTMENT_GITHUB_July212023.py "${call_csf_compartments_arguments[@]}")
+fi
 ## single filename NECT, its CSF mask and other relevant files
 #rm /media/atul/WDJan2022/WASHU_WORKS/PROJECTS/DOCKERIZE/CSFSEPERATION/TESTING_CSF_SEPERATION/error.txt
 #greyfile='/workinginput/SAH_1_01052014_2003_2_resaved_levelset.nii.gz'
