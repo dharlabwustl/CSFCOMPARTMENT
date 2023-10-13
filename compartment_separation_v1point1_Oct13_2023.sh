@@ -96,18 +96,19 @@ while IFS=',' read -ra array; do
         filename2=$(basename ${url2})
         call_download_a_singlefile_with_URIString_arguments=('call_download_a_singlefile_with_URIString' ${url2} ${filename2} ${dir_to_save})
         outputfiles_present=$(python3 download_with_session_ID.py "${call_download_a_singlefile_with_URIString_arguments[@]}")
-        csffile=${dir_to_save}/${filename2}
-        echo "${csffile}"
+        csfboundingbox_file=${dir_to_save}/${filename2}
+        echo "${csfboundingbox_file}"
       fi
-    done < <(tail -n +2 "${working_dir}/${output_csvfile_1}")
 
+    done < <(tail -n +2 "${working_dir}/${output_csvfile_1}")
+  call_csf_compartments_arguments=('call_csf_compartments' ${greyfile} ${csffile} ${betfile} ${csfboundingbox_file})
+  outputfiles_present=$(python3 /software/CSF_COMPARTMENT_GITHUB_Oct13_2023.py "${call_csf_compartments_arguments[@]}")
   done < <(tail -n +2 "${dir_to_save}/${filename}")
 
 done \
   < <(tail -n +2 "${working_dir}/${output_csvfile}")
 
-#call_csf_compartments_arguments=('call_csf_compartments' ${greyfile} ${csffile} ${betfile})
-#outputfiles_present=$(python3 /software/CSF_COMPARTMENT_GITHUB_July212023.py "${call_csf_compartments_arguments[@]}")
+
 ##  echo ${outputfiles_present}
 ##fi
 #echo ${outputfiles_present}
