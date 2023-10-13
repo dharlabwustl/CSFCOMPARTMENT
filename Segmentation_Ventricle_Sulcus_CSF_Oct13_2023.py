@@ -101,6 +101,7 @@ def divideintozones_v1(filename_gray,filename_mask,filename_bet,filename_csf_bou
         reader.SetImageIO("NiftiImageIO")
         reader.SetFileName(file)
         filename_mask_img = reader.Execute()
+        img_T1_Copy=filename_mask_img #img_T1
         filename_mask_img_arr=sitk.GetArrayFromImage(filename_mask_img)
         filename_mask_img_arr[reader_csf_boundingbox_img_arr<1]=np.min(filename_mask_img_arr)
         filename_mask_img_arr_img=sitk.GetImageFromArray(filename_mask_img_arr)
@@ -110,7 +111,7 @@ def divideintozones_v1(filename_gray,filename_mask,filename_bet,filename_csf_bou
 
 
         #######################################
-        img_T1_Copy=img_T1
+        # img_T1_Copy=img_T1
         imagenparray=sitk.GetArrayFromImage(img_T1)
 
         if np.sum(imagenparray)>200:
