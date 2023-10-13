@@ -186,16 +186,16 @@ def divideintozones_v1(filename_gray,filename_mask,filename_bet,filename_csf_bou
 
 
             subtracted_image.CopyInformation( img_T1_bet)
-            sitk.WriteImage(subtracted_image, filename_gray.split(".nii")[0]+ "_sulci_total.nii.gz", True)
+            sitk.WriteImage(subtracted_image, filename_gray.split(".nii")[0]+ "_sulci_total_v1.nii.gz", True)
 
             seg_explicit_thresholds.CopyInformation( img_T1_bet)
-            sitk.WriteImage(seg_explicit_thresholds, filename_gray.split(".nii")[0]+ "_ventricle_total.nii.gz", True)
+            sitk.WriteImage(seg_explicit_thresholds, filename_gray.split(".nii")[0]+ "_ventricle_total_v1.nii.gz", True)
 
-            sitk.WriteImage(above_ventricle_image_sitkimg, filename_gray.split(".nii")[0]+ "_sulci_above_ventricle.nii.gz", True)
+            sitk.WriteImage(above_ventricle_image_sitkimg, filename_gray.split(".nii")[0]+ "_sulci_above_ventricle_v1.nii.gz", True)
 
-            sitk.WriteImage(below_ventricle_image_sitkimg, filename_gray.split(".nii")[0]+ "_sulci_below_ventricle.nii.gz", True)
+            sitk.WriteImage(below_ventricle_image_sitkimg, filename_gray.split(".nii")[0]+ "_sulci_below_ventricle_v1.nii.gz", True)
 
-            sitk.WriteImage(covering_ventricle_image_sitkimg, filename_gray.split(".nii")[0]+ "_sulci_at_ventricle.nii.gz", True)
+            sitk.WriteImage(covering_ventricle_image_sitkimg, filename_gray.split(".nii")[0]+ "_sulci_at_ventricle_v1.nii.gz", True)
 
             subprocess.call("echo " + "SUCCEEDED AT ::{}  > error.txt".format(inspect.stack()[0][3]) ,shell=True )
 
