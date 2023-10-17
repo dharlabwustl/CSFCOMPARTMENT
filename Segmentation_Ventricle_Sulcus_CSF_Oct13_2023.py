@@ -103,7 +103,10 @@ def divideintozones_v1(filename_gray,filename_mask,filename_bet,filename_csf_bou
         filename_mask_img = reader.Execute()
         img_T1_Copy=filename_mask_img #img_T1
         filename_mask_img_arr=sitk.GetArrayFromImage(filename_mask_img)
-        filename_mask_img_arr[reader_csf_boundingbox_img_arr<np.max(reader_csf_boundingbox_img_arr)]=np.min(filename_mask_img_arr)
+        for slice_num in range(filename_mask_img_arr.shape[0]):
+            filename_mask_img_arr[slice_num,:,:][reader_csf_boundingbox_img_arr[slice_num,:,:]<np.max(reader_csf_boundingbox_img_arr[slice_num,:,:])]=np.min(filename_mask_img_arr)
+
+        # filename_mask_img_arr[reader_csf_boundingbox_img_arr<np.max(reader_csf_boundingbox_img_arr)]=np.min(filename_mask_img_arr)
         filename_mask_img_arr_img=sitk.GetImageFromArray(filename_mask_img_arr)
         filename_mask_img_arr_img.CopyInformation(filename_mask_img)
         sitk.WriteImage(filename_mask_img_arr_img, filename_mask.split(".nii")[0]+ "ventricle_inside_BB.nii.gz", True)
