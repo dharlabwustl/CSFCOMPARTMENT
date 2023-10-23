@@ -97,15 +97,15 @@ while IFS=',' read -ra array; do
     echo ${outputfiles_present}
     URI_1=${url2%/resource*}
     resource_dirname="MASKS"
-    for file_name in ${dir_to_save}/*.nii.gz; do
-      echo ${file_name}
-      if [[ ${file_name} == *"ventricle"* ]] || [[ ${file_name} == *"sulci"* ]]; then
-        call_uploadsinglefile_with_URI_arguments=('call_uploadsinglefile_with_URI' ${URI_1} ${file_name} ${resource_dirname})
-        outputfiles_present=$(python3 /software/download_with_session_ID.py "${call_uploadsinglefile_with_URI_arguments[@]}")
-        echo ${outputfiles_present}
-
-      fi
-    done
+#    for file_name in ${dir_to_save}/*.nii.gz; do
+#      echo ${file_name}
+#      if [[ ${file_name} == *"ventricle"* ]] || [[ ${file_name} == *"sulci"* ]]; then
+#        call_uploadsinglefile_with_URI_arguments=('call_uploadsinglefile_with_URI' ${URI_1} ${file_name} ${resource_dirname})
+#        outputfiles_present=$(python3 /software/download_with_session_ID.py "${call_uploadsinglefile_with_URI_arguments[@]}")
+#        echo ${outputfiles_present}
+#
+#      fi
+#    done
   done < <(tail -n +2 "${dir_to_save}/${filename}")
 
 done \
