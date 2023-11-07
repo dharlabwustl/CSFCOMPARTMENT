@@ -1383,6 +1383,13 @@ def call_download_a_singlefile_with_URIString(args):
     dir_to_save=args.stuff[3]
     download_a_singlefile_with_URIString(url,filename,dir_to_save)
     return
+def delete_a_singlefile_with_URIString(args):
+    url=args.stuff[1]
+    xnatSession = XnatSession(username=XNAT_USER, password=XNAT_PASS, host=XNAT_HOST)
+    xnatSession.renew_httpsession()
+    response = xnatSession.httpsess.get(xnatSession.host +url) #/data/projects/ICH/resources/179772/files/ICH_CTSESSIONS_202305170753.csv") #
+    return response
+
 def download_a_singlefile_with_URIString(url,filename,dir_to_save):
     print("url::{}::filename::{}::dir_to_save::{}".format(url,filename,dir_to_save))
     xnatSession = XnatSession(username=XNAT_USER, password=XNAT_PASS, host=XNAT_HOST)
@@ -1659,12 +1666,10 @@ def main():
         return_value=call_download_all_csv_files_givena_URIdf(args)
     if name_of_the_function == "call_divide_sessionlist_done_vs_undone":
         return_value=call_divide_sessionlist_done_vs_undone(args)
-
     if name_of_the_function == "call_download_files_with_mastersessionlist":
         return_value=call_download_files_with_mastersessionlist(args)
     if name_of_the_function=="call_combinecsvs_inafileoflist":
         return_value=call_combinecsvs_inafileoflist(args)
-
     if name_of_the_function=="call_uploadfilesfromlistinacsv":
         return_value=call_uploadfilesfromlistinacsv(args)
     if name_of_the_function=="call_get_resourcefiles_metadata_saveascsv_args":
@@ -1673,8 +1678,12 @@ def main():
         return_value=call_uploadsinglefile_with_URI(args)
     if name_of_the_function=="call_download_a_singlefile_with_URIString":
         return_value=call_download_a_singlefile_with_URIString(args)
-        # print(return_value) call_get_resourcefiles_metadata_saveascsv
-        # return  call_concatenate_twocsv_list
     print(return_value)
+    if "call" not in name_of_the_function:
+        return_value=0
+        globals()[args.stuff[0]](args)
+        return return_value
+    return return_value
 if __name__ == '__main__':
     main()
+

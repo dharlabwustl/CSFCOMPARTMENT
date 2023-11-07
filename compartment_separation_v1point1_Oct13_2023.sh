@@ -102,7 +102,7 @@ while IFS=',' read -ra array; do
 
     done < <(tail -n +2 "${working_dir}/${output_csvfile_1}")
   call_csf_compartments_arguments=('multiply_2files'  ${csffile} ${csfboundingbox_file} ${csffile})
-  outputfiles_present=$(python3 /software/CSF_COMPARTMENT_GITHUB_Oct13_2023.py "${call_csf_compartments_arguments[@]}")
+  outputfiles_present=$(python3 /software/utilities_simple_compartments.py "${call_csf_compartments_arguments[@]}")
   call_csf_compartments_arguments=('call_csf_compartments' ${greyfile} ${csffile} ${betfile} ${csfboundingbox_file})
   outputfiles_present=$(python3 /software/CSF_COMPARTMENT_GITHUB_Oct13_2023.py "${call_csf_compartments_arguments[@]}")
   done < <(tail -n +2 "${dir_to_save}/${filename}")
