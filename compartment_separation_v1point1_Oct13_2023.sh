@@ -90,7 +90,7 @@ while IFS=',' read -ra array; do
         echo "${csffile}"
       fi
 
-      if [[ ${url2} == *"_T_APPLIED_warped_moving_label_mirror_bounding_box_inv_r_t.nii.gz"* ]]; then #  || [[ ${url2} == *"_levelset_bet"* ]]  || [[ ${url2} == *"csf_unet"* ]]  ; then ##[[ $string == *"My long"* ]]; then
+      if [[ ${url2} == *"_vertical_bounding_box_512x512.nii.gz"* ]]; then #  || [[ ${url2} == *"_levelset_bet"* ]]  || [[ ${url2} == *"csf_unet"* ]]  ; then ##[[ $string == *"My long"* ]]; then
         echo "It's there!"
         echo "${array2[6]}"
         filename2=$(basename ${url2})
@@ -101,6 +101,8 @@ while IFS=',' read -ra array; do
       fi
 
     done < <(tail -n +2 "${working_dir}/${output_csvfile_1}")
+  call_csf_compartments_arguments=('multiply_2files'  ${csffile} ${csfboundingbox_file} ${csffile})
+  outputfiles_present=$(python3 /software/CSF_COMPARTMENT_GITHUB_Oct13_2023.py "${call_csf_compartments_arguments[@]}")
   call_csf_compartments_arguments=('call_csf_compartments' ${greyfile} ${csffile} ${betfile} ${csfboundingbox_file})
   outputfiles_present=$(python3 /software/CSF_COMPARTMENT_GITHUB_Oct13_2023.py "${call_csf_compartments_arguments[@]}")
   done < <(tail -n +2 "${dir_to_save}/${filename}")
@@ -109,20 +111,20 @@ done \
   < <(tail -n +2 "${working_dir}/${output_csvfile}")
 
 
-##  echo ${outputfiles_present}
-##fi
-#echo ${outputfiles_present}
-#URI_1=${url2%/resource*}
-#resource_dirname="MASKS"
-#for file_name in ${dir_to_save}/*.nii.gz; do
-#  echo ${file_name}
-#  if [[ ${file_name} == *"ventricle"* ]] || [[ ${file_name} == *"sulci"* ]]; then
-#    call_uploadsinglefile_with_URI_arguments=('call_uploadsinglefile_with_URI' ${URI_1} ${file_name} ${resource_dirname})
-#    outputfiles_present=$(python3 /software/download_with_session_ID.py "${call_uploadsinglefile_with_URI_arguments[@]}")
-#    echo ${outputfiles_present}
-#
-#  fi
-#done
+#  echo ${outputfiles_present}
+#fi
+echo ${outputfiles_present}
+URI_1=${url2%/resource*}
+resource_dirname="MASKS"
+for file_name in ${dir_to_save}/*.nii.gz; do
+  echo ${file_name}
+  if [[ ${file_name} == *"ventricle"* ]] || [[ ${file_name} == *"sulci"* ]]; then
+    call_uploadsinglefile_with_URI_arguments=('call_uploadsinglefile_with_URI' ${URI_1} ${file_name} ${resource_dirname})
+    outputfiles_present=$(python3 /software/download_with_session_ID.py "${call_uploadsinglefile_with_URI_arguments[@]}")
+    echo ${outputfiles_present}
+
+  fi
+done
 ## single filename NECT, its CSF mask and other relevant files
 #rm /media/atul/WDJan2022/WASHU_WORKS/PROJECTS/DOCKERIZE/CSFSEPERATION/TESTING_CSF_SEPERATION/error.txt
 #greyfile='/workinginput/SAH_1_01052014_2003_2_resaved_levelset.nii.gz'

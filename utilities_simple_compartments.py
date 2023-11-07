@@ -6,7 +6,7 @@ Created on Timporthu Mar 12 15:40:53 2020
 @author: atul
 """
 import subprocess,os,sys,glob,datetime
-import os,csv
+import os,csv,argparse
 import glob,re
 import pandas as pd
 import numpy as np
@@ -507,15 +507,15 @@ def print_number_slices(inputdirectory):
     
 def contrast_stretch(img,threshold_id):
     if threshold_id==1:
-        ct_image=exposure.rescale_intensity(img.get_fdata() , in_range=(0, 200))
+        ct_image=exposure.rescale_intensity(img.get_fdata() , in_range=(20, 60))
     if threshold_id==2:
-        ct_image=exposure.rescale_intensity(img.get_fdata() , in_range=(1000, 1200))        
+        ct_image=exposure.rescale_intensity(img.get_fdata() , in_range=(1020, 1060))
     return ct_image
 def contrast_stretch_np(img,threshold_id):
     if threshold_id==1:
-        ct_image=exposure.rescale_intensity(img , in_range=(0, 200))
+        ct_image=exposure.rescale_intensity(img , in_range=(20, 60))
     if threshold_id==2:
-        ct_image=exposure.rescale_intensity(img, in_range=(1000, 1200))        
+        ct_image=exposure.rescale_intensity(img, in_range=(1020, 1060))
     return ct_image
 def saveslicesofnumpy3D(img_gray_data,savefilename="",savetodir=""):
 ##    filename_nib=nib.load(filename)
@@ -612,7 +612,16 @@ def send_email_sh():
         print('Email sent!')
     except:
         print('Something went wrong...')   
-    
+
+def multiply_2files(args):
+    file1=args.stuff[1]
+    file2=args.stuff[2]
+    outputfilname=args.stuff[3]
+    file1_nib=nib.load(file1)
+    file1xfile1_data=nib.load(file2).get_fdata()*file1_nib.get_fdata()
+    array_mask = nib.Nifti1Image(file1xfile1_data, affine=file1_nib.affine, header=file1_nib.header)
+    nib.save(array_mask, outputfilname)
+
     
 def heatmap_intensities():
     image_file="/media/atul/AC0095E80095BA32/WASHU_WORK/PROJECTS/NetWaterUptake/DATA/FU_CTs_Masks/CTs/WUSTL_660_05062018_1027_gray.nii.gz"
@@ -736,9 +745,24 @@ def heatmap_intensities():
 #        imagename3=  os.path.join(SLICE_OUTPUT_DIRECTORY, imagefilename+ str(i)+".png" )
 #        
 #        cv2.imwrite(imagename3,slice_3_layer_original_colored)
-    
-    
-    
+
+
+def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument('stuff', nargs='+')
+    args = parser.parse_args()
+    name_of_the_function=args.stuff[0]
+    return_value=0
+    if "call" not in name_of_the_function:
+        return_value=0
+        globals()[args.stuff[0]](args)
+        return return_value
+
+
+
+    return return_value
+if __name__ == '__main__':
+    main()
     
     
     
