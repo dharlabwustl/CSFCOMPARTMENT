@@ -115,7 +115,7 @@ while IFS=',' read -ra array; do
     #fi
     echo ${outputfiles_present}
     URI_1=${url2%/resource*}
-    filename_prefix=filename=$(basename ${url}) #${url2%/resource*}
+    filename_prefix=$(basename ${url}) #${url2%/resource*} #filename=
     filename_prefix=${filename_prefix%_NIFTILOCATION*}
     resource_dirname="MASKS"
     for file_name in ${dir_to_save}/${filename_prefix}*.nii.gz; do
