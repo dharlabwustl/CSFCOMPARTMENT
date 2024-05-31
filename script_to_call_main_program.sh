@@ -21,7 +21,11 @@ then
 echo " I AM IN TYPE_OF_PROGRAM == ${TYPE_OF_PROGRAM}"
 /software/compartment_separation_v1point1_Oct13_2023.sh  $SESSION_ID $XNAT_USER $XNAT_PASS $XNAT_HOST
 fi
-
+if [[ ${TYPE_OF_PROGRAM} == 'PROJECT_LEVEL_CSF_COMPARTMENT' ]] ;
+then
+echo " I AM IN TYPE_OF_PROGRAM == ${TYPE_OF_PROGRAM}"
+/software/project_level_csf_compartment.sh  $SESSION_ID $XNAT_USER $XNAT_PASS $XNAT_HOST
+fi
 #
 #if [[ ${TYPE_OF_PROGRAM} == 2 ]] ;
 #then
