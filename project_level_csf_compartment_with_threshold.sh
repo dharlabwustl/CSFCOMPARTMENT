@@ -5,9 +5,6 @@ export XNAT_HOST=${4}
 project_ID=${1}
 counter_start=${5}
 counter_end=${6}
-zoneV_min_z=${7}
-zoneV_max_z=${8}
-echo ::$XNAT_USER::$XNAT_PASS::$XNAT_HOST::${zoneV_min_z}::${zoneV_max_z} 
 working_dir=/workinginput
 output_directory=/workingoutput
 final_output_directory=/outputinsidedocker
@@ -54,19 +51,21 @@ count=0
     SESSION_NAME=${array[5]} 
 
     # echo SESSION_NAME::${SESSION_NAME}
-    # directory_to_create_destroy
-echo $SESSION_ID::$XNAT_USER::$XNAT_PASS::$XNAT_HOST::${zoneV_min_z}::${zoneV_max_z} 
-    echo zoneV_max_z::${zoneV_max_z} 
-    # /software/compartment_separation_with_vent_boundgiven.sh $SESSION_ID $XNAT_USER $XNAT_PASS $XNAT_HOST ${zoneV_min_z} ${zoneV_max_z} /input /output
- 
+    directory_to_create_destroy
+    /software/compartment_separation_with_vent_boundgiven.sh $SESSION_ID $XNAT_USER $XNAT_PASS $XNAT_HOST /input /output
+    # echo snipr_step::${snipr_step}
+    # scan_selection ${SESSION_ID}  
 
     # echo "$SESSION_ID,$SESSION_NAME" >> ${list_accomplished}
   fi 
     count=$((count+1))
-    # echo "THIS COUNT NUMBER IS "::${count}::${counter_end}
+    echo "THIS COUNT NUMBER IS "::${count}::${counter_end}
 #     fi
     if [ ${count} -ge ${counter_end} ]; then
     break
     fi
 done < <(tail -n +2 "${sessions_list}")
+
+count=0
+
 
