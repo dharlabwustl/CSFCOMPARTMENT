@@ -50,16 +50,17 @@ count=0
     SESSION_ID=${array[0]}  #SNIPR02_E10218 ##SNIPR02_E10112 #
     SESSION_NAME=${array[5]} 
 
-    # echo SESSION_NAME::${SESSION_NAME}
+    echo SESSION_NAME::${SESSION_NAME}
     directory_to_create_destroy
-    /software/compartment_separation_with_vent_boundgiven.sh $SESSION_ID $XNAT_USER $XNAT_PASS $XNAT_HOST /input /output
+    echo $SESSION_ID $XNAT_USER $XNAT_PASS $XNAT_HOST /input /output
+    # /software/compartment_separation_with_vent_boundgiven.sh $SESSION_ID $XNAT_USER $XNAT_PASS $XNAT_HOST /input /output
     # echo snipr_step::${snipr_step}
     # scan_selection ${SESSION_ID}  
 
     # echo "$SESSION_ID,$SESSION_NAME" >> ${list_accomplished}
   fi 
     count=$((count+1))
-    echo "THIS COUNT NUMBER IS "::${count}::${counter_end}
+    # echo "THIS COUNT NUMBER IS "::${count}::${counter_end}
 #     fi
     if [ ${count} -ge ${counter_end} ]; then
     break
