@@ -43,7 +43,7 @@ then
 if [[ ${SUBTYPE_OF_PROGRAM} == 'PROJECT_LEVEL_CSF_COMPARTMENT' ]] ;
 then
 echo " I AM IN SUBTYPE_OF_PROGRAM == ${SUBTYPE_OF_PROGRAM}"
-# /software/project_level_csf_compartment.sh  $SESSION_ID $XNAT_USER $XNAT_PASS "${ADDR[0]}" "${ADDR[2]}" "${ADDR[3]}"   "${ADDR[4]}" "${ADDR[5]}"  
+/software/project_level_csf_compartment_with_threshold.sh  $SESSION_ID $XNAT_USER $XNAT_PASS "${ADDR[0]}" "${ADDR[2]}" "${ADDR[3]}"   "${ADDR[4]}" "${ADDR[5]}"  
 fi
 fi
 #
