@@ -5,6 +5,9 @@ export XNAT_HOST=${4}
 sessionID=${1}
 working_dir=/workinginput
 output_directory=/workingoutput
+zoneV_min_z=${5} 
+zoneV_max_z=${6}
+
 
 final_output_directory=/outputinsidedocker
 function call_get_resourcefiles_metadata_saveascsv_args() {
