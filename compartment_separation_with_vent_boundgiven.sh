@@ -2,6 +2,8 @@
 export XNAT_USER=${2}
 export XNAT_PASS=${3}
 export XNAT_HOST=${4}
+zoneV_min_z=${5}
+zoneV_max_z=${6}
 sessionID=${1}
 working_dir=/workinginput
 output_directory=/workingoutput
@@ -109,7 +111,7 @@ while IFS=',' read -ra array; do
         echo "${csffile}"
       fi
     done < <(tail -n +2 "${working_dir}/${output_csvfile_1}")
-    call_csf_compartments_arguments=('call_csf_compartments' ${greyfile} ${csffile} ${betfile})
+    call_csf_compartments_arguments=('call_csf_compartments_ventbound_given' ${greyfile} ${csffile} ${betfile} ${zoneV_min_z} ${zoneV_max_z} )
     outputfiles_present=$(python3 /software/CSF_COMPARTMENT_GITHUB_July212023.py "${call_csf_compartments_arguments[@]}")
     #  echo ${outputfiles_present}
     #fi
