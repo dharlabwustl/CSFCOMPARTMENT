@@ -8,7 +8,7 @@ output_directory=/workingoutput
 zoneV_min_z=${5} 
 zoneV_max_z=${6}
 
-
+echo $zoneV_min_z::$zoneV_max_z
 final_output_directory=/outputinsidedocker
 function call_get_resourcefiles_metadata_saveascsv_args() {
 
