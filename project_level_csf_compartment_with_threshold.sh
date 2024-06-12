@@ -47,7 +47,7 @@ echo $XNAT_USER $XNAT_PASS $XNAT_HOST ${counter_start} ${counter_end} ATUL
 count=0
   while IFS=',' read -ra array; do
   echo SESSION_ID::${array[0]}::${counter_start}
-  if [ $((count)) -ge $((counter_start)) ]; then
+  if [[ $((count)) -ge $((counter_start)) ]]; then
     
     SESSION_ID=${array[0]}  #SNIPR02_E10218 ##SNIPR02_E10112 #
     SESSION_NAME=${array[5]} 
