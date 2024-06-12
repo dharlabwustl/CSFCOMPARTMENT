@@ -7,6 +7,7 @@ counter_start=${5}
 counter_end=${6}
 zoneV_min_z=${7}
 zoneV_max_z=${8}
+echo ::$XNAT_USER::$XNAT_PASS::$XNAT_HOST::${zoneV_min_z}::${zoneV_max_z} 
 working_dir=/workinginput
 output_directory=/workingoutput
 final_output_directory=/outputinsidedocker
