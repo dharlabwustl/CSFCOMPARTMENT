@@ -5,6 +5,9 @@ export XNAT_HOST=${4}
 project_ID=${1}
 counter_start=${5}
 counter_end=${6}
+zoneV_min_z=${7}
+zoneV_max_z=${8}
+echo ::$XNAT_USER::$XNAT_PASS::$XNAT_HOST::${zoneV_min_z}::${zoneV_max_z} 
 working_dir=/workinginput
 output_directory=/workingoutput
 final_output_directory=/outputinsidedocker
@@ -44,7 +47,6 @@ sessions_list=${software}/session.csv
 curl -u $XNAT_USER:$XNAT_PASS -X GET $XNAT_HOST/data/projects/${project_ID}'/experiments/?xsiType=xnat:ctSessionData&format=csv' > ${sessions_list}
 ######################################
 count=0
-echo "project_ID=${1} counter_start=${5} counter_end=${6}"
   while IFS=',' read -ra array; do
   if [ ${count} -ge ${counter_start} ]; then
     echo SESSION_ID::${array[0]}
@@ -52,10 +54,11 @@ echo "project_ID=${1} counter_start=${5} counter_end=${6}"
     SESSION_NAME=${array[5]} 
 
     # echo SESSION_NAME::${SESSION_NAME}
-    # directory_to_create_destroy
-    # /software/scan_selection_May18_2023.sh $SESSION_ID $XNAT_USER $XNAT_PASS $XNAT_HOST /input /output
-    # echo snipr_step::${snipr_step}
-    # scan_selection ${SESSION_ID}  
+    directory_to_create_destroy
+echo $SESSION_ID::$XNAT_USER::$XNAT_PASS::$XNAT_HOST::${zoneV_min_z}::${zoneV_max_z} 
+    echo zoneV_max_z::${zoneV_max_z} 
+    /software/compartment_separation_with_vent_boundgiven.sh $SESSION_ID $XNAT_USER $XNAT_PASS $XNAT_HOST ${zoneV_min_z} ${zoneV_max_z} /input /output
+ 
 
     # echo "$SESSION_ID,$SESSION_NAME" >> ${list_accomplished}
   fi 
@@ -66,6 +69,4 @@ echo "project_ID=${1} counter_start=${5} counter_end=${6}"
     break
     fi
 done < <(tail -n +2 "${sessions_list}")
-
-
 
