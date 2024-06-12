@@ -43,7 +43,7 @@ directory_to_create_destroy
 sessions_list=${software}/session.csv 
 curl -u $XNAT_USER:$XNAT_PASS -X GET $XNAT_HOST/data/projects/${project_ID}'/experiments/?xsiType=xnat:ctSessionData&format=csv' > ${sessions_list}
 ######################################
-echo $XNAT_USER $XNAT_PASS $XNAT_HOST ${counter_start} ${counter_end} /input /output
+echo $XNAT_USER $XNAT_PASS $XNAT_HOST ${counter_start} ${counter_end} ATUL
 count=0
   while IFS=',' read -ra array; do
   if [ ${count} -ge ${counter_start} ]; then
