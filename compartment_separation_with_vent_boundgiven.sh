@@ -1,4 +1,5 @@
 #!/bin/bash
+echo " I AM AT COMPARTMENT_SEPARATION_WITH_VENT_BOUNDGIVEN.sh"
 export XNAT_USER=${2}
 export XNAT_PASS=${3}
 export XNAT_HOST=${4}
