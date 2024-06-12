@@ -46,8 +46,9 @@ curl -u $XNAT_USER:$XNAT_PASS -X GET $XNAT_HOST/data/projects/${project_ID}'/exp
 echo $XNAT_USER $XNAT_PASS $XNAT_HOST ${counter_start} ${counter_end} ATUL
 count=0
   while IFS=',' read -ra array; do
+  echo SESSION_ID::${array[0]}
   if [ ${count} -ge ${counter_start} ]; then
-    echo SESSION_ID::${array[0]}
+    
     SESSION_ID=${array[0]}  #SNIPR02_E10218 ##SNIPR02_E10112 #
     SESSION_NAME=${array[5]} 
 
