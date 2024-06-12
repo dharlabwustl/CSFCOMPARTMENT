@@ -54,9 +54,10 @@ count=0
 
     # echo SESSION_NAME::${SESSION_NAME}
     directory_to_create_destroy
+echo zoneV_min_z::${zoneV_min_z}
+    echo zoneV_max_z::${zoneV_max_z} 
     /software/compartment_separation_with_vent_boundgiven.sh $SESSION_ID $XNAT_USER $XNAT_PASS $XNAT_HOST ${zoneV_min_z} ${zoneV_max_z} /input /output
-    # echo snipr_step::${snipr_step}
-    # scan_selection ${SESSION_ID}  
+ 
 
     # echo "$SESSION_ID,$SESSION_NAME" >> ${list_accomplished}
   fi 
