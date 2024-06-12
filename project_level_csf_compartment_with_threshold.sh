@@ -44,6 +44,7 @@ sessions_list=${software}/session.csv
 curl -u $XNAT_USER:$XNAT_PASS -X GET $XNAT_HOST/data/projects/${project_ID}'/experiments/?xsiType=xnat:ctSessionData&format=csv' > ${sessions_list}
 ######################################
 count=0
+echo "project_ID=${1} counter_start=${5} counter_end=${6}"
   while IFS=',' read -ra array; do
   if [ ${count} -ge ${counter_start} ]; then
     echo SESSION_ID::${array[0]}
