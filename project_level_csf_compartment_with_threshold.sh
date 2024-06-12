@@ -54,10 +54,10 @@ count=0
     SESSION_NAME=${array[5]} 
 
     # echo SESSION_NAME::${SESSION_NAME}
-    directory_to_create_destroy
+    # directory_to_create_destroy
 echo $SESSION_ID::$XNAT_USER::$XNAT_PASS::$XNAT_HOST::${zoneV_min_z}::${zoneV_max_z} 
     echo zoneV_max_z::${zoneV_max_z} 
-    /software/compartment_separation_with_vent_boundgiven.sh $SESSION_ID $XNAT_USER $XNAT_PASS $XNAT_HOST ${zoneV_min_z} ${zoneV_max_z} /input /output
+    # /software/compartment_separation_with_vent_boundgiven.sh $SESSION_ID $XNAT_USER $XNAT_PASS $XNAT_HOST ${zoneV_min_z} ${zoneV_max_z} /input /output
  
 
     # echo "$SESSION_ID,$SESSION_NAME" >> ${list_accomplished}
