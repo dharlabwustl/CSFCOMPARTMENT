@@ -68,6 +68,6 @@ count=0
     fi
 done < <(tail -n +2 "${sessions_list}")
 
-count=0
+
 
 
