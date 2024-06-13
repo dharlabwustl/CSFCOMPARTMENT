@@ -81,17 +81,21 @@ URI=/data/projects/${project_ID}
 
 resource_dir="INCOMPLETE"
 output_csvfile=${project_ID}_INCOMPLETE_METADATA.csv
-echo ${URI} ${resource_dir} ${working_dir} ${output_csvfile}
-call_get_resourcefiles_metadata_saveascsv_args ${URI} ${resource_dir} ${working_dir} ${output_csvfile}
-URI_COL_NUM=$(get_column_number ${working_dir}/$output_csvfile URI)
-CSV_FILE=${working_dir}/${output_csvfile}
+echo ${URI} ${resource_dir} ${software} ${output_csvfile}
+call_get_resourcefiles_metadata_saveascsv_args ${URI} ${resource_dir} ${software} ${output_csvfile}
+URI_COL_NUM=$(get_column_number ${software}/$output_csvfile URI)
+CSV_FILE=${software}/${output_csvfile}
 COLUMN_NUMBER=${URI_COL_NUM}
 
 # Extract the second row and get the 4th element
-element=$(head -n 2 "$CSV_FILE" | tail -n 1 | cut -d ',' -f "$COLUMN_NUMBER")
-
+incomplete_file_uri=$(head -n 2 "$CSV_FILE" | tail -n 1 | cut -d ',' -f "$COLUMN_NUMBER")
+echo "Element at column $COLUMN_NUMBER in the second row: $incomplete_file_uri"
+filename=$(basename ${incomplete_file_uri})
+dir_to_save=${software}
+call_download_a_singlefile_with_URIString_arguments=('call_download_a_singlefile_with_URIString' ${incomplete_file_uri} ${filename} ${dir_to_save})
+outputfiles_present=$(python3 download_with_session_ID.py "${call_download_a_singlefile_with_URIString_arguments[@]}")
 # Print the element
-echo "Element at column $COLUMN_NUMBER in the second row: $element"
+
 #
 # ##############################
 # # # Get the header row and split it into columns
