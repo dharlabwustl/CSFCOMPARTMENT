@@ -227,49 +227,50 @@ def divideintozones_v1_with_vent_bound(filename_gray,filename_mask,filename_bet,
             reader1.SetImageIO("NiftiImageIO")
             reader1.SetFileName(file1)
             img_T1_bet = reader1.Execute();
-            cc1 = sitk.ConnectedComponent(img_T1_bet>0)
-            stats1 = sitk.LabelIntensityStatisticsImageFilter()
-            stats1.Execute(cc1,img_T1_bet)
-    #
-            cc = sitk.ConnectedComponent(img_T1_255>0)
-            stats = sitk.LabelIntensityStatisticsImageFilter()
-            stats.Execute(cc,img_T1)
+    #         cc1 = sitk.ConnectedComponent(img_T1_bet>0)
+    #         stats1 = sitk.LabelIntensityStatisticsImageFilter()
+    #         stats1.Execute(cc1,img_T1_bet)
+    # #
+    #         cc = sitk.ConnectedComponent(img_T1_255>0)
+    #         stats = sitk.LabelIntensityStatisticsImageFilter()
+    #         stats.Execute(cc,img_T1)
 
-            maxsize_comp_1=0
-            id_of_maxsize_comp_1=0
+    #         maxsize_comp_1=0
+    #         id_of_maxsize_comp_1=0
 
-            for l in range(len(stats1.GetLabels())):
-                if stats1.GetPhysicalSize(stats1.GetLabels()[l])>maxsize_comp_1:
-                    maxsize_comp_1=stats1.GetPhysicalSize(stats1.GetLabels()[l])
+    #         for l in range(len(stats1.GetLabels())):
+    #             if stats1.GetPhysicalSize(stats1.GetLabels()[l])>maxsize_comp_1:
+    #                 maxsize_comp_1=stats1.GetPhysicalSize(stats1.GetLabels()[l])
 
-                    id_of_maxsize_comp_1=l
-            csf_ids=[]
-            for l in range(len(stats.GetLabels())):
+    #                 id_of_maxsize_comp_1=l
+    #         csf_ids=[]
+    #         for l in range(len(stats.GetLabels())):
 
-                csf_ids.append([l,stats.GetPhysicalSize(stats.GetLabels()[l])])
-            csf_ids.sort(key = sortSecond, reverse = True)
-            # subprocess.call("echo " + "SUCCEEDED AT ::{}  > error.txt".format(inspect.stack()[0][3]) ,shell=True )
-            first_seg_centroid=np.array(stats.GetCentroid(stats.GetLabels()[csf_ids[0][0]]))
-            second_seg_centroid=np.array(stats.GetCentroid(stats.GetLabels()[csf_ids[1][0]]))
-            bet_centroid=np.array(stats.GetCentroid(stats.GetLabels()[id_of_maxsize_comp_1]))
-            first2bet_centroid=np.linalg.norm(first_seg_centroid - bet_centroid)
-            second2bet_centroid=np.linalg.norm(second_seg_centroid - bet_centroid)
-            if first2bet_centroid< second2bet_centroid:
-                id_of_maxsize_comp=csf_ids[0][0]
+    #             csf_ids.append([l,stats.GetPhysicalSize(stats.GetLabels()[l])])
+    #         csf_ids.sort(key = sortSecond, reverse = True)
+    #         # subprocess.call("echo " + "SUCCEEDED AT ::{}  > error.txt".format(inspect.stack()[0][3]) ,shell=True )
+    #         first_seg_centroid=np.array(stats.GetCentroid(stats.GetLabels()[csf_ids[0][0]]))
+    #         second_seg_centroid=np.array(stats.GetCentroid(stats.GetLabels()[csf_ids[1][0]]))
+    #         bet_centroid=np.array(stats.GetCentroid(stats.GetLabels()[id_of_maxsize_comp_1]))
+    #         first2bet_centroid=np.linalg.norm(first_seg_centroid - bet_centroid)
+    #         second2bet_centroid=np.linalg.norm(second_seg_centroid - bet_centroid)
+    #         if first2bet_centroid< second2bet_centroid:
+    #             id_of_maxsize_comp=csf_ids[0][0]
 
-            else:
-                if stats.GetPhysicalSize(stats.GetLabels()[csf_ids[1][0]]) > 10000:
-                    id_of_maxsize_comp=csf_ids[1][0]
+    #         else:
+    #             if stats.GetPhysicalSize(stats.GetLabels()[csf_ids[1][0]]) > 10000:
+    #                 id_of_maxsize_comp=csf_ids[1][0]
 
-                else:
-                    id_of_maxsize_comp=csf_ids[0][0]
+    #             else:
+    #                 id_of_maxsize_comp=csf_ids[0][0]
 
-            initial_seed_point_indexes=[stats.GetMinimumIndex(stats.GetLabels()[id_of_maxsize_comp])]
-            seg_explicit_thresholds = sitk.ConnectedThreshold(img_T1, seedList=initial_seed_point_indexes, lower=100, upper=255)
+    #         initial_seed_point_indexes=[stats.GetMinimumIndex(stats.GetLabels()[id_of_maxsize_comp])]
+    #         seg_explicit_thresholds = sitk.ConnectedThreshold(img_T1, seedList=initial_seed_point_indexes, lower=100, upper=255)
 
             # zoneV_min_z,zoneV_max_z=get_ventricles_range(sitk.GetArrayFromImage(seg_explicit_thresholds))
-            subtracted_image=subtract_binary_1(sitk.GetArrayFromImage(img_T1_Copy),sitk.GetArrayFromImage(seg_explicit_thresholds)*255)
-            subtracted_image=sitk.GetImageFromArray(subtracted_image)
+            # subtracted_image=subtract_binary_1(sitk.GetArrayFromImage(img_T1_Copy),sitk.GetArrayFromImage(seg_explicit_thresholds)*255)
+            # subtracted_image=sitk.GetImageFromArray(subtracted_image)
+            subtracted_image=img_T1_Copy
             above_ventricle_image= sitk.GetArrayFromImage(subtracted_image)
             above_ventricle_image[0:zoneV_max_z+1,:,:]=0
             covering_ventricle_image= sitk.GetArrayFromImage(subtracted_image)
