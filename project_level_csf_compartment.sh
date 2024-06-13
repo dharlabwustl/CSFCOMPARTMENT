@@ -109,7 +109,7 @@ fi
 value2=3
 if (( $(echo "$value1 < $value2" | bc -l) )); then
     echo "$value1 is less than $value2"
-    echo ${array[${SESSION_ID_COL_NUM}]}
+    echo ${array2[${SESSION_ID_COL_NUM}]}
 else
     echo "$value1 is not less than $value2"
 fi
