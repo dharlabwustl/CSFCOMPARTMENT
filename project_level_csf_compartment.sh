@@ -94,6 +94,13 @@ filename=$(basename ${incomplete_file_uri})
 dir_to_save=${software}
 call_download_a_singlefile_with_URIString_arguments=('call_download_a_singlefile_with_URIString' ${incomplete_file_uri} ${filename} ${dir_to_save})
 outputfiles_present=$(python3 download_with_session_ID.py "${call_download_a_singlefile_with_URIString_arguments[@]}")
+PDF_FILE_SIZE_COL_NUM=$(get_column_number ${software}/$filename PDF_FILE_SIZE )
+sessions_list=${software}/$filename
+  while IFS=',' read -ra array; do
+
+echo ${array[${PDF_FILE_SIZE_COL_NUM}]}
+done < <(tail -n +2 "${sessions_list}")
+
 # Print the element
 
 #
