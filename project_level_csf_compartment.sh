@@ -97,7 +97,7 @@ outputfiles_present=$(python3 download_with_session_ID.py "${call_download_a_sin
 PDF_FILE_SIZE_COL_NUM=$(get_column_number ${software}/$filename PDF_FILE_SIZE )
 sessions_list=${software}/$filename
 while IFS=',' read -ra array2; do
-url2=${array2[28]}
+url2=${array2[27]}
 echo ${url2}
 # done < <(tail -n +2 "${working_dir}/${output_csvfile_1}")
 done < <(tail -n +2 "${sessions_list}")
