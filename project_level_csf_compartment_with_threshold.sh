@@ -68,9 +68,9 @@ echo $SESSION_ID::$XNAT_USER::$XNAT_PASS::$XNAT_HOST::${zoneV_min_z}::${zoneV_ma
     count=$((count+1))
     # echo "THIS COUNT NUMBER IS "::${count}::${counter_end}
 #     fi
-    # if [ ${count} -ge ${counter_end+1} ]; then
-    # sleep 10
-    # break
-    # fi
+    if [ ${count} -ge ${counter_end+1} ]; then
+    sleep 10
+    break
+    fi
 done < <(tail -n +2 "${sessions_list}")
 
