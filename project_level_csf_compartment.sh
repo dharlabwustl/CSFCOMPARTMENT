@@ -96,9 +96,10 @@ call_download_a_singlefile_with_URIString_arguments=('call_download_a_singlefile
 outputfiles_present=$(python3 download_with_session_ID.py "${call_download_a_singlefile_with_URIString_arguments[@]}")
 PDF_FILE_SIZE_COL_NUM=$(get_column_number ${software}/$filename PDF_FILE_SIZE )
 sessions_list=${software}/$filename
-  while IFS=',' read -ra array; do
-echo ${PDF_FILE_SIZE_COL_NUM}
-echo ${array[$((PDF_FILE_SIZE_COL_NUM))]}
+while IFS=',' read -ra array2; do
+url2=${array2[6]}
+echo ${url2}
+# done < <(tail -n +2 "${working_dir}/${output_csvfile_1}")
 done < <(tail -n +2 "${sessions_list}")
 
 # Print the element
