@@ -333,8 +333,11 @@ def divideintozones_v1_with_vent_bound(filename_gray,filename_mask,filename_bet,
             subprocess.call("echo " + "SUCCEEDED AT ::{}  > error.txt".format(inspect.stack()[0][3]) ,shell=True )
 
 
-    except:
-        subprocess.call("echo " + "FAILED AT ::{}  >> error.txt".format(inspect.stack()[0][3]) ,shell=True )
+    except     Exception as e:
+    # Print the error message
+        print(f"Error: {e}")
+        subprocess.call("echo " + "FAILED AT ::{}::{}  >> error.txt".format(inspect.stack()[0][3],e) ,shell=True )
+
 
 
 
