@@ -55,6 +55,27 @@ function call_get_resourcefiles_metadata_saveascsv_args() {
   echo " I AM AT call_get_resourcefiles_metadata_saveascsv_args"
 
 }
+# Get the header row and split it into columns
+get_column_number(){
+  CSV_FILE=${1}
+  COLUMN_NAME=${2}
+HEADER=$(head -n 1 "$CSV_FILE")
+
+# Convert the header to an array of column names
+IFS=',' read -r -a COLUMNS <<< "$HEADER"
+
+# Initialize column index
+COLUMN_INDEX=-1
+
+# Iterate over columns to find the index
+for i in "${!COLUMNS[@]}"; do
+    if [[ "${COLUMNS[$i]}" == "$COLUMN_NAME" ]]; then
+        COLUMN_INDEX=$((i + 1))
+        break
+    fi
+done
+echo "$COLUMN_INDEX"
+}
 
 URI=/data/projects/${project_ID}
 
@@ -62,7 +83,8 @@ resource_dir="INCOMPLETE"
 output_csvfile=${project_ID}_INCOMPLETE_METADATA.csv
 echo ${URI} ${resource_dir} ${working_dir} ${output_csvfile}
 call_get_resourcefiles_metadata_saveascsv_args ${URI} ${resource_dir} ${working_dir} ${output_csvfile}
-
+URI_COL_NUM=$(get_column_number $output_csvfile URI)
+echo ${URI_COL_NUM}
 # ##############################
 # # # Get the header row and split it into columns
 # # HEADER=$(head -n 1 "$CSV_FILE")
