@@ -100,6 +100,10 @@ sessions_list=${software}/$filename
 while IFS=',' read -ra array2; do
 value1=${array2[${PDF_FILE_SIZE_COL_NUM}]}
 echo ${value1}
+if [ -z "$value1" ]; then
+value1=0
+    echo "The value is empty."
+fi
 value2=3
 if (( $(echo "$value1 < $value2" | bc -l) )); then
     echo "$value1 is less than $value2"
