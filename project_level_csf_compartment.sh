@@ -86,6 +86,7 @@ call_get_resourcefiles_metadata_saveascsv_args ${URI} ${resource_dir} ${working_
 URI_COL_NUM=$(get_column_number ${working_dir}/$output_csvfile URI)
 echo URI_COL_NUM::${URI_COL_NUM}
 CSV_FILE=${working_dir}/${output_csvfile}
+cat ${working_dir}/${output_csvfile}
 column_value=$(cut -d ',' -f "$URI_COL_NUM" "$CSV_FILE")
 #
 # ##############################
