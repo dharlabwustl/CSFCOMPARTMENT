@@ -57,9 +57,9 @@ function call_get_resourcefiles_metadata_saveascsv_args() {
 }
 # Get the header row and split it into columns
 get_column_number(){
-  CSV_FILE=${1}
-  COLUMN_NAME=${2}
-HEADER=$(head -n 1 "$CSV_FILE")
+local  CSV_FILE=${1}
+local  COLUMN_NAME=${2}
+local HEADER=$(head -n 1 "$CSV_FILE")
 
 # Convert the header to an array of column names
 IFS=',' read -r -a COLUMNS <<< "$HEADER"
@@ -85,10 +85,8 @@ echo ${URI} ${resource_dir} ${working_dir} ${output_csvfile}
 call_get_resourcefiles_metadata_saveascsv_args ${URI} ${resource_dir} ${working_dir} ${output_csvfile}
 URI_COL_NUM=$(get_column_number ${working_dir}/$output_csvfile URI)
 echo URI_COL_NUM::${URI_COL_NUM}
-  while IFS=',' read -ra array0; do
-  echo ${array0[2]}
-  echo ${array0[$URI_COL_NUM]}
-done < <(tail -n +2 "${working_dir}/$output_csvfile")
+CSV_FILE=${working_dir}/${output_csvfile}
+column_value=$(cut -d ',' -f "$URI_COL_NUM" "$CSV_FILE")
 #
 # ##############################
 # # # Get the header row and split it into columns
