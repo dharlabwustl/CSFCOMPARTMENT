@@ -84,20 +84,14 @@ output_csvfile=${project_ID}_INCOMPLETE_METADATA.csv
 echo ${URI} ${resource_dir} ${working_dir} ${output_csvfile}
 call_get_resourcefiles_metadata_saveascsv_args ${URI} ${resource_dir} ${working_dir} ${output_csvfile}
 URI_COL_NUM=$(get_column_number ${working_dir}/$output_csvfile URI)
-echo URI_COL_NUM::${URI_COL_NUM}
 CSV_FILE=${working_dir}/${output_csvfile}
-cat ${working_dir}/${output_csvfile}
-column_value=$(cut -d ',' -f "$URI_COL_NUM" "$CSV_FILE")
-echo ${column_value}
-COLUMN_NUMBER=7
-
-# Read the single row
 IFS=',' read -r -a fields < "$CSV_FILE"
 
-# Extract the 7th column
-column_value="${fields[$((COLUMN_NUMBER - 1))]}"
-# Print the value
-echo "Column $COLUMN_NUMBER value: $column_value"
+# Extract the 7th element
+element="${fields[6]}"
+
+# Print the element
+echo "7th element: $element"
 #
 # ##############################
 # # # Get the header row and split it into columns
