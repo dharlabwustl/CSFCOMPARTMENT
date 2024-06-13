@@ -206,8 +206,8 @@ def divideintozones_v1_with_vent_bound(filename_gray,filename_mask,filename_bet,
 
         gray_scale_file=filename_gray
         gray_image=nib.load(gray_scale_file)
-
-
+        zoneV_min_z1=zoneV_min_z
+        zoneV_max_z1=zoneV_max_z
 
         file =filename_mask
         reader = sitk.ImageFileReader()
