@@ -60,6 +60,7 @@ URI=/data/projects/${project_ID}
 
 resource_dir="INCOMPLETE"
 output_csvfile=${project_ID}_INCOMPLETE_METADATA.csv
+echo ${URI} ${resource_dir} ${working_dir} ${output_csvfile}
 call_get_resourcefiles_metadata_saveascsv_args ${URI} ${resource_dir} ${working_dir} ${output_csvfile}
 
 # ##############################
