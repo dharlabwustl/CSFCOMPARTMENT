@@ -85,6 +85,10 @@ echo ${URI} ${resource_dir} ${working_dir} ${output_csvfile}
 call_get_resourcefiles_metadata_saveascsv_args ${URI} ${resource_dir} ${working_dir} ${output_csvfile}
 URI_COL_NUM=$(get_column_number ${working_dir}/$output_csvfile URI)
 echo ${URI_COL_NUM}
+  while IFS=',' read -ra array0; do
+  echo ${array0[$((URI_COL_NUM=))]}
+done < <(tail -n +2 "${sessions_list}")
+#
 # ##############################
 # # # Get the header row and split it into columns
 # # HEADER=$(head -n 1 "$CSV_FILE")
