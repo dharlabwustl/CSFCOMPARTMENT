@@ -88,6 +88,7 @@ echo URI_COL_NUM::${URI_COL_NUM}
 CSV_FILE=${working_dir}/${output_csvfile}
 cat ${working_dir}/${output_csvfile}
 column_value=$(cut -d ',' -f "$URI_COL_NUM" "$CSV_FILE")
+echo ${column_value}
 #
 # ##############################
 # # # Get the header row and split it into columns
