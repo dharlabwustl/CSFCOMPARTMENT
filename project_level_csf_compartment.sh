@@ -84,9 +84,9 @@ output_csvfile=${project_ID}_INCOMPLETE_METADATA.csv
 echo ${URI} ${resource_dir} ${working_dir} ${output_csvfile}
 call_get_resourcefiles_metadata_saveascsv_args ${URI} ${resource_dir} ${working_dir} ${output_csvfile}
 URI_COL_NUM=$(get_column_number ${working_dir}/$output_csvfile URI)
-echo ${URI_COL_NUM}
+echo URI_COL_NUM::${URI_COL_NUM}
   while IFS=',' read -ra array0; do
-  echo ${array0[0]}
+  echo ${array0[2]}
   echo ${array0[$URI_COL_NUM]}
 done < <(tail -n +2 "${working_dir}/$output_csvfile")
 #
