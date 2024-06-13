@@ -40,29 +40,71 @@ rm  -r    ${output}/*
 # /callfromgithub/downloadcodefromgithub.sh $SESSION_ID $XNAT_USER $XNAT_PASS ${git_repo} ${script_number}  ${snipr_host}  EC6A2206FF8C1D87D4035E61C99290FF
 # }
 directory_to_create_destroy
-sessions_list=${software}/session.csv 
-curl -u $XNAT_USER:$XNAT_PASS -X GET $XNAT_HOST/data/projects/${project_ID}'/experiments/?xsiType=xnat:ctSessionData&format=csv' > ${sessions_list}
-######################################
-count=0
-  while IFS=',' read -ra array; do
-  if [ ${count} -ge ${counter_start} ]; then
-    echo SESSION_ID::${array[0]}
-    SESSION_ID=${array[0]}  #SNIPR02_E10218 ##SNIPR02_E10112 #
-    SESSION_NAME=${array[5]} 
+function call_get_resourcefiles_metadata_saveascsv_args() {
 
-    # echo SESSION_NAME::${SESSION_NAME}
-    directory_to_create_destroy
-    /software/compartment_separation_with_vent_boundgiven.sh $SESSION_ID $XNAT_USER $XNAT_PASS $XNAT_HOST /input /output
-    # echo snipr_step::${snipr_step}
-    # scan_selection ${SESSION_ID}  
+  local resource_dir=${2}   #"NIFTI"
+  local output_csvfile=${4} #{array[1]}
 
-    # echo "$SESSION_ID,$SESSION_NAME" >> ${list_accomplished}
-  fi 
-    count=$((count+1))
-    echo "THIS COUNT NUMBER IS "::${count}::${counter_end}
+  local URI=${1} #{array[0]}
+  #  local file_ext=${5}
+  #  local output_csvfile=${output_csvfile%.*}${resource_dir}.csv
+
+  local final_output_directory=${3}
+  local call_download_files_in_a_resource_in_a_session_arguments=('call_get_resourcefiles_metadata_saveascsv_args' ${URI} ${resource_dir} ${final_output_directory} ${output_csvfile})
+  outputfiles_present=$(python3 download_with_session_ID.py "${call_download_files_in_a_resource_in_a_session_arguments[@]}")
+  echo " I AM AT call_get_resourcefiles_metadata_saveascsv_args"
+
+}
+
+URI=/data/experiments/${sessionID}
+
+resource_dir="INCOMPLETE"
+output_csvfile=${sessionID}_INCOMPLETE_METADATA.csv
+call_get_resourcefiles_metadata_saveascsv_args ${URI} ${resource_dir} ${working_dir} ${output_csvfile}
+
+# ##############################
+# # # Get the header row and split it into columns
+# # HEADER=$(head -n 1 "$CSV_FILE")
+
+# # # Convert the header to an array of column names
+# # IFS=',' read -r -a COLUMNS <<< "$HEADER"
+
+# # # Initialize column index
+# # COLUMN_INDEX=-1
+
+# # # Iterate over columns to find the index
+# # for i in "${!COLUMNS[@]}"; do
+# #     if [[ "${COLUMNS[$i]}" == "$COLUMN_NAME" ]]; then
+# #         COLUMN_INDEX=$((i + 1))
+# #         break
+# #     fi
+# # done
+
+# ################################
+# sessions_list=${software}/session.csv 
+# curl -u $XNAT_USER:$XNAT_PASS -X GET $XNAT_HOST/data/projects/${project_ID}'/experiments/?xsiType=xnat:ctSessionData&format=csv' > ${sessions_list}
+# ######################################
+# count=0
+#   while IFS=',' read -ra array; do
+#   # if [ ${count} -ge ${counter_start} ]; then
+#   if [[ ${counter_start} == ${array[0]} ]] ; then
+#     echo SESSION_ID::${array[0]}
+#     SESSION_ID=${array[0]}  #SNIPR02_E10218 ##SNIPR02_E10112 #
+#     SESSION_NAME=${array[5]} 
+
+#     # echo SESSION_NAME::${SESSION_NAME}
+#     directory_to_create_destroy
+#     /software/compartment_separation.sh $SESSION_ID $XNAT_USER $XNAT_PASS $XNAT_HOST /input /output
+#     # echo snipr_step::${snipr_step}
+#     # scan_selection ${SESSION_ID}  
+
+#     # echo "$SESSION_ID,$SESSION_NAME" >> ${list_accomplished}
+#   fi 
+#     count=$((count+1))
+#     echo "THIS COUNT NUMBER IS "::${count}::${counter_end}
+# #     fi
+#     if [ ${count} -ge ${counter_end} ]; then
+#     break
 #     fi
-    if [ ${count} -ge ${counter_end} ]; then
-    break
-    fi
-done < <(tail -n +2 "${sessions_list}")
+# done < <(tail -n +2 "${sessions_list}")
 
