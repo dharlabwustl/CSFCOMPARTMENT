@@ -98,9 +98,14 @@ PDF_FILE_SIZE_COL_NUM=$(get_column_number ${software}/$filename PDF_FILE_SIZE )
 PDF_FILE_SIZE_COL_NUM=$((PDF_FILE_SIZE_COL_NUM - 1 ))
 sessions_list=${software}/$filename
 while IFS=',' read -ra array2; do
-url2=${array2[${PDF_FILE_SIZE_COL_NUM}]}
-echo ${url2}
-# done < <(tail -n +2 "${working_dir}/${output_csvfile_1}")
+value1=${array2[${PDF_FILE_SIZE_COL_NUM}]}
+echo ${value1}
+value2=3
+if (( $(echo "$value1 < $value2" | bc -l) )); then
+    echo "$value1 is less than $value2"
+else
+    echo "$value1 is not less than $value2"
+fi
 done < <(tail -n +2 "${sessions_list}")
 
 # Print the element
