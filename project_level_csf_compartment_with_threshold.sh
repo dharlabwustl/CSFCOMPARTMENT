@@ -50,7 +50,7 @@ curl -u $XNAT_USER:$XNAT_PASS -X GET $XNAT_HOST/data/projects/${project_ID}'/exp
 ######################################
 count=0
   while IFS=',' read -ra array; do
-  if [ ${count} -ge ${counter_start} ] && [ ${count} -le $((counter_end+1)) ]; then
+  if [[ ${count} -ge ${counter_start} -a   ${count} -le $((counter_end+1)) ]]; then
   # if [[ ${counter_start} == ${array[0]} ]] ; then
     echo SESSION_ID::${array[0]}
     SESSION_ID=${array[0]}  #SNIPR02_E10218 ##SNIPR02_E10112 #
