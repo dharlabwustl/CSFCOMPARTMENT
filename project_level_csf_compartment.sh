@@ -109,58 +109,12 @@ fi
 value2=3
 if (( $(echo "$value1 < $value2" | bc -l) )); then
     echo "$value1 is less than $value2"
-    echo ${array2[${SESSION_ID_COL_NUM}]}
+    SESSION_ID=${array2[${SESSION_ID_COL_NUM}]} #${array[0]}  #SNIPR02_E10218 ##SNIPR02_E10112 #
+    echo SESSION_ID::${SESSION_ID}
+    directory_to_create_destroy
+    /software/compartment_separation.sh $SESSION_ID $XNAT_USER $XNAT_PASS $XNAT_HOST /input /output
 else
     echo "$value1 is not less than $value2"
 fi
 done < <(tail -n +2 "${sessions_list}")
-
-# Print the element
-
-#
-# ##############################
-# # # Get the header row and split it into columns
-# # HEADER=$(head -n 1 "$CSV_FILE")
-
-# # # Convert the header to an array of column names
-# # IFS=',' read -r -a COLUMNS <<< "$HEADER"
-
-# # # Initialize column index
-# # COLUMN_INDEX=-1
-
-# # # Iterate over columns to find the index
-# # for i in "${!COLUMNS[@]}"; do
-# #     if [[ "${COLUMNS[$i]}" == "$COLUMN_NAME" ]]; then
-# #         COLUMN_INDEX=$((i + 1))
-# #         break
-# #     fi
-# # done
-
-# ################################
-# sessions_list=${software}/session.csv 
-# curl -u $XNAT_USER:$XNAT_PASS -X GET $XNAT_HOST/data/projects/${project_ID}'/experiments/?xsiType=xnat:ctSessionData&format=csv' > ${sessions_list}
-# ######################################
-# count=0
-#   while IFS=',' read -ra array; do
-#   # if [ ${count} -ge ${counter_start} ]; then
-#   if [[ ${counter_start} == ${array[0]} ]] ; then
-#     echo SESSION_ID::${array[0]}
-#     SESSION_ID=${array[0]}  #SNIPR02_E10218 ##SNIPR02_E10112 #
-#     SESSION_NAME=${array[5]} 
-
-#     # echo SESSION_NAME::${SESSION_NAME}
-#     directory_to_create_destroy
-#     /software/compartment_separation.sh $SESSION_ID $XNAT_USER $XNAT_PASS $XNAT_HOST /input /output
-#     # echo snipr_step::${snipr_step}
-#     # scan_selection ${SESSION_ID}  
-
-#     # echo "$SESSION_ID,$SESSION_NAME" >> ${list_accomplished}
-#   fi 
-#     count=$((count+1))
-#     echo "THIS COUNT NUMBER IS "::${count}::${counter_end}
-# #     fi
-#     if [ ${count} -ge ${counter_end} ]; then
-#     break
-#     fi
-# done < <(tail -n +2 "${sessions_list}")
 
