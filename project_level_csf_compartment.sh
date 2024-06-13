@@ -97,8 +97,8 @@ outputfiles_present=$(python3 download_with_session_ID.py "${call_download_a_sin
 PDF_FILE_SIZE_COL_NUM=$(get_column_number ${software}/$filename PDF_FILE_SIZE )
 sessions_list=${software}/$filename
   while IFS=',' read -ra array; do
-
-echo ${array[${PDF_FILE_SIZE_COL_NUM}]}
+echo ${PDF_FILE_SIZE_COL_NUM}
+# echo ${array[${PDF_FILE_SIZE_COL_NUM}]}
 done < <(tail -n +2 "${sessions_list}")
 
 # Print the element
