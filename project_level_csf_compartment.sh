@@ -98,7 +98,7 @@ PDF_FILE_SIZE_COL_NUM=$(get_column_number ${software}/$filename PDF_FILE_SIZE )
 sessions_list=${software}/$filename
   while IFS=',' read -ra array; do
 echo ${PDF_FILE_SIZE_COL_NUM}
-# echo ${array[${PDF_FILE_SIZE_COL_NUM}]}
+echo ${array[$((PDF_FILE_SIZE_COL_NUM))]}
 done < <(tail -n +2 "${sessions_list}")
 
 # Print the element
