@@ -96,6 +96,8 @@ call_download_a_singlefile_with_URIString_arguments=('call_download_a_singlefile
 outputfiles_present=$(python3 download_with_session_ID.py "${call_download_a_singlefile_with_URIString_arguments[@]}")
 PDF_FILE_SIZE_COL_NUM=$(get_column_number ${software}/$filename PDF_FILE_SIZE )
 PDF_FILE_SIZE_COL_NUM=$((PDF_FILE_SIZE_COL_NUM - 1 ))
+SESSION_ID_COL_NUM=$(get_column_number ${software}/$filename ID )
+SESSION_ID_COL_NUM=$((SESSION_ID_COL_NUM - 1 ))
 sessions_list=${software}/$filename
 while IFS=',' read -ra array2; do
 value1=${array2[${PDF_FILE_SIZE_COL_NUM}]}
@@ -107,6 +109,7 @@ fi
 value2=3
 if (( $(echo "$value1 < $value2" | bc -l) )); then
     echo "$value1 is less than $value2"
+    echo ${array[${SESSION_ID_COL_NUM}]}
 else
     echo "$value1 is not less than $value2"
 fi
