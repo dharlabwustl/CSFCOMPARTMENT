@@ -51,6 +51,10 @@ while IFS=',' read -ra array; do
   #    url=args.stuff[1]
   #    filename=args.stuff[2]
   #    dir_to_save=args.stuff[3]
+    if [[ ${url} != *"$required_nifti"* ]]; then #echo "$url2" | grep -q "$required_nifti"; then 
+
+    break
+    fi
   call_download_a_singlefile_with_URIString_arguments=('call_download_a_singlefile_with_URIString' ${url} ${filename} ${dir_to_save})
   outputfiles_present=$(python3 download_with_session_ID.py "${call_download_a_singlefile_with_URIString_arguments[@]}")
 
@@ -68,7 +72,7 @@ while IFS=',' read -ra array; do
     while IFS=',' read -ra array2; do
 
       url2=${array2[6]}
-        if echo "$url2" | grep -q "$required_nifti"; then 
+
             if [[ ${url2} == *"_vertical_bounding_box_512x512.nii.gz"* ]]; then #  || [[ ${url2} == *"_levelset_bet"* ]]  || [[ ${url2} == *"csf_unet"* ]]  ; then ##[[ $string == *"My long"* ]]; then
                 echo "It's there!"
                 echo "${array2[6]}"
@@ -133,7 +137,7 @@ while IFS=',' read -ra array; do
 
             fi
             done
-        fi
+        
   done < <(tail -n +2 "${dir_to_save}/${filename}")
  
 done \
