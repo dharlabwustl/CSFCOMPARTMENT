@@ -65,6 +65,7 @@ def call_csf_compartments(args):
     return returnvalue
 def main():
     return_value=0
+    print('I am failing at MAIN')
     try:
         parser = argparse.ArgumentParser()
         parser.add_argument('stuff', nargs='+')
@@ -80,7 +81,7 @@ def main():
             print("WO ZAI ::{}".format("call_csf_compartments_ventbound_given"))
             return_value=call_csf_compartments_ventbound_given(args) 
     except:
-        print('I am failing at MAIN')
+        
 
     return return_value
 
