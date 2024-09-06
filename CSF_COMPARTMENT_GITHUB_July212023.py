@@ -59,6 +59,7 @@ def call_csf_compartments_ventbound_given_args():
         filename_bet=sys.argv[3]
         zoneV_min_z=int(sys.argv[4])
         zoneV_max_z=int(sys.argv[5])
+        print('arguments::{}::{}::{}::{}::{}'.format(filename_gray,filename_mask,filename_bet,zoneV_min_z,zoneV_max_z))
         # csf_compartments_ventbound_given(filename_gray,filename_mask,filename_bet,zoneV_min_z,zoneV_max_z)
         print("I SUCCEED AT ::{}".format(inspect.stack()[0][3]))
         returnvalue=1
