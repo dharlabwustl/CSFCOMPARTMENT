@@ -127,11 +127,11 @@ echo "I am tracking an error: 1"
 python3 -c "
 import sys ;
 sys.path.append('/software/') ;
-from CSF_COMPARTMENT_GITHUB_July212023 import * ;  call_csf_compartments_ventbound_given_args()"  "a" "b" "c" "d" "e" "f"  #"${greyfile}" "${csffile}" "${betfile}" "${zoneV_min_z}" "${zoneV_max_z}"
+from CSF_COMPARTMENT_GITHUB_July212023 import * ;  call_csf_compartments_ventbound_given_args()"  "${greyfile}" "${csffile}" "${betfile}" "${zoneV_min_z}" "${zoneV_max_z}"
 
             #### preprocessing csf mask:
 
-
+##"a" "b" "c" "d" "e" "f"  #
             ###################################
             
             call_csf_compartments_arguments=('call_csf_compartments_ventbound_given' ${greyfile} ${csffile} ${betfile} ${zoneV_min_z} ${zoneV_max_z} )
