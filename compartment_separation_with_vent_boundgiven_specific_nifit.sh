@@ -61,7 +61,7 @@ echo "I am tracking an error: 1"
   outputfiles_present=$(python3 download_with_session_ID.py "${call_download_a_singlefile_with_URIString_arguments[@]}")
 
   while IFS=',' read -ra array1; do
-    echo "I am tracking an error"
+    
     #      echo "${array1[0]}"
     url1=${array1[0]}
     #      URI=/data/experiments/${sessionID}
@@ -122,6 +122,7 @@ echo "I am tracking an error: 1"
                 echo "${csffile}"
             fi
             done < <(tail -n +2 "${working_dir}/${output_csvfile_1}")
+            echo "I am tracking an error 2"
             call_csf_compartments_arguments=('call_csf_compartments_ventbound_given' ${greyfile} ${csffile} ${betfile} ${zoneV_min_z} ${zoneV_max_z} )
             outputfiles_present=$(python3 /software/CSF_COMPARTMENT_GITHUB_July212023.py "${call_csf_compartments_arguments[@]}")
             #  echo ${outputfiles_present}
