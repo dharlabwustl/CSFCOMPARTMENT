@@ -52,6 +52,7 @@ def call_csf_compartments_ventbound_given(args):
 def call_csf_compartments_ventbound_given_args():
     returnvalue=0
     try:
+        print('I am at call_csf_compartments_ventbound_given_args')
         filename_gray=sys.argv[1]
         filename_mask=sys.argv[2]
         filename_bet=sys.argv[3]
