@@ -71,7 +71,7 @@ def main():
         parser.add_argument('stuff', nargs='+')
         args = parser.parse_args()
         name_of_the_function=args.stuff[0]
-        print(name_of_the_function)
+        print('name of the function is ' + name_of_the_function)
         print("WO ZAI ::{}".format("main"))
         if name_of_the_function == "call_csf_compartments":
             print("WO ZAI ::{}".format("call_csf_compartments"))
