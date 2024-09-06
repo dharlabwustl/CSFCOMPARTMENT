@@ -65,7 +65,7 @@ def call_csf_compartments(args):
     return returnvalue
 def main():
     return_value=0
-    print('I am failing at MAIN')
+    print('I am before try at MAIN')
     try:
         parser = argparse.ArgumentParser()
         parser.add_argument('stuff', nargs='+')
