@@ -54,7 +54,7 @@ echo "I am tracking an error: 1"
   #    dir_to_save=args.stuff[3]
     echo required_nifti::${required_nifti}::${url}
     if [[ ${url} != *"$required_nifti"* ]]; then #echo "$url2" | grep -q "$required_nifti"; then 
-    
+    echo 'I am at if [[ ${url} != *"$required_nifti"* ]]; then'
     continue
     fi
   call_download_a_singlefile_with_URIString_arguments=('call_download_a_singlefile_with_URIString' ${url} ${filename} ${dir_to_save})
