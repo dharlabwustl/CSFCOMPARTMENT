@@ -64,7 +64,7 @@ def call_csf_compartments(args):
         pass
     return returnvalue
 def main():
-        return_value=0
+    return_value=0
     try:
         parser = argparse.ArgumentParser()
         parser.add_argument('stuff', nargs='+')
