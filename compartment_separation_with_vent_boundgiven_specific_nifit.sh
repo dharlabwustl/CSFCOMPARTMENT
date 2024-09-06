@@ -140,7 +140,7 @@ echo "I am tracking an error: 1"
             #     echo ${outputfiles_present}
 
             # fi
-            done
+            # done
         
   done < <(tail -n +2 "${dir_to_save}/${filename}")
  
