@@ -60,6 +60,7 @@ while IFS=',' read -ra array; do
   outputfiles_present=$(python3 download_with_session_ID.py "${call_download_a_singlefile_with_URIString_arguments[@]}")
 
   while IFS=',' read -ra array1; do
+    echo "I am tracking an error"
     #      echo "${array1[0]}"
     url1=${array1[0]}
     #      URI=/data/experiments/${sessionID}

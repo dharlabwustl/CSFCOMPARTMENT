@@ -61,7 +61,7 @@ count=0
 echo $SESSION_ID::$XNAT_USER::$XNAT_PASS::$XNAT_HOST::${zoneV_min_z}::${zoneV_max_z} 
     echo zoneV_max_z::${zoneV_max_z} 
     /software/compartment_separation_with_vent_boundgiven_specific_nifit.sh $SESSION_ID $XNAT_USER $XNAT_PASS $XNAT_HOST ${zoneV_min_z} ${zoneV_max_z} ${counter_end}  /input /output
- echo " I AM AT COMPARTMENT_SEPARATION_WITH_VENT_BOUNDGIVEN.sh"
+ echo " I AM AT compartment_separation_with_vent_boundgiven_specific_nifit.sh"
 
     # echo "$SESSION_ID,$SESSION_NAME" >> ${list_accomplished}
   fi 
