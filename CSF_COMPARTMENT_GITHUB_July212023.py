@@ -48,6 +48,23 @@ def call_csf_compartments_ventbound_given(args):
         print("I FAILED AT ::{}".format(inspect.stack()[0][3]))
         pass
     return returnvalue
+
+def call_csf_compartments_ventbound_given_args():
+    returnvalue=0
+    try:
+        filename_gray=sys.args[1]
+        filename_mask=sys.args[2]
+        filename_bet=sys.args[3]
+        zoneV_min_z=int(sys.args[4])
+        zoneV_max_z=int(sys.args[5])
+        csf_compartments_ventbound_given(filename_gray,filename_mask,filename_bet,zoneV_min_z,zoneV_max_z)
+        print("I SUCCEED AT ::{}".format(inspect.stack()[0][3]))
+        returnvalue=1
+    except:
+        print("I FAILED AT ::{}".format(inspect.stack()[0][3]))
+        pass
+    return returnvalue
+
 def call_csf_compartments(args):
     returnvalue=0
 
