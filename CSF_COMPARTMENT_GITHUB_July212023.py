@@ -64,20 +64,23 @@ def call_csf_compartments(args):
         pass
     return returnvalue
 def main():
+        return_value=0
+    try:
+        parser = argparse.ArgumentParser()
+        parser.add_argument('stuff', nargs='+')
+        args = parser.parse_args()
+        name_of_the_function=args.stuff[0]
 
-    parser = argparse.ArgumentParser()
-    parser.add_argument('stuff', nargs='+')
-    args = parser.parse_args()
-    name_of_the_function=args.stuff[0]
-    return_value=0
-    print("WO ZAI ::{}".format("main"))
-    if name_of_the_function == "call_csf_compartments":
-        print("WO ZAI ::{}".format("call_csf_compartments"))
-        return_value=call_csf_compartments(args) #
+        print("WO ZAI ::{}".format("main"))
+        if name_of_the_function == "call_csf_compartments":
+            print("WO ZAI ::{}".format("call_csf_compartments"))
+            return_value=call_csf_compartments(args) #
 
-    if name_of_the_function == "call_csf_compartments_ventbound_given":
-        print("WO ZAI ::{}".format("call_csf_compartments_ventbound_given"))
-        return_value=call_csf_compartments_ventbound_given(args) 
+        if name_of_the_function == "call_csf_compartments_ventbound_given":
+            print("WO ZAI ::{}".format("call_csf_compartments_ventbound_given"))
+            return_value=call_csf_compartments_ventbound_given(args) 
+    except:
+        print('I am failing at MAIN')
 
     return return_value
 
