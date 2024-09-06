@@ -124,10 +124,10 @@ echo "I am tracking an error: 1"
             done < <(tail -n +2 "${working_dir}/${output_csvfile_1}")
             echo "I am tracking an error 2:'call_csf_compartments_ventbound_given' ${greyfile} ${csffile} ${betfile} ${zoneV_min_z} ${zoneV_max_z} "
             ##################################
-python3 -c "
-import sys ;
-sys.path.append('/software/') ;
-from CSF_COMPARTMENT_GITHUB_July212023 import * ;  call_csf_compartments_ventbound_given_args()"  "${greyfile}" "${csffile}" "${betfile}" "${zoneV_min_z}" "${zoneV_max_z}"
+# python3 -c "
+# import sys ;
+# sys.path.append('/software/') ;
+# from CSF_COMPARTMENT_GITHUB_July212023 import * ;  call_csf_compartments_ventbound_given_args()"  "${greyfile}" "${csffile}" "${betfile}" "${zoneV_min_z}" "${zoneV_max_z}"
 
             #### preprocessing csf mask:
 
@@ -138,7 +138,7 @@ from CSF_COMPARTMENT_GITHUB_July212023 import * ;  call_csf_compartments_ventbou
             for element in "${call_csf_compartments_arguments[@]}"; do
   echo "$element"
 done
-            # outputfiles_present=$(python3 /software/CSF_COMPARTMENT_GITHUB_July212023.py "${call_csf_compartments_arguments[@]}")
+            outputfiles_present=$(python3 /software/CSF_COMPARTMENT_GITHUB_July212023.py "${call_csf_compartments_arguments[@]}")
             #  echo ${outputfiles_present}
             #fi
             echo ${outputfiles_present}
