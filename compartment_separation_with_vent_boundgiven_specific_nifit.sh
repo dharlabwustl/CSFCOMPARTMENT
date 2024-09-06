@@ -138,7 +138,7 @@ from CSF_COMPARTMENT_GITHUB_July212023 import * ;  call_csf_compartments_ventbou
             for element in "${call_csf_compartments_arguments[@]}"; do
   echo "$element"
 done
-            outputfiles_present=$(python3 /software/CSF_COMPARTMENT_GITHUB_July212023.py "${call_csf_compartments_arguments[@]}")
+            # outputfiles_present=$(python3 /software/CSF_COMPARTMENT_GITHUB_July212023.py "${call_csf_compartments_arguments[@]}")
             #  echo ${outputfiles_present}
             #fi
             echo ${outputfiles_present}
