@@ -137,12 +137,14 @@ while IFS=',' read -ra array; do
         done < <(tail -n +2 "${working_dir}/${output_csvfile_2}")
         while IFS=',' read -ra array3; do
           echo "${array3[3]}::${array3[4]}"
+          zoneV_min_z=${array3[3]}
+          zoneV_max_z=${array3[4]}
         done < <(tail -n +2 "${ventricleboundfile}")
 #    ##############################################
 #
-#    call_csf_compartments_arguments=('call_csf_compartments_ventbound_given' ${greyfile} ${csffile} ${betfile} ${zoneV_min_z} ${zoneV_max_z} )
-#    outputfiles_present=$(python3 /software/CSF_COMPARTMENT_GITHUB_July212023.py "${call_csf_compartments_arguments[@]}")
-#    #  echo ${outputfiles_present}
+    call_csf_compartments_arguments=('call_csf_compartments_ventbound_given' ${greyfile} ${csffile} ${betfile} ${zoneV_min_z} ${zoneV_max_z} )
+    outputfiles_present=$(python3 /software/CSF_COMPARTMENT_GITHUB_July212023.py "${call_csf_compartments_arguments[@]}")
+    #  echo ${outputfiles_present}
 #    #fi
 #    echo ${outputfiles_present}
 #    URI_1=${url2%/resource*}
