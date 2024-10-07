@@ -125,7 +125,7 @@ while IFS=',' read -ra array; do
 
           url2=${array2[6]}
 
-          if [[ ${url2} == *".csv"* ]]; then #  || [[ ${url2} == *"_levelset_bet"* ]]  || [[ ${url2} == *"csf_unet"* ]]  ; then ##[[ $string == *"My long"* ]]; then
+          if [[ ${url2} == *"ventricle_bounds.csv"* ]]; then #  || [[ ${url2} == *"_levelset_bet"* ]]  || [[ ${url2} == *"csf_unet"* ]]  ; then ##[[ $string == *"My long"* ]]; then
             echo "It's there!"
             echo "${array2[6]}"
             filename2=$(basename ${url2})
