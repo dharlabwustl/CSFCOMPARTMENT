@@ -99,7 +99,7 @@ def create_obb_mask_from_image_mask(binary_mask):
 
 # Optionally, visualize using a 3D visualization tool like matplotlib or mayavi
 
-ventricle_mask=Infarct_Mask_filename_June20_data_512=resizeinto_512by512(nib.load(sys.argv[1]).get_fdata())
+ventricle_mask=Infarct_Mask_filename_June20_data_512=resizeinto_512by512_and_flip(nib.load(sys.argv[1]).get_fdata())
 ventricle_obb_mask = create_obb_mask_from_image_mask(ventricle_mask)
 csf_mask_nib=nib.load(sys.argv[2])
 # save_nifti_without_affine(ventricle_obb_mask, os.path.join(sys.argv[3],'ventricle_obb_mask.nii'))

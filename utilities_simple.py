@@ -179,8 +179,65 @@ def hdr2niigz_py(filenameniigz,original_grayfile,niigzfilenametosave) : #,header
     analyzedata=nib.AnalyzeImage.from_filename(filenameniigz)
     array_img = nib.Nifti1Image(analyzedata.dataobj.get_unscaled(), affine=original_grayfile_nib.affine, header=original_grayfile_nib.header)
     nib.save(array_img, niigzfilenametosave)
-    
-    
+
+def resizeinto_512by512_and_flip(image_nib_nii_file_data):
+    print('I am in utilities_simple.py: resizeinto_512by512 ')
+    print('image_nib_nii_file_data.shape')
+    print(image_nib_nii_file_data.shape)
+    size_diff_x=np.abs(image_nib_nii_file_data.shape[0]-512)
+    size_diff_y=np.abs(image_nib_nii_file_data.shape[1]-512)
+    temp_array=np.copy(image_nib_nii_file_data)
+
+    if image_nib_nii_file_data.shape[0] <512:
+        print('shape[0]<512')
+        if (size_diff_x % 2 )== 0 :
+            size_diff_x=int(size_diff_x/2)
+            npad = ((size_diff_x-1, size_diff_x+1), (0, 0), (0, 0))
+        else :
+            size_diff_x=int(size_diff_x/2)
+            npad = ((size_diff_x, size_diff_x+1), (0, 0), (0, 0))  #abs(np.min(image_levelset_data)
+        temp_array=np.pad(temp_array, pad_width=npad, mode='constant', constant_values=np.min(temp_array))
+    if image_nib_nii_file_data.shape[1] <512:
+        print('shape[1]<512')
+        if (size_diff_y % 2 )== 0 :
+            size_diff_y=int(size_diff_y/2)
+            npad = ((0, 0),(size_diff_y-1, size_diff_y+1),  (0, 0))
+        else :
+            size_diff_y=int(size_diff_y/2)
+            npad = ( (0, 0),(size_diff_y, size_diff_y+1), (0, 0))  #abs(np.min(image_levelset_data)
+        temp_array=np.pad(temp_array, pad_width=npad, mode='constant', constant_values=np.min(temp_array))
+
+    if image_nib_nii_file_data.shape[0] > 512:
+        print('shape[0]>512')
+        if (size_diff_x % 2 )== 0 :
+            size_diff_x=int(size_diff_x/2)
+            temp_array=temp_array[size_diff_x:temp_array.shape[0]-size_diff_x,0:temp_array.shape[1],0:temp_array.shape[2]]
+        else :
+            size_diff_x=int(size_diff_x/2)
+            temp_array=temp_array[size_diff_x:temp_array.shape[0]-size_diff_x-1,0:temp_array.shape[1],0:temp_array.shape[2]]
+
+    if image_nib_nii_file_data.shape[1] > 512:
+        print('shape[1]>512')
+        #         print('image_nib_nii_file_data.shape')
+        #         print(image_nib_nii_file_data.shape)
+        #         print('size_diff_y: {} '.format(size_diff_y))
+        if (size_diff_y % 2 )== 0 :
+            size_diff_y=int(size_diff_y/2)
+            #             print('size_diff_y/2: {} '.format(size_diff_y))
+            temp_array=temp_array[0:temp_array.shape[0],size_diff_y:temp_array.shape[1]-size_diff_y,0:temp_array.shape[2]]
+        else :
+            size_diff_y=int(size_diff_y/2)
+            #             print('size_diff_y/2: {} '.format(size_diff_y))
+            temp_array=temp_array[0:temp_array.shape[0],size_diff_y:temp_array.shape[1]-size_diff_y-1,0:temp_array.shape[2]]
+    flipped_mask=np.copy(temp_array)
+    for idx in range(temp_array.shape[2]):
+        flipped_mask[:,:,idx]=cv2.flip(image_levelset_data[:,:,idx],0)
+    image_nib_nii_file_data=flipped_mask
+
+    print('image_nib_nii_file_data.shape')
+    print(image_nib_nii_file_data.shape)
+    return image_nib_nii_file_data
+
 ###############################################################################
 def resizeinto_512by512(image_nib_nii_file_data):
     print('I am in utilities_simple.py: resizeinto_512by512 ')
