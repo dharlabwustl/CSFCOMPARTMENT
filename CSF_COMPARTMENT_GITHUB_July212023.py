@@ -63,6 +63,7 @@ def call_csf_compartments_ventbound_given(args):
 def call_csf_compartments_vent_obb_given(args):
     returnvalue=0
     try:
+        print(" I AM AT call_csf_compartments_vent_obb_given")
         filename_gray=args.stuff[1]
         filename_mask=args.stuff[2]
         filename_bet=args.stuff[3]
