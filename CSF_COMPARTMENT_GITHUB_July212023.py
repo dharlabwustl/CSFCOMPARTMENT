@@ -66,9 +66,10 @@ def call_csf_compartments_vent_obb_given(args):
         filename_gray=args.stuff[1]
         filename_mask=args.stuff[2]
         filename_bet=args.stuff[3]
-        zoneV_min_z=int(args.stuff[4])
-        zoneV_max_z=int(args.stuff[5])
-        csf_compartments_ventobb_given(filename_gray,filename_mask,filename_bet,zoneV_min_z,zoneV_max_z)
+        filename_ventricle_obb_mask=args.stuff[4]
+        zoneV_min_z=int(args.stuff[5])
+        zoneV_max_z=int(args.stuff[6])
+        csf_compartments_ventobb_given(filename_gray,filename_mask,filename_bet,filename_ventricle_obb_mask,zoneV_min_z,zoneV_max_z)
         print("I SUCCEED AT ::{}".format(inspect.stack()[0][3]))
         returnvalue=1
     except:
