@@ -100,7 +100,7 @@ def create_obb_mask_from_image_mask(binary_mask):
 
 ventricle_mask=nib.load(sys.argv[1]).get_fdata()
 ventricle_obb_mask = create_obb_mask_from_image_mask(ventricle_mask)
-save_nifti_without_affine(obb_mask, os.path.join(sys.argv[2],'ventricle_obb_mask.nii'))
+save_nifti_without_affine(ventricle_obb_mask, os.path.join(sys.argv[2],'ventricle_obb_mask.nii'))
 
 # non_zero_slice_num=[]
 # # print(ventricle_mask.get_fdata().shape[2])
