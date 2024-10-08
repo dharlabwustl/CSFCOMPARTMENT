@@ -181,7 +181,7 @@ def hdr2niigz_py(filenameniigz,original_grayfile,niigzfilenametosave) : #,header
     nib.save(array_img, niigzfilenametosave)
 
 def resizeinto_512by512_and_flip(image_nib_nii_file_data):
-    print('I am in utilities_simple.py: resizeinto_512by512 ')
+    print('I am in utilities_simple.py: resizeinto_512by512_and_flip ')
     print('image_nib_nii_file_data.shape')
     print(image_nib_nii_file_data.shape)
     size_diff_x=np.abs(image_nib_nii_file_data.shape[0]-512)
