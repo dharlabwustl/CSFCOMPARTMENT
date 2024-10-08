@@ -125,15 +125,15 @@ while IFS=',' read -ra array; do
 
           url2=${array2[6]}
 
-          if [[ ${url2} == *"ventricle_bounds.csv"* ]]; then #  || [[ ${url2} == *"_levelset_bet"* ]]  || [[ ${url2} == *"csf_unet"* ]]  ; then ##[[ $string == *"My long"* ]]; then
-            echo "It's there!"
-            echo "${array2[6]}"
-            filename2=$(basename ${url2})
-            call_download_a_singlefile_with_URIString_arguments=('call_download_a_singlefile_with_URIString' ${url2} ${filename2} ${dir_to_save})
-            outputfiles_present=$(python3 download_with_session_ID.py "${call_download_a_singlefile_with_URIString_arguments[@]}")
-            ventricleboundfile=${dir_to_save}/${filename2}
-            echo "${ventricleboundfile}"
-          fi
+#          if [[ ${url2} == *"ventricle_bounds.csv"* ]]; then #  || [[ ${url2} == *"_levelset_bet"* ]]  || [[ ${url2} == *"csf_unet"* ]]  ; then ##[[ $string == *"My long"* ]]; then
+#            echo "It's there!"
+#            echo "${array2[6]}"
+#            filename2=$(basename ${url2})
+#            call_download_a_singlefile_with_URIString_arguments=('call_download_a_singlefile_with_URIString' ${url2} ${filename2} ${dir_to_save})
+#            outputfiles_present=$(python3 download_with_session_ID.py "${call_download_a_singlefile_with_URIString_arguments[@]}")
+#            ventricleboundfile=${dir_to_save}/${filename2}
+#            echo "${ventricleboundfile}"
+#          fi
           if [[ ${url2} == *"warped_1_"* ]]; then #  || [[ ${url2} == *"_levelset_bet"* ]]  || [[ ${url2} == *"csf_unet"* ]]  ; then ##[[ $string == *"My long"* ]]; then
             echo "It's there!"
             echo "${array2[6]}"
@@ -146,32 +146,33 @@ while IFS=',' read -ra array; do
         done < <(tail -n +2 "${working_dir}/${output_csvfile_2}")
 #        venticle_only_mask=${betfile}
         python3 findventriclemaskobb.py  ${venticle_only_mask} ${csffile} ${dir_to_save}
-
-#        while IFS=',' read -ra array3; do
-#          echo "${array3[3]}::${array3[4]}"
-#          zoneV_min_z=${array3[3]}
-#          zoneV_max_z=${array3[4]}
-#        done < <(tail -n +2 "${ventricleboundfile}")
-##    ##############################################
-##
-#    call_csf_compartments_arguments=('call_csf_compartments_ventbound_given' ${greyfile} ${csffile} ${betfile} ${zoneV_min_z} ${zoneV_max_z} )
-#    outputfiles_present=$(python3 /software/CSF_COMPARTMENT_GITHUB_July212023.py "${call_csf_compartments_arguments[@]}")
-#    #  echo ${outputfiles_present}
-#    #fi
-#    echo ${outputfiles_present}
-#    URI_1=${url2%/resource*}
-#    filename_prefix=$(basename ${url}) #${url2%/resource*} #filename=
-#    filename_prefix=${filename_prefix%_NIFTILOCATION*}
-#    resource_dirname="MASKS"
-#    for file_name in ${dir_to_save}/${filename_prefix}*.nii.gz; do
-#      echo ${file_name}
-#      if [[ ${file_name} == *"ventricle"* ]] || [[ ${file_name} == *"sulci"* ]]; then
-#        call_uploadsinglefile_with_URI_arguments=('call_uploadsinglefile_with_URI' ${URI_1} ${file_name} ${resource_dirname})
-#        outputfiles_present=$(python3 /software/download_with_session_ID.py "${call_uploadsinglefile_with_URI_arguments[@]}")
-#        echo ${outputfiles_present}
+        ventricleboundfile=${dir_to_save}/'ventricle_bounds.csv'
+        ventricle_obb_mask=${dir_to_save}/ventricle_obb_mask.nii
+        while IFS=',' read -ra array3; do
+          echo "${array3[3]}::${array3[4]}"
+          zoneV_min_z=${array3[3]}
+          zoneV_max_z=${array3[4]}
+        done < <(tail -n +2 "${ventricleboundfile}")
+#    ##############################################
 #
-#      fi
-#    done
+    call_csf_compartments_arguments=('csf_compartments_ventobb_given' ${greyfile} ${csffile} ${betfile} ${ventricle_obb_mask} ${zoneV_min_z} ${zoneV_max_z} )
+    outputfiles_present=$(python3 /software/CSF_COMPARTMENT_GITHUB_July212023.py "${call_csf_compartments_arguments[@]}")
+    #  echo ${outputfiles_present}
+    #fi
+    echo ${outputfiles_present}
+    URI_1=${url2%/resource*}
+    filename_prefix=$(basename ${url}) #${url2%/resource*} #filename=
+    filename_prefix=${filename_prefix%_NIFTILOCATION*}
+    resource_dirname="MASKS"
+    for file_name in ${dir_to_save}/${filename_prefix}*.nii.gz; do
+      echo ${file_name}
+      if [[ ${file_name} == *"ventricle"* ]] || [[ ${file_name} == *"sulci"* ]]; then
+        call_uploadsinglefile_with_URI_arguments=('call_uploadsinglefile_with_URI' ${URI_1} ${file_name} ${resource_dirname})
+        outputfiles_present=$(python3 /software/download_with_session_ID.py "${call_uploadsinglefile_with_URI_arguments[@]}")
+        echo ${outputfiles_present}
+
+      fi
+    done
   done < <(tail -n +2 "${dir_to_save}/${filename}")
 
 done \

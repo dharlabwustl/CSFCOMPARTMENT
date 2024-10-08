@@ -21,6 +21,18 @@ def csf_compartments_ventbound_given(filename_gray,filename_mask,filename_bet,zo
         print("I FAILED AT ::{}".format(inspect.stack()[0][3]))
         pass
     return returnvalue
+def csf_compartments_ventobb_given(filename_gray,filename_mask,filename_bet,filename_vent_obb,zoneV_min_z,zoneV_max_z):
+    returnvalue=0
+    try:
+
+        sulci_vol, ventricle_vol,leftcountven,rightcountven,leftcountsul,rightcountsul,sulci_vol_above_vent,sulci_vol_below_vent,sulci_vol_at_vent = divideintozones_with_vent_obb(filename_gray,filename_mask,filename_bet,filename_vent_obb,zoneV_min_z,zoneV_max_z)
+
+        print("I SUCCEED AT ::{}".format(inspect.stack()[0][3]))
+        returnvalue=1
+    except:
+        print("I FAILED AT ::{}".format(inspect.stack()[0][3]))
+        pass
+    return returnvalue
 def csf_compartments(filename_gray,filename_mask,filename_bet):
     returnvalue=0
     try:
