@@ -29,7 +29,7 @@ export XNAT_HOST=${XNAT_HOST}
 echo XNAT_USER=$XNAT_USER
 echo XNAT_PASS=$XNAT_PASS
 echo "I am "
-compartment_separation_with_vent_boundgiven_insnipr.sh
+#compartment_separation_with_vent_boundgiven_insnipr.sh
 if [[ ${TYPE_OF_PROGRAM} == "VENT_BOUND_IN_SNIPR" ]] ;
 then
 echo " I AM IN TYPE_OF_PROGRAM == VENT_BOUND_IN_SNIPR"
