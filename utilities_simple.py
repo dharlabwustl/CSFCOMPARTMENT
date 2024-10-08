@@ -231,7 +231,7 @@ def resizeinto_512by512_and_flip(image_nib_nii_file_data):
             temp_array=temp_array[0:temp_array.shape[0],size_diff_y:temp_array.shape[1]-size_diff_y-1,0:temp_array.shape[2]]
     flipped_mask=np.copy(temp_array)
     for idx in range(temp_array.shape[2]):
-        flipped_mask[:,:,idx]=cv2.flip(image_levelset_data[:,:,idx],0)
+        flipped_mask[:,:,idx]=cv2.flip(temp_array[:,:,idx],0)
     image_nib_nii_file_data=flipped_mask
 
     print('image_nib_nii_file_data.shape')
