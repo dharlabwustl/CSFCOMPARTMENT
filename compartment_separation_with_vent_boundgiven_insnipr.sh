@@ -145,7 +145,7 @@ while IFS=',' read -ra array; do
           fi
         done < <(tail -n +2 "${working_dir}/${output_csvfile_2}")
         venticle_only_mask=${betfile}
-        python3 findventriclemaskobb.py  ${venticle_only_mask} ${dir_to_save}
+        python3 findventriclemaskobb.py  ${venticle_only_mask} ${csffile} ${dir_to_save}
 
 #        while IFS=',' read -ra array3; do
 #          echo "${array3[3]}::${array3[4]}"

@@ -101,7 +101,10 @@ def create_obb_mask_from_image_mask(binary_mask):
 
 ventricle_mask=Infarct_Mask_filename_June20_data_512=resizeinto_512by512(nib.load(sys.argv[1]).get_fdata())
 ventricle_obb_mask = create_obb_mask_from_image_mask(ventricle_mask)
-save_nifti_without_affine(ventricle_obb_mask, os.path.join(sys.argv[2],'ventricle_obb_mask.nii'))
+csf_mask_nib=nib.load(sys.argv[2])
+# save_nifti_without_affine(ventricle_obb_mask, os.path.join(sys.argv[3],'ventricle_obb_mask.nii'))
+array_img = nib.Nifti1Image(ventricle_obb_mask, affine=csf_mask_nib.affine, header=csf_mask_nib.header)
+nib.save(array_img, os.path.join(sys.argv[3],'ventricle_obb_mask.nii'))
 
 # non_zero_slice_num=[]
 # # print(ventricle_mask.get_fdata().shape[2])
