@@ -105,6 +105,8 @@ csf_mask_nib=nib.load(sys.argv[2])
 # save_nifti_without_affine(ventricle_obb_mask, os.path.join(sys.argv[3],'ventricle_obb_mask.nii'))
 array_img = nib.Nifti1Image(ventricle_obb_mask, affine=csf_mask_nib.affine, header=csf_mask_nib.header)
 nib.save(array_img, os.path.join(sys.argv[3],'ventricle_obb_mask.nii'))
+array_img = nib.Nifti1Image(ventricle_mask, affine=csf_mask_nib.affine, header=csf_mask_nib.header)
+nib.save(array_img, os.path.join(sys.argv[3],'ventricle.nii'))
 
 # non_zero_slice_num=[]
 # # print(ventricle_mask.get_fdata().shape[2])
