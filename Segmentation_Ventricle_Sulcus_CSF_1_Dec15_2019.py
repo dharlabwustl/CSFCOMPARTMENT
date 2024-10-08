@@ -357,7 +357,7 @@ def divideintozones_with_vent_obb(filename_gray,filename_mask,filename_bet,filen
         ########################
         file_gray = filename_gray
         reader_gray = sitk.ImageFileReader()
-        reader_gray.SetImageIO("NiftiImageIO")
+        reader_gray.SetImageIO("NiftriImageIO")
         reader_gray.SetFileName(file_gray)
 
 
