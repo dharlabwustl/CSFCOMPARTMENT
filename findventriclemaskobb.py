@@ -16,95 +16,67 @@ import numpy as np
 import scipy.ndimage as ndi
 from skimage import filters
 
-def get_3d_contour(binary_mask):
+import numpy as np
+import scipy.ndimage as ndi
+
+def fill_holes_in_3d_mask(binary_mask):
     """
-    Given a 3D binary mask, computes the contour (boundary) voxels of the object
-    and returns a binary mask of the contour.
+    Given a 3D binary mask, fill the holes inside the mask and return the updated mask.
 
     Parameters:
     - binary_mask: 3D numpy array (binary mask of the object)
 
     Returns:
-    - contour_mask: 3D binary mask of the contour (boundary) of the object
+    - filled_mask: 3D binary mask with the holes filled.
     """
-    # Step 1: Perform a binary erosion to shrink the object
-    eroded_mask = ndi.binary_erosion(binary_mask)
-
-    # Step 2: Subtract the eroded mask from the original mask to get the contour
-    contour_mask = binary_mask - eroded_mask
-
-    # Ensure the contour mask only contains binary values (0 and 1)
-    contour_mask = np.clip(contour_mask, 0, 1)
-
-    return contour_mask
-
-def smooth_contour(contour_mask, sigma=1):
-    """
-    Apply a Gaussian filter to smooth the contour of a 3D mask.
-
-    Parameters:
-    - contour_mask: 3D numpy array (binary mask of the contour)
-    - sigma: Standard deviation for Gaussian kernel for smoothing (default is 1)
-
-    Returns:
-    - smoothed_contour: 3D binary mask of the smoothed contour.
-    """
-    # Apply Gaussian smoothing to the contour
-    smoothed_contour = filters.gaussian(contour_mask, sigma=sigma)
-
-    # Convert back to a binary mask (threshold at 0.5)
-    smoothed_contour = (smoothed_contour > 0.5).astype(np.uint8)
-
-    return smoothed_contour
-
-def fill_contour_to_3d_mask(contour_mask):
-    """
-    Given a 3D binary mask representing the contour (boundary) of an object, fill the interior
-    to get the solid object and return the binary mask of the filled object.
-
-    Parameters:
-    - contour_mask: 3D numpy array (binary mask of the contour)
-
-    Returns:
-    - filled_mask: 3D binary mask with the contour's interior filled (solid object).
-    """
-    # Step 1: Fill the interior of the object (from the contour) using binary fill holes
-    filled_mask = ndi.binary_fill_holes(contour_mask).astype(np.uint8)
+    # Use binary_fill_holes to fill holes inside the mask
+    filled_mask = ndi.binary_fill_holes(binary_mask).astype(np.uint8)
 
     return filled_mask
 
-def process_3d_binary_mask(binary_mask, sigma=1):
+def dilate_3d_mask(binary_mask, iterations=1):
     """
-    Given a 3D binary mask, finds its contour, smooths the contour, and returns a binary mask
-    of the filled contour.
+    Dilate a 3D binary mask to make it bigger by expanding the object.
 
     Parameters:
     - binary_mask: 3D numpy array (binary mask of the object)
-    - sigma: Standard deviation for Gaussian smoothing (default is 1)
+    - iterations: Number of dilation iterations to apply (default is 1)
 
     Returns:
-    - filled_contour_mask: 3D binary mask where the contour has been smoothed and filled.
+    - dilated_mask: 3D binary mask that has been dilated.
     """
-    # Step 1: Get the contour of the binary mask
-    contour_mask = get_3d_contour(binary_mask)
+    # Perform binary dilation to make the object larger
+    dilated_mask = ndi.binary_dilation(binary_mask, iterations=iterations).astype(np.uint8)
 
-    # Step 2: Smooth the contour using Gaussian filtering
-    smoothed_contour_mask = smooth_contour(contour_mask, sigma=sigma)
+    return dilated_mask
 
-    # Step 3: Fill the contour to get the filled mask
-    filled_contour_mask = fill_contour_to_3d_mask(smoothed_contour_mask)
+def fill_dilate_and_fill_3d_mask(binary_mask, dilation_iterations=1):
+    """
+    Fill the holes in a 3D binary mask, dilate the mask to make it bigger, and then fill the
+    holes again.
 
-    return filled_contour_mask
+    Parameters:
+    - binary_mask: 3D numpy array (binary mask of the object)
+    - dilation_iterations: Number of dilation iterations to apply (default is 1)
+
+    Returns:
+    - result_mask: 3D binary mask that has been filled, dilated, and filled again.
+    """
+    # Step 1: Fill holes in the mask
+    filled_mask_1 = fill_holes_in_3d_mask(binary_mask)
+
+    # Step 2: Dilate the filled mask to make it bigger
+    dilated_mask = dilate_3d_mask(filled_mask_1, iterations=dilation_iterations)
+
+    # Step 3: Fill holes again after dilation
+    filled_mask_2 = fill_holes_in_3d_mask(dilated_mask)
+
+    return filled_mask_2
 
 
 
-# # Process the binary mask to get the filled contour mask
-# filled_contour_mask = process_3d_binary_mask(binary_mask)
-#
-# # Print the result
-# print("3D Mask of the Filled Contour (Solid Object):")
-# print(filled_contour_mask)
-
+######################################################
+##################################################################
 def save_nifti_without_affine(matrix, filename):
     """
     Save a 3D matrix as a NIfTI file without explicitly providing an affine matrix.
@@ -222,18 +194,22 @@ print(upper_lower_limit_vent_df)
 upper_lower_limit_vent_df.to_csv(os.path.join(sys.argv[3],'ventricle_bounds.csv'),index=False)
 
 ventricle_mask=nib.load( os.path.join(sys.argv[3],'ventricle.nii')).get_fdata()
-filled_contour_mask =process_3d_binary_mask(ventricle_mask, sigma=1) # process_3d_binary_mask(ventricle_mask)
+filled_contour_mask =fill_dilate_and_fill_3d_mask(ventricle_mask, dilation_iterations=2) #process_3d_binary_mask(ventricle_mask, sigma=1) # process_3d_binary_mask(ventricle_mask)
 array_img = nib.Nifti1Image(filled_contour_mask, affine=csf_mask_nib.affine, header=csf_mask_nib.header)
 nib.save(array_img, os.path.join(sys.argv[3],'ventricle_contour.nii'))
-
-# Example usage:
-# Replace this with your actual 3D binary mask
-# binary_mask = np.zeros((20, 20, 20), dtype=np.uint8)
-# binary_mask[5:15, 5:15, 5:15] = 1  # Example filled 3D block
-
-# Process the binary mask to get the filled contour mask
-# filled_contour_mask = process_3d_binary_mask(binary_mask, sigma=1)
-
+#
+# # Example usage:
+# # Replace this with your actual 3D binary mask
+# binary_mask = np.zeros((10, 10, 10), dtype=np.uint8)
+# binary_mask[2:8, 2:8, 2:8] = 1  # Example filled 3D block
+# binary_mask[4, 4, 4] = 0  # Create a hole inside the object
+#
+# # Perform the fill, dilate, and fill again process
+# result_mask = fill_dilate_and_fill_3d_mask(binary_mask, dilation_iterations=2)
+#
 # # Print the result
-# print("3D Mask of the Filled and Smoothed Contour:")
-# print(filled_contour_mask)
+# print("Original Mask with Hole:")
+# print(binary_mask)
+#
+# print("\nMask after Fill, Dilate, and Fill Again:")
+# print(result_mask)
