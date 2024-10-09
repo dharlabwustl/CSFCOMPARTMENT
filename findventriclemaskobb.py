@@ -31,7 +31,8 @@ def fill_holes_in_3d_mask(binary_mask):
     """
     # Use binary_fill_holes to fill holes inside the mask
     filled_mask = ndi.binary_fill_holes(binary_mask).astype(np.uint8)
-
+    filled_mask = ndi.binary_fill_holes(filled_mask).astype(np.uint8)
+    filled_mask = ndi.binary_fill_holes(filled_mask).astype(np.uint8)
     return filled_mask
 
 def dilate_3d_mask(binary_mask, iterations=1):
