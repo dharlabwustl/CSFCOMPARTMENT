@@ -349,6 +349,11 @@ def divideintozones_with_vent_obb(filename_gray,filename_mask,filename_bet,filen
     try:
         sulci_vol, ventricle_vol,leftcountven,rightcountven,leftcountsul,rightcountsul,sulci_vol_above_vent,sulci_vol_below_vent,sulci_vol_at_vent=(0,0,0,0,0,0,0,0,0) #seg_explicit_thresholds, subtracted_image
         #######################
+        reader_filename_vent_nonlinmask = sitk.ImageFileReader()
+        reader_filename_vent_nonlinmask.SetImageIO("NiftiImageIO")
+        reader_filename_vent_nonlinmask.SetFileName('/workinginput/warped_1_scct_strippedResampled1_onlyventricleSAH_511_04042022_0918_4_resaved_levelset_brain_f.nii.gz')
+        ventricle_nonlin_mask = reader_filename_vent_nonlinmask.Execute()
+        ventricle_nonlin_mask_np=sitk.GetArrayFromImage(ventricle_nonlin_mask)
 
         reader_filename_vent_obb = sitk.ImageFileReader()
         reader_filename_vent_obb.SetImageIO("NiftiImageIO")
@@ -382,6 +387,8 @@ def divideintozones_with_vent_obb(filename_gray,filename_mask,filename_bet,filen
         img_T1_1_forsubtract_itk=sitk.GetImageFromArray(img_T1_1_forsubtract_np)
         img_T1_1_forsubtract_itk.CopyInformation(img_T1_1)
         img_T1_temp_np[ventricle_obb_np<1]=0.0
+        img_T1_temp_np[ventricle_nonlin_mask_np>0]=1.0
+
         # img_T1_temp_np[0:zoneV_min_z1,:,:]=0.0
         # img_T1_temp_np[zoneV_max_z1+1:img_T1_temp_np.shape[0],:,:]=0.0
         img_T1_temp_itk=sitk.GetImageFromArray(img_T1_temp_np)
@@ -453,7 +460,7 @@ def divideintozones_with_vent_obb(filename_gray,filename_mask,filename_bet,filen
                     id_of_maxsize_comp=csf_ids[0][0]
 
             initial_seed_point_indexes=[stats.GetMinimumIndex(stats.GetLabels()[id_of_maxsize_comp])]
-            seg_explicit_thresholds = img_T1 # sitk.ConnectedThreshold(img_T1, seedList=initial_seed_point_indexes, lower=100, upper=255)
+            seg_explicit_thresholds = sitk.ConnectedThreshold(img_T1, seedList=initial_seed_point_indexes, lower=100, upper=255)
 
             zoneV_min_z,zoneV_max_z=get_ventricles_range(sitk.GetArrayFromImage(seg_explicit_thresholds))
             subtracted_image=subtract_binary_1(sitk.GetArrayFromImage(img_T1_1),sitk.GetArrayFromImage(seg_explicit_thresholds)*255)
