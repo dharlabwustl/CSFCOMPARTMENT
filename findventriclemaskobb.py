@@ -18,6 +18,21 @@ from skimage import filters
 
 import numpy as np
 import scipy.ndimage as ndi
+def erode_3d_mask(binary_mask, iterations=1):
+    """
+    Erode a 3D binary mask by removing layers from the object.
+
+    Parameters:
+    - binary_mask: 3D numpy array (binary mask of the object)
+    - iterations: Number of erosion iterations to apply (default is 1)
+
+    Returns:
+    - eroded_mask: 3D binary mask that has been eroded.
+    """
+    # Perform binary erosion to shrink the object
+    eroded_mask = ndi.binary_erosion(binary_mask, iterations=iterations).astype(np.uint8)
+
+    return eroded_mask
 
 def fill_holes_in_3d_mask(binary_mask):
     """
@@ -30,6 +45,7 @@ def fill_holes_in_3d_mask(binary_mask):
     - filled_mask: 3D binary mask with the holes filled.
     """
     # Use binary_fill_holes to fill holes inside the mask
+
     filled_mask = ndi.binary_fill_holes(binary_mask).astype(np.uint8)
     filled_mask = ndi.binary_fill_holes(filled_mask).astype(np.uint8)
     filled_mask = ndi.binary_fill_holes(filled_mask).astype(np.uint8)
@@ -47,7 +63,8 @@ def dilate_3d_mask(binary_mask, iterations=1):
     - dilated_mask: 3D binary mask that has been dilated.
     """
     # Perform binary dilation to make the object larger
-    dilated_mask = ndi.binary_dilation(binary_mask, iterations=iterations).astype(np.uint8)
+    dilated_mask=erode_3d_mask(binary_mask, iterations=1)
+    dilated_mask = ndi.binary_dilation(dilated_mask, iterations=iterations).astype(np.uint8)
 
     return dilated_mask
 
