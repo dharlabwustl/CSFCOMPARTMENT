@@ -9,6 +9,78 @@ import pandas as pd
 import numpy as np
 from sklearn.decomposition import PCA
 from scipy.spatial import ConvexHull, Delaunay
+
+import numpy as np
+import scipy.ndimage as ndi
+
+def get_3d_contour(binary_mask):
+    """
+    Given a 3D binary mask, computes the contour (boundary) voxels of the object
+    and returns a binary mask of the contour.
+
+    Parameters:
+    - binary_mask: 3D numpy array (binary mask of the object)
+
+    Returns:
+    - contour_mask: 3D binary mask of the contour (boundary) of the object
+    """
+    # Step 1: Perform a binary erosion to shrink the object
+    eroded_mask = ndi.binary_erosion(binary_mask)
+
+    # Step 2: Subtract the eroded mask from the original mask to get the contour
+    contour_mask = binary_mask - eroded_mask
+
+    # Ensure the contour mask only contains binary values (0 and 1)
+    contour_mask = np.clip(contour_mask, 0, 1)
+
+    return contour_mask
+
+def fill_contour_to_3d_mask(contour_mask):
+    """
+    Given a 3D binary mask representing the contour (boundary) of an object, fill the interior
+    to get the solid object and return the binary mask of the filled object.
+
+    Parameters:
+    - contour_mask: 3D numpy array (binary mask of the contour)
+
+    Returns:
+    - filled_mask: 3D binary mask with the contour's interior filled (solid object).
+    """
+    # Step 1: Fill the interior of the object (from the contour) using binary fill holes
+    filled_mask = ndi.binary_fill_holes(contour_mask).astype(np.uint8)
+
+    return filled_mask
+
+def process_3d_binary_mask(binary_mask):
+    """
+    Given a 3D binary mask, finds its contour and returns a binary mask of the filled contour.
+
+    Parameters:
+    - binary_mask: 3D numpy array (binary mask of the object)
+
+    Returns:
+    - filled_contour_mask: 3D binary mask where the contour has been filled.
+    """
+    # Step 1: Get the contour of the binary mask
+    contour_mask = get_3d_contour(binary_mask)
+
+    # Step 2: Fill the contour to get the filled mask
+    filled_contour_mask = fill_contour_to_3d_mask(contour_mask)
+
+    return filled_contour_mask
+
+# # Example usage:
+# # Replace this with your actual 3D binary mask
+# binary_mask = np.zeros((10, 10, 10), dtype=np.uint8)
+# binary_mask[3:7, 3:7, 3:7] = 1  # Example filled 3D block
+#
+# # Process the binary mask to get the filled contour mask
+# filled_contour_mask = process_3d_binary_mask(binary_mask)
+#
+# # Print the result
+# print("3D Mask of the Filled Contour (Solid Object):")
+# print(filled_contour_mask)
+
 def save_nifti_without_affine(matrix, filename):
     """
     Save a 3D matrix as a NIfTI file without explicitly providing an affine matrix.
@@ -124,5 +196,8 @@ upper_lower_limit_vent_df.columns=['SESSION_ID','SCAN_ID','NIFTI_FILENAME','LOWE
 print(upper_lower_limit_vent_df)
 # upper_lower_limit_vent_df.to_csv(os.path.join(SAVE_PATH,original_nifti_filename.split('.nii')[0]+'_ventricle_bounds.csv'),index=False)
 upper_lower_limit_vent_df.to_csv(os.path.join(sys.argv[3],'ventricle_bounds.csv'),index=False)
+filled_contour_mask = process_3d_binary_mask(ventricle_mask)
+array_img = nib.Nifti1Image(filled_contour_mask, affine=csf_mask_nib.affine, header=csf_mask_nib.header)
+nib.save(array_img, os.path.join(sys.argv[3],'ventricle_contour.nii'))
 
 
