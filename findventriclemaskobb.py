@@ -12,6 +12,9 @@ from scipy.spatial import ConvexHull, Delaunay
 
 import numpy as np
 import scipy.ndimage as ndi
+import numpy as np
+import scipy.ndimage as ndi
+from skimage import filters
 
 def get_3d_contour(binary_mask):
     """
@@ -35,6 +38,25 @@ def get_3d_contour(binary_mask):
 
     return contour_mask
 
+def smooth_contour(contour_mask, sigma=1):
+    """
+    Apply a Gaussian filter to smooth the contour of a 3D mask.
+
+    Parameters:
+    - contour_mask: 3D numpy array (binary mask of the contour)
+    - sigma: Standard deviation for Gaussian kernel for smoothing (default is 1)
+
+    Returns:
+    - smoothed_contour: 3D binary mask of the smoothed contour.
+    """
+    # Apply Gaussian smoothing to the contour
+    smoothed_contour = filters.gaussian(contour_mask, sigma=sigma)
+
+    # Convert back to a binary mask (threshold at 0.5)
+    smoothed_contour = (smoothed_contour > 0.5).astype(np.uint8)
+
+    return smoothed_contour
+
 def fill_contour_to_3d_mask(contour_mask):
     """
     Given a 3D binary mask representing the contour (boundary) of an object, fill the interior
@@ -51,29 +73,31 @@ def fill_contour_to_3d_mask(contour_mask):
 
     return filled_mask
 
-def process_3d_binary_mask(binary_mask):
+def process_3d_binary_mask(binary_mask, sigma=1):
     """
-    Given a 3D binary mask, finds its contour and returns a binary mask of the filled contour.
+    Given a 3D binary mask, finds its contour, smooths the contour, and returns a binary mask
+    of the filled contour.
 
     Parameters:
     - binary_mask: 3D numpy array (binary mask of the object)
+    - sigma: Standard deviation for Gaussian smoothing (default is 1)
 
     Returns:
-    - filled_contour_mask: 3D binary mask where the contour has been filled.
+    - filled_contour_mask: 3D binary mask where the contour has been smoothed and filled.
     """
     # Step 1: Get the contour of the binary mask
     contour_mask = get_3d_contour(binary_mask)
 
-    # Step 2: Fill the contour to get the filled mask
-    filled_contour_mask = fill_contour_to_3d_mask(contour_mask)
+    # Step 2: Smooth the contour using Gaussian filtering
+    smoothed_contour_mask = smooth_contour(contour_mask, sigma=sigma)
+
+    # Step 3: Fill the contour to get the filled mask
+    filled_contour_mask = fill_contour_to_3d_mask(smoothed_contour_mask)
 
     return filled_contour_mask
 
-# # Example usage:
-# # Replace this with your actual 3D binary mask
-# binary_mask = np.zeros((10, 10, 10), dtype=np.uint8)
-# binary_mask[3:7, 3:7, 3:7] = 1  # Example filled 3D block
-#
+
+
 # # Process the binary mask to get the filled contour mask
 # filled_contour_mask = process_3d_binary_mask(binary_mask)
 #
@@ -198,8 +222,18 @@ print(upper_lower_limit_vent_df)
 upper_lower_limit_vent_df.to_csv(os.path.join(sys.argv[3],'ventricle_bounds.csv'),index=False)
 
 ventricle_mask=nib.load( os.path.join(sys.argv[3],'ventricle.nii')).get_fdata()
-filled_contour_mask = process_3d_binary_mask(ventricle_mask)
+filled_contour_mask =process_3d_binary_mask(ventricle_mask, sigma=1) # process_3d_binary_mask(ventricle_mask)
 array_img = nib.Nifti1Image(filled_contour_mask, affine=csf_mask_nib.affine, header=csf_mask_nib.header)
 nib.save(array_img, os.path.join(sys.argv[3],'ventricle_contour.nii'))
 
+# Example usage:
+# Replace this with your actual 3D binary mask
+# binary_mask = np.zeros((20, 20, 20), dtype=np.uint8)
+# binary_mask[5:15, 5:15, 5:15] = 1  # Example filled 3D block
 
+# Process the binary mask to get the filled contour mask
+# filled_contour_mask = process_3d_binary_mask(binary_mask, sigma=1)
+
+# # Print the result
+# print("3D Mask of the Filled and Smoothed Contour:")
+# print(filled_contour_mask)
