@@ -195,7 +195,7 @@ print(upper_lower_limit_vent_df)
 upper_lower_limit_vent_df.to_csv(os.path.join(sys.argv[3],'ventricle_bounds.csv'),index=False)
 
 ventricle_mask=nib.load( os.path.join(sys.argv[3],'ventricle.nii')).get_fdata()
-filled_contour_mask =fill_dilate_and_fill_3d_mask(ventricle_mask, dilation_iterations=2) #process_3d_binary_mask(ventricle_mask, sigma=1) # process_3d_binary_mask(ventricle_mask)
+filled_contour_mask =fill_dilate_and_fill_3d_mask(ventricle_mask, dilation_iterations=5) #process_3d_binary_mask(ventricle_mask, sigma=1) # process_3d_binary_mask(ventricle_mask)
 array_img = nib.Nifti1Image(filled_contour_mask, affine=csf_mask_nib.affine, header=csf_mask_nib.header)
 nib.save(array_img, os.path.join(sys.argv[3],'ventricle_contour.nii'))
 #
