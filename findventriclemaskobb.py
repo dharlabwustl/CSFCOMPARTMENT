@@ -555,7 +555,7 @@ print(closest_voxels)
 print("\nOBB Mask:")
 print(obb_mask)
 print('closest_voxels')
-print(closest_voxels.shape)
+print(np.array(closest_voxels.shape))
 nib.save(array_img, os.path.join(sys.argv[3],'ventricle_contour.nii'))
 #
 # # Example usage:
