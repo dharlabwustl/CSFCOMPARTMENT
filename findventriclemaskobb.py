@@ -21,6 +21,60 @@ import scipy.ndimage as ndi
 ##############################
 import numpy as np
 import cv2
+import numpy as np
+from sklearn.decomposition import PCA
+
+def fit_ellipsoid_to_3d_mask(binary_mask):
+    """
+    Fit a best-fit ellipsoid to a 3D binary mask and return a binary mask representing the region
+    inside the ellipsoid.
+
+    Parameters:
+    - binary_mask: 3D numpy array (binary mask of the object)
+
+    Returns:
+    - ellipsoid_mask: 3D numpy array (binary mask of the ellipsoid).
+    """
+    # Step 1: Find the non-zero points (coordinates where the mask is non-zero)
+    points = np.column_stack(np.nonzero(binary_mask))
+
+    if points.size == 0:
+        # If there are no points in the mask, return an empty mask
+        return np.zeros_like(binary_mask)
+
+    # Step 2: Apply PCA to find the principal components (directions of maximum variance)
+    pca = PCA(n_components=3)
+    pca.fit(points)
+
+    # Get the center of the ellipsoid (mean of the points)
+    center = np.mean(points, axis=0)
+
+    # Step 3: Get the axes of the ellipsoid (radii) from the PCA components
+    radii = np.sqrt(np.var(points @ pca.components_.T, axis=0))  # Standard deviations along PCA axes
+
+    # Step 4: Generate a grid of points for the mask
+    grid_x, grid_y, grid_z = np.indices(binary_mask.shape)
+
+    # Step 5: Translate grid points relative to the ellipsoid center
+    grid_points = np.stack([grid_x - center[0], grid_y - center[1], grid_z - center[2]], axis=-1)
+    grid_points = grid_points.reshape(-1, 3)
+
+    # Step 6: Rotate the grid points to align with the principal axes
+    rotated_grid_points = grid_points @ pca.components_
+
+    # Step 7: Normalize the rotated grid points by the radii of the ellipsoid
+    normalized_points = rotated_grid_points / radii
+
+    # Step 8: Compute the distance from the center in the normalized space
+    distance_from_center = np.sum(normalized_points**2, axis=1)
+
+    # Step 9: Points inside the ellipsoid will have a distance <= 1
+    ellipsoid_mask = (distance_from_center <= 1).reshape(binary_mask.shape)
+
+    return ellipsoid_mask.astype(np.uint8)
+
+
+
 
 def fit_and_fill_ellipse_2d(slice_2d):
     """
@@ -302,9 +356,19 @@ ventricle_mask=nib.load( os.path.join(sys.argv[3],'ventricle.nii')).get_fdata()
 # # Print or visualize the result
 # print("3D Mask with Fitted and Filled Ellipses for Each Slice:")
 # print(ellipse_3d_mask)
+# Example usage:
+# Replace this with your actual 3D binary mask
+# binary_mask = np.zeros((100, 100, 100), dtype=np.uint8)
+# binary_mask[30:70, 30:70, 30:70] = 1  # Example filled 3D block
 
+# Fit an ellipsoid to the mask and get the ellipsoid binary mask
+filled_contour_mask = fit_ellipsoid_to_3d_mask(ventricle_mask)
+#
+# # Print or visualize the result
+# print("3D Mask of the Best-Fit Ellipsoid:")
+# print(ellipsoid_mask)
 
-filled_contour_mask =fill_dilate_and_fill_3d_mask(ventricle_mask, dilation_iterations=20) #process_3d_binary_mask(ventricle_mask, sigma=1) # process_3d_binary_mask(ventricle_mask)
+# filled_contour_mask =fill_dilate_and_fill_3d_mask(ventricle_mask, dilation_iterations=20) #process_3d_binary_mask(ventricle_mask, sigma=1) # process_3d_binary_mask(ventricle_mask)
 array_img = nib.Nifti1Image(filled_contour_mask, affine=csf_mask_nib.affine, header=csf_mask_nib.header)
 nib.save(array_img, os.path.join(sys.argv[3],'ventricle_contour.nii'))
 #
