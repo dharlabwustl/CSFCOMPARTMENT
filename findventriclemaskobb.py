@@ -23,7 +23,24 @@ import numpy as np
 import cv2
 import numpy as np
 from sklearn.decomposition import PCA
+def smooth_3d_mask(binary_mask, sigma=1):
+    """
+    Smooth the boundary of a 3D binary mask using a Gaussian filter.
 
+    Parameters:
+    - binary_mask: 3D numpy array (binary mask of the object)
+    - sigma: Standard deviation for Gaussian kernel (default is 1)
+
+    Returns:
+    - smoothed_mask: 3D numpy array (smoothed binary mask).
+    """
+    # Step 1: Apply a Gaussian filter to smooth the edges of the mask
+    smoothed = filters.gaussian(binary_mask.astype(float), sigma=sigma)
+
+    # Step 2: Threshold the smoothed mask back to binary
+    smoothed_mask = smoothed > 0.5
+
+    return smoothed_mask.astype(np.uint8)
 def fit_ellipsoid_to_3d_mask(binary_mask):
     """
     Fit a best-fit ellipsoid to a 3D binary mask and return a binary mask representing the region
@@ -369,7 +386,8 @@ ventricle_mask=nib.load( os.path.join(sys.argv[3],'ventricle.nii')).get_fdata()
 # print(ellipsoid_mask)
 
 filled_contour_mask =fill_dilate_and_fill_3d_mask(ventricle_mask, dilation_iterations=20) #process_3d_binary_mask(ventricle_mask, sigma=1) # process_3d_binary_mask(ventricle_mask)
-filled_contour_mask = fit_ellipsoid_to_3d_mask(filled_contour_mask)
+# filled_contour_mask = fit_ellipsoid_to_3d_mask(filled_contour_mask)
+filled_contour_mask = smooth_3d_mask(filled_contour_mask, sigma=3)
 array_img = nib.Nifti1Image(filled_contour_mask, affine=csf_mask_nib.affine, header=csf_mask_nib.header)
 nib.save(array_img, os.path.join(sys.argv[3],'ventricle_contour.nii'))
 #
