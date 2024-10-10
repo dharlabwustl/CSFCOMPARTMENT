@@ -18,6 +18,78 @@ from skimage import filters
 
 import numpy as np
 import scipy.ndimage as ndi
+##############################
+import numpy as np
+import cv2
+
+def fit_and_fill_ellipse_2d(slice_2d):
+    """
+    Fit an ellipse to a 2D binary mask slice, fill the ellipse, and return the filled slice.
+
+    Parameters:
+    - slice_2d: 2D numpy array (binary mask of a single slice)
+
+    Returns:
+    - filled_slice: 2D binary mask with the filled ellipse.
+    """
+    # Find the non-zero points (coordinates where the mask is non-zero)
+    points = cv2.findNonZero(slice_2d.astype(np.uint8))
+
+    # If there are no points in the slice, return an empty slice
+    if points is None:
+        return np.zeros_like(slice_2d)
+
+    # Fit an ellipse to the points
+    ellipse = cv2.fitEllipse(points)
+
+    # Create an empty mask for the slice
+    filled_slice = np.zeros_like(slice_2d)
+
+    # Draw and fill the ellipse on the mask
+    cv2.ellipse(filled_slice, ellipse, color=1, thickness=-1)  # Thickness -1 fills the ellipse
+
+    return filled_slice
+
+def fit_ellipse_to_3d_mask(binary_mask):
+    """
+    For each slice in the 3D binary mask, fit and fill an ellipse that encompasses all the pixels
+    of that slice, and return a 3D mask of the stacked ellipses.
+
+    Parameters:
+    - binary_mask: 3D numpy array (binary mask of the object)
+
+    Returns:
+    - ellipse_mask: 3D numpy array with ellipses fitted and filled for each slice.
+    """
+    # Get the shape of the 3D mask
+    z_slices, height, width = binary_mask.shape
+
+    # Initialize an empty 3D mask to store the ellipses
+    ellipse_mask = np.zeros((z_slices, height, width), dtype=np.uint8)
+
+    # Iterate through each slice and fit an ellipse
+    for z in range(z_slices):
+        # Fit and fill the ellipse for the current slice
+        ellipse_mask[z] = fit_and_fill_ellipse_2d(binary_mask[z])
+
+    return ellipse_mask
+
+# # Example usage:
+# # Replace this with your actual 3D binary mask
+# binary_mask = np.zeros((10, 100, 100), dtype=np.uint8)
+# cv2.circle(binary_mask[5], (50, 50), 30, 1, -1)  # Example filled 2D circle in slice 5
+# cv2.rectangle(binary_mask[6], (30, 30), (70, 70), 1, -1)  # Example filled rectangle in slice 6
+#
+# # Fit ellipses for each 2D slice and create the 3D mask of stacked ellipses
+# ellipse_3d_mask = fit_ellipse_to_3d_mask(binary_mask)
+#
+# # Print or visualize the result
+# print("3D Mask with Fitted and Filled Ellipses for Each Slice:")
+# print(ellipse_3d_mask)
+
+
+##################################
+
 def erode_3d_mask(binary_mask, iterations=1):
     """
     Erode a 3D binary mask by removing layers from the object.
@@ -212,8 +284,22 @@ print(upper_lower_limit_vent_df)
 upper_lower_limit_vent_df.to_csv(os.path.join(sys.argv[3],'ventricle_bounds.csv'),index=False)
 
 ventricle_mask=nib.load( os.path.join(sys.argv[3],'ventricle.nii')).get_fdata()
-filled_contour_mask =fill_dilate_and_fill_3d_mask(ventricle_mask, dilation_iterations=2) #process_3d_binary_mask(ventricle_mask, sigma=1) # process_3d_binary_mask(ventricle_mask)
-array_img = nib.Nifti1Image(filled_contour_mask, affine=csf_mask_nib.affine, header=csf_mask_nib.header)
+# # Example usage:
+# # Replace this with your actual 3D binary mask
+# binary_mask = np.zeros((10, 100, 100), dtype=np.uint8)
+# cv2.circle(binary_mask[5], (50, 50), 30, 1, -1)  # Example filled 2D circle in slice 5
+# cv2.rectangle(binary_mask[6], (30, 30), (70, 70), 1, -1)  # Example filled rectangle in slice 6
+
+# Fit ellipses for each 2D slice and create the 3D mask of stacked ellipses
+ellipse_3d_mask = fit_ellipse_to_3d_mask(ventricle_mask)
+
+# Print or visualize the result
+print("3D Mask with Fitted and Filled Ellipses for Each Slice:")
+print(ellipse_3d_mask)
+
+
+# filled_contour_mask =fill_dilate_and_fill_3d_mask(ventricle_mask, dilation_iterations=2) #process_3d_binary_mask(ventricle_mask, sigma=1) # process_3d_binary_mask(ventricle_mask)
+array_img = nib.Nifti1Image(ellipse_3d_mask, affine=csf_mask_nib.affine, header=csf_mask_nib.header)
 nib.save(array_img, os.path.join(sys.argv[3],'ventricle_contour.nii'))
 #
 # # Example usage:
