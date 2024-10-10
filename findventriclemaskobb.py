@@ -538,24 +538,24 @@ ventricle_mask=nib.load( os.path.join(sys.argv[3],'ventricle.nii')).get_fdata()
 # print("3D Mask of the Best-Fit Ellipsoid:")
 # print(ellipsoid_mask)
 
-# filled_contour_mask =fill_dilate_and_fill_3d_mask(ventricle_mask, dilation_iterations=20) #process_3d_binary_mask(ventricle_mask, sigma=1) # process_3d_binary_mask(ventricle_mask)
-# filled_contour_mask = fit_ellipsoid_to_3d_mask(filled_contour_mask)
-# filled_contour_mask = smooth_3d_mask(filled_contour_mask, sigma=3)
-# array_img = nib.Nifti1Image(filled_contour_mask, affine=csf_mask_nib.affine, header=csf_mask_nib.header)
+filled_contour_mask =fill_dilate_and_fill_3d_mask(ventricle_mask, dilation_iterations=20) #process_3d_binary_mask(ventricle_mask, sigma=1) # process_3d_binary_mask(ventricle_mask)
+filled_contour_mask = fit_ellipsoid_to_3d_mask(filled_contour_mask)
+filled_contour_mask = smooth_3d_mask(filled_contour_mask, sigma=3)
+array_img = nib.Nifti1Image(filled_contour_mask, affine=csf_mask_nib.affine, header=csf_mask_nib.header)
 # Example usage:
 # binary_mask = np.zeros((100, 100, 100), dtype=np.uint8)
 # binary_mask[30:70, 30:70, 30:70] = 1  # Example filled 3D block
 
-# Process the 3D mask to get the closest non-zero voxels and OBB mask
-closest_voxels, obb_mask = process_3d_mask(ventricle_mask)
-
-print("Closest non-zero voxel coordinates to the centroids:")
-print(closest_voxels)
-
-print("\nOBB Mask:")
-print(obb_mask)
-print('closest_voxels')
-print(np.array(closest_voxels).shape)
+# # Process the 3D mask to get the closest non-zero voxels and OBB mask
+# closest_voxels, obb_mask = process_3d_mask(ventricle_mask)
+#
+# print("Closest non-zero voxel coordinates to the centroids:")
+# print(closest_voxels)
+#
+# print("\nOBB Mask:")
+# print(obb_mask)
+# print('closest_voxels')
+# print(np.array(closest_voxels).shape)
 nib.save(array_img, os.path.join(sys.argv[3],'ventricle_contour.nii'))
 #
 # # Example usage:
