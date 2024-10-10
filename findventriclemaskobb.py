@@ -23,6 +23,159 @@ import numpy as np
 import cv2
 import numpy as np
 from sklearn.decomposition import PCA
+#########################################################
+import numpy as np
+from sklearn.decomposition import PCA
+from scipy.spatial import distance
+
+def get_obb_mask(binary_mask):
+    """
+    Fit the Oriented Bounding Box (OBB) to the binary mask and return the mask of the OBB.
+
+    Parameters:
+    - binary_mask: 3D numpy array (binary mask of the object)
+
+    Returns:
+    - obb_mask: 3D numpy array (mask of the OBB)
+    - obb_corners: 8 corner points of the OBB in the original space
+    """
+    # Find non-zero points (the object)
+    points = np.column_stack(np.nonzero(binary_mask))
+
+    if points.size == 0:
+        # If no object, return an empty mask
+        return np.zeros_like(binary_mask), []
+
+    # Apply PCA to get the principal axes of the object
+    pca = PCA(n_components=3)
+    pca.fit(points)
+
+    # Rotate the points to align with principal axes
+    points_rotated = pca.transform(points)
+
+    # Get the bounding box in the rotated space
+    min_bounds = np.min(points_rotated, axis=0)
+    max_bounds = np.max(points_rotated, axis=0)
+
+    # Get the 8 corners of the bounding box in rotated space
+    corners_rotated = np.array([
+        [min_bounds[0], min_bounds[1], min_bounds[2]],
+        [min_bounds[0], min_bounds[1], max_bounds[2]],
+        [min_bounds[0], max_bounds[1], min_bounds[2]],
+        [min_bounds[0], max_bounds[1], max_bounds[2]],
+        [max_bounds[0], min_bounds[1], min_bounds[2]],
+        [max_bounds[0], min_bounds[1], max_bounds[2]],
+        [max_bounds[0], max_bounds[1], min_bounds[2]],
+        [max_bounds[0], max_bounds[1], max_bounds[2]],
+    ])
+
+    # Rotate the corners back to the original space
+    obb_corners = pca.inverse_transform(corners_rotated)
+
+    # Create an empty mask and fill it with the OBB
+    obb_mask = np.zeros_like(binary_mask)
+
+    # Find indices for the bounding box
+    x_min, y_min, z_min = np.floor(np.min(obb_corners, axis=0)).astype(int)
+    x_max, y_max, z_max = np.ceil(np.max(obb_corners, axis=0)).astype(int)
+
+    # Fill the OBB mask
+    obb_mask[x_min:x_max+1, y_min:y_max+1, z_min:z_max+1] = 1
+
+    return obb_mask, obb_corners
+
+def subdivide_obb(obb_corners):
+    """
+    Subdivide the OBB into 4 smaller boxes and find their centroids.
+
+    Parameters:
+    - obb_corners: 8 corner points of the OBB
+
+    Returns:
+    - centroids: List of 4 centroids of the subdivided boxes
+    """
+    # Calculate the centroid of the OBB
+    obb_center = np.mean(obb_corners, axis=0)
+
+    # Subdivide the bounding box by dividing it into four smaller boxes
+    min_corner = np.min(obb_corners, axis=0)
+    max_corner = np.max(obb_corners, axis=0)
+    mid_corner = (min_corner + max_corner) / 2
+
+    # Create 4 smaller boxes (subdividing along all 3 axes)
+    centroids = [
+        (min_corner + mid_corner) / 2,  # Lower box
+        [mid_corner[0], (min_corner[1] + mid_corner[1]) / 2, (min_corner[2] + mid_corner[2]) / 2],  # Mid left
+        [mid_corner[0], (max_corner[1] + mid_corner[1]) / 2, (max_corner[2] + mid_corner[2]) / 2],  # Mid right
+        (max_corner + mid_corner) / 2,  # Upper box
+    ]
+    return centroids
+
+def find_closest_non_zero_voxel(binary_mask, centroids):
+    """
+    For each centroid, find the closest non-zero voxel in the binary mask.
+
+    Parameters:
+    - binary_mask: 3D numpy array (binary mask of the object)
+    - centroids: List of centroids from the subdivided boxes
+
+    Returns:
+    - closest_voxels: List of coordinates of the closest non-zero voxels to the centroids
+    """
+    non_zero_voxels = np.column_stack(np.nonzero(binary_mask))
+
+    if non_zero_voxels.size == 0:
+        return []
+
+    closest_voxels = []
+
+    for centroid in centroids:
+        distances = distance.cdist([centroid], non_zero_voxels)
+        closest_idx = np.argmin(distances)
+        closest_voxels.append(non_zero_voxels[closest_idx])
+
+    return closest_voxels
+
+def process_3d_mask(binary_mask):
+    """
+    Main function to get the OBB mask, subdivide it, find centroids, and return the closest
+    non-zero voxels to the centroids.
+
+    Parameters:
+    - binary_mask: 3D numpy array (binary mask of the object)
+
+    Returns:
+    - closest_voxels: Coordinates of the closest non-zero voxels to the centroids
+    - obb_mask: 3D mask of the OBB
+    """
+    # Step 1: Get the OBB mask
+    obb_mask, obb_corners = get_obb_mask(binary_mask)
+
+    # Step 2: Subdivide the OBB and find the centroids of the subdivided boxes
+    centroids = subdivide_obb(obb_corners)
+
+    # Step 3: Find the closest non-zero voxels to the centroids in the original binary mask
+    closest_voxels = find_closest_non_zero_voxel(binary_mask, centroids)
+
+    return closest_voxels, obb_mask
+
+# # Example usage:
+# binary_mask = np.zeros((100, 100, 100), dtype=np.uint8)
+# binary_mask[30:70, 30:70, 30:70] = 1  # Example filled 3D block
+#
+# # Process the 3D mask to get the closest non-zero voxels and OBB mask
+# closest_voxels, obb_mask = process_3d_mask(binary_mask)
+#
+# print("Closest non-zero voxel coordinates to the centroids:")
+# print(closest_voxels)
+#
+# print("\nOBB Mask:")
+# print(obb_mask)
+
+
+
+#########################################################
+
 def smooth_3d_mask(binary_mask, sigma=1):
     """
     Smooth the boundary of a 3D binary mask using a Gaussian filter.
@@ -385,10 +538,24 @@ ventricle_mask=nib.load( os.path.join(sys.argv[3],'ventricle.nii')).get_fdata()
 # print("3D Mask of the Best-Fit Ellipsoid:")
 # print(ellipsoid_mask)
 
-filled_contour_mask =fill_dilate_and_fill_3d_mask(ventricle_mask, dilation_iterations=20) #process_3d_binary_mask(ventricle_mask, sigma=1) # process_3d_binary_mask(ventricle_mask)
+# filled_contour_mask =fill_dilate_and_fill_3d_mask(ventricle_mask, dilation_iterations=20) #process_3d_binary_mask(ventricle_mask, sigma=1) # process_3d_binary_mask(ventricle_mask)
 # filled_contour_mask = fit_ellipsoid_to_3d_mask(filled_contour_mask)
-filled_contour_mask = smooth_3d_mask(filled_contour_mask, sigma=3)
-array_img = nib.Nifti1Image(filled_contour_mask, affine=csf_mask_nib.affine, header=csf_mask_nib.header)
+# filled_contour_mask = smooth_3d_mask(filled_contour_mask, sigma=3)
+# array_img = nib.Nifti1Image(filled_contour_mask, affine=csf_mask_nib.affine, header=csf_mask_nib.header)
+# Example usage:
+# binary_mask = np.zeros((100, 100, 100), dtype=np.uint8)
+# binary_mask[30:70, 30:70, 30:70] = 1  # Example filled 3D block
+
+# Process the 3D mask to get the closest non-zero voxels and OBB mask
+closest_voxels, obb_mask = process_3d_mask(ventricle_mask)
+
+print("Closest non-zero voxel coordinates to the centroids:")
+print(closest_voxels)
+
+print("\nOBB Mask:")
+print(obb_mask)
+print('closest_voxels')
+print(closest_voxels)
 nib.save(array_img, os.path.join(sys.argv[3],'ventricle_contour.nii'))
 #
 # # Example usage:
