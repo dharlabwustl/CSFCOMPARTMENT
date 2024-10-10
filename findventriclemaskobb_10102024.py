@@ -819,7 +819,7 @@ def divideintozones_v1_with_vent_bound(filename_gray,filename_mask,filename_bet,
     return  sulci_vol, ventricle_vol,leftcountven,rightcountven,leftcountsul,rightcountsul,sulci_vol_above_vent,sulci_vol_below_vent,sulci_vol_at_vent
     # return sulci_vol, ventricle_vol,leftcountven*resol,rightcountven*resol,leftcountsul*resol,rightcountsul*resol,sulci_vol_above_vent,sulci_vol_below_vent,sulci_vol_at_vent #seg_explicit_thresholds, subtracted_image
 
-def divideintozones_with_vent_obb(filename_gray,filename_mask,filename_bet,filename_vent_obb,zoneV_min_z,zoneV_max_z):
+def divideintozones_with_vent_obb_with_four_centroid(filename_gray,filename_mask,filename_bet,filename_vent_obb,closest_voxels,zoneV_min_z,zoneV_max_z):
     try:
         sulci_vol, ventricle_vol,leftcountven,rightcountven,leftcountsul,rightcountsul,sulci_vol_above_vent,sulci_vol_below_vent,sulci_vol_at_vent=(0,0,0,0,0,0,0,0,0) #seg_explicit_thresholds, subtracted_image
         #######################
@@ -1024,3 +1024,8 @@ print(obb_mask)
 print('closest_voxels')
 print(np.array(closest_voxels).shape)
 nib.save(array_img, os.path.join(sys.argv[3],'ventricle_contour.nii'))
+filename_gray=sys.argv[4]
+filename_mask=sys.argv[5]
+filename_bet=sys.argv[6]
+filename_vent_obb=os.path.join(sys.argv[3],'ventricle_obb_mask.nii')
+divideintozones_with_vent_obb_with_four_centroid(filename_gray,filename_mask,filename_bet,filename_vent_obb,closest_voxels,zoneV_min_z,zoneV_max_z):
