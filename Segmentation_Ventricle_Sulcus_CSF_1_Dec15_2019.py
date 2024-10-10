@@ -388,8 +388,8 @@ def divideintozones_with_vent_obb(filename_gray,filename_mask,filename_bet,filen
         img_T1_1_forsubtract_np=np.copy(img_T1_temp_np)
         img_T1_1_forsubtract_itk=sitk.GetImageFromArray(img_T1_1_forsubtract_np)
         img_T1_1_forsubtract_itk.CopyInformation(img_T1_1)
-        # img_T1_temp_np[ventricle_obb_np<1]=0.0
-        img_T1_temp_np[ventricle_nonlin_mask_np<1]=0.0
+        img_T1_temp_np[ventricle_obb_np<1]=0.0
+        # img_T1_temp_np[ventricle_nonlin_mask_np<1]=0.0
         # img_T1_temp_np[0:zoneV_min_z1,:,:]=0.0
         # img_T1_temp_np[zoneV_max_z1+1:img_T1_temp_np.shape[0],:,:]=0.0
         img_T1_temp_itk=sitk.GetImageFromArray(img_T1_temp_np)
@@ -461,9 +461,9 @@ def divideintozones_with_vent_obb(filename_gray,filename_mask,filename_bet,filen
                     id_of_maxsize_comp=csf_ids[0][0]
 
             initial_seed_point_indexes=[stats.GetMinimumIndex(stats.GetLabels()[id_of_maxsize_comp])]
-            seg_explicit_thresholds =img_T1 # sitk.ConnectedThreshold(img_T1, seedList=initial_seed_point_indexes, lower=100, upper=255)
+            seg_explicit_thresholds =sitk.ConnectedThreshold(img_T1, seedList=initial_seed_point_indexes, lower=100, upper=255)
 
-            zoneV_min_z__,zoneV_max_z=get_ventricles_range(sitk.GetArrayFromImage(seg_explicit_thresholds))
+            zoneV_min_z,zoneV_max_z=get_ventricles_range(sitk.GetArrayFromImage(seg_explicit_thresholds))
             subtracted_image=subtract_binary_1(sitk.GetArrayFromImage(img_T1_1),sitk.GetArrayFromImage(seg_explicit_thresholds)*255)
             subtracted_image=sitk.GetImageFromArray(subtracted_image)
             above_ventricle_image= sitk.GetArrayFromImage(subtracted_image)
