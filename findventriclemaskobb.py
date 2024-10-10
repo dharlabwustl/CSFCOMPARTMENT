@@ -362,13 +362,14 @@ ventricle_mask=nib.load( os.path.join(sys.argv[3],'ventricle.nii')).get_fdata()
 # binary_mask[30:70, 30:70, 30:70] = 1  # Example filled 3D block
 
 # Fit an ellipsoid to the mask and get the ellipsoid binary mask
-filled_contour_mask = fit_ellipsoid_to_3d_mask(ventricle_mask)
+
 #
 # # Print or visualize the result
 # print("3D Mask of the Best-Fit Ellipsoid:")
 # print(ellipsoid_mask)
 
-# filled_contour_mask =fill_dilate_and_fill_3d_mask(ventricle_mask, dilation_iterations=20) #process_3d_binary_mask(ventricle_mask, sigma=1) # process_3d_binary_mask(ventricle_mask)
+filled_contour_mask =fill_dilate_and_fill_3d_mask(ventricle_mask, dilation_iterations=20) #process_3d_binary_mask(ventricle_mask, sigma=1) # process_3d_binary_mask(ventricle_mask)
+filled_contour_mask = fit_ellipsoid_to_3d_mask(filled_contour_mask)
 array_img = nib.Nifti1Image(filled_contour_mask, affine=csf_mask_nib.affine, header=csf_mask_nib.header)
 nib.save(array_img, os.path.join(sys.argv[3],'ventricle_contour.nii'))
 #
