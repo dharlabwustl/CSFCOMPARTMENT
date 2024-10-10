@@ -186,9 +186,9 @@ def process_3d_mask(binary_mask):
     centroids = subdivide_obb(obb_corners)
 
     # Step 3: Find the closest non-zero voxels to the centroids in the original binary mask
-    # closest_voxels = find_closest_non_zero_voxel(binary_mask, centroids)
+    closest_voxels = find_closest_non_zero_voxel(binary_mask, centroids)
 
-    return centroids, obb_mask
+    return closest_voxels, obb_mask
 
 # # Example usage:
 # binary_mask = np.zeros((100, 100, 100), dtype=np.uint8)
