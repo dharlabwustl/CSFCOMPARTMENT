@@ -58,88 +58,107 @@ from sklearn.decomposition import PCA
 import numpy as np
 from sklearn.decomposition import PCA
 from scipy.spatial import distance
+import numpy as np
+from sklearn.decomposition import PCA
+from scipy.spatial import distance
+from itertools import product
 
-def get_obb_mask(binary_mask):
+def compute_obb(binary_mask):
     """
-    Fit the Oriented Bounding Box (OBB) to the binary mask and return the mask of the OBB.
+    Compute the Oriented Bounding Box (OBB) for the non-zero elements in a 3D binary mask using PCA.
 
     Parameters:
     - binary_mask: 3D numpy array (binary mask of the object)
 
     Returns:
-    - obb_mask: 3D numpy array (mask of the OBB)
-    - obb_corners: 8 corner points of the OBB in the original space
+    - obb_corners: The 8 corner points of the OBB (in the original space)
+    - pca_components: The principal components (directions of the OBB)
+    - obb_center: The center point of the OBB (in the original space)
+    - radii: The half-lengths of the OBB along the principal axes
     """
     # Find non-zero points (the object)
     points = np.column_stack(np.nonzero(binary_mask))
 
     if points.size == 0:
-        # If no object, return an empty mask
-        return np.zeros_like(binary_mask), []
+        # If no object, return empty results
+        return None, None, None, None
 
     # Apply PCA to get the principal axes of the object
     pca = PCA(n_components=3)
     pca.fit(points)
 
-    # Rotate the points to align with principal axes
-    points_rotated = pca.transform(points)
+    # Get the OBB center and its half-lengths (radii)
+    obb_center = np.mean(points, axis=0)
+    points_transformed = pca.transform(points)
+    radii = (np.max(points_transformed, axis=0) - np.min(points_transformed, axis=0)) / 2
 
-    # Get the bounding box in the rotated space
-    min_bounds = np.min(points_rotated, axis=0)
-    max_bounds = np.max(points_rotated, axis=0)
+    # Get the 8 corners of the OBB
+    obb_corners_local = np.array(list(product([-1, 1], repeat=3))) * radii
+    obb_corners = pca.inverse_transform(obb_corners_local + pca.transform([obb_center])[0])
 
-    # Get the 8 corners of the bounding box in rotated space
-    corners_rotated = np.array([
-        [min_bounds[0], min_bounds[1], min_bounds[2]],
-        [min_bounds[0], min_bounds[1], max_bounds[2]],
-        [min_bounds[0], max_bounds[1], min_bounds[2]],
-        [min_bounds[0], max_bounds[1], max_bounds[2]],
-        [max_bounds[0], min_bounds[1], min_bounds[2]],
-        [max_bounds[0], min_bounds[1], max_bounds[2]],
-        [max_bounds[0], max_bounds[1], min_bounds[2]],
-        [max_bounds[0], max_bounds[1], max_bounds[2]],
-    ])
+    return obb_corners, pca.components_, obb_center, radii
 
-    # Rotate the corners back to the original space
-    obb_corners = pca.inverse_transform(corners_rotated)
+def create_obb_binary_mask(binary_mask, obb_corners):
+    """
+    Create a binary mask representing the OBB by filling in the OBB region.
 
-    # Create an empty mask and fill it with the OBB
+    Parameters:
+    - binary_mask: 3D numpy array (binary mask of the object)
+    - obb_corners: The 8 corner points of the OBB (in the original space)
+
+    Returns:
+    - obb_mask: 3D numpy array with the OBB region filled with 1s
+    """
+    # Create an empty mask of the same shape as the original binary mask
     obb_mask = np.zeros_like(binary_mask)
 
-    # Find indices for the bounding box
+    # Get the bounding box of the OBB (min and max coordinates along each axis)
     x_min, y_min, z_min = np.floor(np.min(obb_corners, axis=0)).astype(int)
     x_max, y_max, z_max = np.ceil(np.max(obb_corners, axis=0)).astype(int)
 
-    # Fill the OBB mask
+    # Fill the region inside the OBB (axis-aligned for simplicity in this example)
     obb_mask[x_min:x_max+1, y_min:y_max+1, z_min:z_max+1] = 1
 
-    return obb_mask, obb_corners
+    return obb_mask
 
-def subdivide_obb(obb_corners):
+def subdivide_obb(obb_center, radii, pca_components, n_subdivisions):
     """
-    Subdivide the OBB into 4 smaller boxes and find their centroids.
+    Subdivide the Oriented Bounding Box (OBB) into 'n_subdivisions' smaller boxes.
 
     Parameters:
-    - obb_corners: 8 corner points of the OBB
+    - obb_center: The center of the OBB (in the original space)
+    - radii: The half-lengths of the OBB along each principal axis
+    - pca_components: The principal components (rotation matrix of the OBB)
+    - n_subdivisions: Number of equal sub-boxes to divide the OBB into
 
     Returns:
-    - centroids: List of 4 centroids of the subdivided boxes
+    - centroids: A list of centroids of each sub-box (in the original space)
     """
-    # Calculate the centroid of the OBB
-    obb_center = np.mean(obb_corners, axis=0)
+    n_per_axis = int(np.cbrt(n_subdivisions))  # Assume equal divisions along all three axes
 
-    # Subdivide the bounding box by dividing it into four smaller boxes
-    min_corner = np.min(obb_corners, axis=0)
-    max_corner = np.max(obb_corners, axis=0)
-    mid_corner = (min_corner + max_corner) / 2
+    if n_per_axis**3 != n_subdivisions:
+        raise ValueError("n_subdivisions must be a perfect cube for equal division in 3D space.")
 
-    # Create 4 smaller boxes (subdividing along all 3 axes)
-    centroids = [
-        (min_corner + mid_corner) / 2,  # Lower box
-        [mid_corner[0], (min_corner[1] + mid_corner[1]) / 2, (min_corner[2] + mid_corner[2]) / 2],  # Mid left
-        [mid_corner[0], (max_corner[1] + mid_corner[1]) / 2, (max_corner[2] + mid_corner[2]) / 2],  # Mid right
-        (max_corner + mid_corner) / 2,  # Upper box
-    ]
+    # Create the step size for each axis in the local OBB space
+    step_size = 2 * radii / n_per_axis
+
+    # Generate the grid points for subdivision in local OBB space
+    ranges = [np.linspace(-radii[i], radii[i], n_per_axis + 1) for i in range(3)]
+
+    centroids = []
+
+    for i, j, k in product(range(n_per_axis), repeat=3):
+        # Min and max corners in local OBB space
+        sub_box_min_local = np.array([ranges[0][i], ranges[1][j], ranges[2][k]])
+        sub_box_max_local = np.array([ranges[0][i+1], ranges[1][j+1], ranges[2][k+1]])
+
+        # Compute the centroid in local space
+        centroid_local = (sub_box_min_local + sub_box_max_local) / 2
+
+        # Convert centroid to original space using the OBB's rotation and translation
+        centroid_original = pca_components.T @ centroid_local + obb_center
+        centroids.append(centroid_original)
+
     return centroids
 
 def find_closest_non_zero_voxel(binary_mask, centroids):
@@ -167,42 +186,37 @@ def find_closest_non_zero_voxel(binary_mask, centroids):
 
     return closest_voxels
 
-def process_3d_mask(binary_mask):
+def process_binary_mask_with_obb(binary_mask, n_subdivisions=8):
     """
-    Main function to get the OBB mask, subdivide it, find centroids, and return the closest
-    non-zero voxels to the centroids.
+    Process the binary mask to compute the OBB, subdivide it, and find closest non-zero voxels.
+    Also returns the OBB binary mask.
 
     Parameters:
     - binary_mask: 3D numpy array (binary mask of the object)
+    - n_subdivisions: Number of equal-sized sub-boxes to divide the OBB into
 
     Returns:
     - closest_voxels: Coordinates of the closest non-zero voxels to the centroids
-    - obb_mask: 3D mask of the OBB
+    - obb_mask: Binary mask of the OBB
     """
-    # Step 1: Get the OBB mask
-    obb_mask, obb_corners = get_obb_mask(binary_mask)
+    # Step 1: Compute the OBB (Oriented Bounding Box)
+    obb_corners, pca_components, obb_center, radii = compute_obb(binary_mask)
+
+    if obb_corners is None:
+        return None, None
 
     # Step 2: Subdivide the OBB and find the centroids of the subdivided boxes
-    centroids = subdivide_obb(obb_corners)
+    centroids = subdivide_obb(obb_center, radii, pca_components, n_subdivisions)
 
     # Step 3: Find the closest non-zero voxels to the centroids in the original binary mask
     closest_voxels = find_closest_non_zero_voxel(binary_mask, centroids)
 
+    # Step 4: Create the binary mask of the OBB
+    obb_mask = create_obb_binary_mask(binary_mask, obb_corners)
+
     return closest_voxels, obb_mask
 
-# # Example usage:
-# binary_mask = np.zeros((100, 100, 100), dtype=np.uint8)
-# binary_mask[30:70, 30:70, 30:70] = 1  # Example filled 3D block
-#
-# # Process the 3D mask to get the closest non-zero voxels and OBB mask
-# closest_voxels, obb_mask = process_3d_mask(binary_mask)
-#
-# print("Closest non-zero voxel coordinates to the centroids:")
-# print(closest_voxels)
-#
-# print("\nOBB Mask:")
-# print(obb_mask)
-
+# Example usage:
 
 
 #########################################################
@@ -948,9 +962,26 @@ def divideintozones_with_vent_obb_with_four_centroid(filename_gray,filename_mask
             seg_explicit_thresholds2 =sitk.ConnectedThreshold(img_T1, seedList=initial_seed_point_indexes, lower=100, upper=255)
             initial_seed_point_indexes=[(int(closest_voxels[3][0]),int(closest_voxels[3][1]),int(closest_voxels[3][2]))]
             seg_explicit_thresholds3 =sitk.ConnectedThreshold(img_T1, seedList=initial_seed_point_indexes, lower=100, upper=255)
+            initial_seed_point_indexes=[(int(closest_voxels[4][0]),int(closest_voxels[4][1]),int(closest_voxels[4][2]))]
+            seg_explicit_thresholds4 =sitk.ConnectedThreshold(img_T1, seedList=initial_seed_point_indexes, lower=100, upper=255)
+            initial_seed_point_indexes=[(int(closest_voxels[5][0]),int(closest_voxels[5][1]),int(closest_voxels[5][2]))]
+            seg_explicit_thresholds5 =sitk.ConnectedThreshold(img_T1, seedList=initial_seed_point_indexes, lower=100, upper=255)
+            initial_seed_point_indexes=[(int(closest_voxels[6][0]),int(closest_voxels[6][1]),int(closest_voxels[6][2]))]
+            seg_explicit_thresholds6 =sitk.ConnectedThreshold(img_T1, seedList=initial_seed_point_indexes, lower=100, upper=255)
+            initial_seed_point_indexes=[(int(closest_voxels[7][0]),int(closest_voxels[7][1]),int(closest_voxels[7][2]))]
+            seg_explicit_thresholds7 =sitk.ConnectedThreshold(img_T1, seedList=initial_seed_point_indexes, lower=100, upper=255)
+            initial_seed_point_indexes=[(int(closest_voxels[8][0]),int(closest_voxels[8][1]),int(closest_voxels[8][2]))]
+            seg_explicit_thresholds8 =sitk.ConnectedThreshold(img_T1, seedList=initial_seed_point_indexes, lower=100, upper=255)
+
             seg_explicit_thresholds = sitk.Or(seg_explicit_thresholds > 0, seg_explicit_thresholds1 > 0)
             seg_explicit_thresholds = sitk.Or(seg_explicit_thresholds, seg_explicit_thresholds2 > 0)
             seg_explicit_thresholds = sitk.Or(seg_explicit_thresholds, seg_explicit_thresholds3 > 0)
+            seg_explicit_thresholds = sitk.Or(seg_explicit_thresholds, seg_explicit_thresholds4 > 0)
+            seg_explicit_thresholds = sitk.Or(seg_explicit_thresholds, seg_explicit_thresholds5 > 0)
+            seg_explicit_thresholds = sitk.Or(seg_explicit_thresholds, seg_explicit_thresholds5 > 0)
+            seg_explicit_thresholds = sitk.Or(seg_explicit_thresholds, seg_explicit_thresholds7 > 0)
+            seg_explicit_thresholds = sitk.Or(seg_explicit_thresholds, seg_explicit_thresholds8 > 0)
+
 
             zoneV_min_z,zoneV_max_z=get_ventricles_range(sitk.GetArrayFromImage(seg_explicit_thresholds))
             subtracted_image=subtract_binary_1(sitk.GetArrayFromImage(img_T1_1),sitk.GetArrayFromImage(seg_explicit_thresholds)*255)
@@ -1004,7 +1035,21 @@ def divideintozones_with_vent_obb_with_four_centroid(filename_gray,filename_mask
 
 ventricle_mask=Infarct_Mask_filename_June20_data_512=resizeinto_512by512_and_flip(nib.load(sys.argv[1]).get_fdata())
 # ventricle_obb_mask = create_obb_mask_from_image_mask(ventricle_mask)
-centroids, ventricle_obb_mask = process_3d_mask(ventricle_mask)
+################
+centroids, ventricle_obb_mask = process_binary_mask_with_obb(ventricle_mask,n_subdivisions=9)
+# # Example usage:
+# binary_mask = np.zeros((100, 100, 100), dtype=np.uint8)
+# binary_mask[30:70, 30:70, 30:70] = 1  # Example filled 3D block
+#
+# # Process the binary mask with OBB and find the closest non-zero voxels
+# closest_voxels, obb_corners = process_binary_mask_with_obb(binary_mask, n_subdivisions=8)
+#
+# print("Closest non-zero voxel coordinates to the centroids:")
+# print(closest_voxels)
+#
+# print("\nOBB Corners:")
+# print(obb_corners)
+####################
 print('sys.argv[2]::{}'.format(sys.argv[2]))
 csf_mask_nib=nib.load(sys.argv[2])
 # save_nifti_without_affine(ventricle_obb_mask, os.path.join(sys.argv[3],'ventricle_obb_mask.nii'))
