@@ -141,8 +141,8 @@ def dilate_3d_mask(binary_mask, iterations=1):
     - dilated_mask: 3D binary mask that has been dilated.
     """
     # Perform binary dilation to make the object larger
-    dilated_mask=erode_3d_mask(binary_mask, iterations=1)
-    dilated_mask = ndi.binary_dilation(dilated_mask, iterations=iterations).astype(np.uint8)
+    # dilated_mask=erode_3d_mask(binary_mask, iterations=1)
+    dilated_mask = ndi.binary_dilation(binary_mask, iterations=iterations).astype(np.uint8)
 
     return dilated_mask
 
