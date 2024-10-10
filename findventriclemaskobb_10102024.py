@@ -186,9 +186,9 @@ def process_3d_mask(binary_mask):
     centroids = subdivide_obb(obb_corners)
 
     # Step 3: Find the closest non-zero voxels to the centroids in the original binary mask
-    closest_voxels = find_closest_non_zero_voxel(binary_mask, centroids)
+    # closest_voxels = find_closest_non_zero_voxel(binary_mask, centroids)
 
-    return closest_voxels, obb_mask
+    return centroids, obb_mask
 
 # # Example usage:
 # binary_mask = np.zeros((100, 100, 100), dtype=np.uint8)
@@ -1029,15 +1029,15 @@ print(upper_lower_limit_vent_df)
 upper_lower_limit_vent_df.to_csv(os.path.join(sys.argv[3],'ventricle_bounds.csv'),index=False)
 
 ventricle_mask=nib.load( os.path.join(sys.argv[3],'ventricle.nii')).get_fdata()
-closest_voxels, obb_mask = process_3d_mask(ventricle_mask)
+centroids, obb_mask = process_3d_mask(ventricle_mask)
 
 print("Closest non-zero voxel coordinates to the centroids:")
-print(closest_voxels)
+print(centroids)
 
 print("\nOBB Mask:")
 print(obb_mask)
 print('closest_voxels')
-print(np.array(closest_voxels).shape)
+print(np.array(centroids).shape)
 nib.save(array_img, os.path.join(sys.argv[3],'ventricle_contour.nii'))
 filename_gray=sys.argv[4]
 filename_mask=sys.argv[2]
