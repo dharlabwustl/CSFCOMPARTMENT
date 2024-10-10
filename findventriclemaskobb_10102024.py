@@ -121,33 +121,37 @@ def create_obb_binary_mask(binary_mask, obb_corners):
 
     return obb_mask
 
-def subdivide_obb(obb_center, radii, pca_components, n_subdivisions):
+def proportional_subdivide_obb(obb_center, radii, pca_components, n_subdivisions):
     """
-    Subdivide the Oriented Bounding Box (OBB) into 'n_subdivisions' smaller boxes.
+    Subdivide the Oriented Bounding Box (OBB) proportionally to its radii (dimensions) along the
+    principal axes.
 
     Parameters:
     - obb_center: The center of the OBB (in the original space)
     - radii: The half-lengths of the OBB along each principal axis
     - pca_components: The principal components (rotation matrix of the OBB)
-    - n_subdivisions: Number of equal sub-boxes to divide the OBB into
+    - n_subdivisions: Number of divisions along the longest axis; the other axes will be divided
+      proportionally.
 
     Returns:
     - centroids: A list of centroids of each sub-box (in the original space)
     """
-    n_per_axis = int(np.cbrt(n_subdivisions))  # Assume equal divisions along all three axes
+    # Step 1: Proportionally subdivide based on the radii along each axis
+    longest_axis_idx = np.argmax(radii)
+    longest_axis_length = radii[longest_axis_idx]
 
-    if n_per_axis**3 != n_subdivisions:
-        raise ValueError("n_subdivisions must be a perfect cube for equal division in 3D space.")
+    # Calculate the number of subdivisions along each axis based on the proportion to the longest axis
+    subdivisions_per_axis = np.ceil(n_subdivisions * (radii / longest_axis_length)).astype(int)
 
-    # Create the step size for each axis in the local OBB space
-    step_size = 2 * radii / n_per_axis
+    # Ensure that we at least have one subdivision along each axis
+    subdivisions_per_axis[subdivisions_per_axis == 0] = 1
 
-    # Generate the grid points for subdivision in local OBB space
-    ranges = [np.linspace(-radii[i], radii[i], n_per_axis + 1) for i in range(3)]
+    # Step 2: Generate the ranges for the subdivisions along each axis in the local OBB space
+    ranges = [np.linspace(-radii[i], radii[i], subdivisions_per_axis[i] + 1) for i in range(3)]
 
     centroids = []
 
-    for i, j, k in product(range(n_per_axis), repeat=3):
+    for i, j, k in product(range(subdivisions_per_axis[0]), range(subdivisions_per_axis[1]), range(subdivisions_per_axis[2])):
         # Min and max corners in local OBB space
         sub_box_min_local = np.array([ranges[0][i], ranges[1][j], ranges[2][k]])
         sub_box_max_local = np.array([ranges[0][i+1], ranges[1][j+1], ranges[2][k+1]])
@@ -160,7 +164,6 @@ def subdivide_obb(obb_center, radii, pca_components, n_subdivisions):
         centroids.append(centroid_original)
 
     return centroids
-
 def find_closest_non_zero_voxel(binary_mask, centroids):
     """
     For each centroid, find the closest non-zero voxel in the binary mask.
@@ -206,7 +209,7 @@ def process_binary_mask_with_obb(binary_mask, n_subdivisions=8):
         return None, None
 
     # Step 2: Subdivide the OBB and find the centroids of the subdivided boxes
-    centroids = subdivide_obb(obb_center, radii, pca_components, n_subdivisions)
+    centroids = proportional_subdivide_obb(obb_center, radii, pca_components, n_subdivisions)
 
     # Step 3: Find the closest non-zero voxels to the centroids in the original binary mask
     closest_voxels = find_closest_non_zero_voxel(binary_mask, centroids)
