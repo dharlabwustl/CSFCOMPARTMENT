@@ -468,7 +468,7 @@ def divideintozones_with_vent_obb(filename_gray,filename_mask,filename_bet,filen
             above_ventricle_image= sitk.GetArrayFromImage(subtracted_image)
             above_ventricle_image[0:zoneV_max_z+1,:,:]=0
             covering_ventricle_image= sitk.GetArrayFromImage(subtracted_image)
-            covering_ventricle_image[0:zoneV_min_z+1,:,:]=0
+            covering_ventricle_image[0:zoneV_min_z,:,:]=0
             covering_ventricle_image[zoneV_max_z+1:above_ventricle_image.shape[0],:,:]=0
             below_ventricle_image= sitk.GetArrayFromImage(subtracted_image)
             below_ventricle_image[zoneV_min_z:above_ventricle_image.shape[0],:,:]=0
