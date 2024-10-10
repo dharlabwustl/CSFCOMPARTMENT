@@ -821,6 +821,8 @@ def divideintozones_v1_with_vent_bound(filename_gray,filename_mask,filename_bet,
 
 def divideintozones_with_vent_obb_with_four_centroid(filename_gray,filename_mask,filename_bet,filename_vent_obb,closest_voxels,zoneV_min_z,zoneV_max_z):
     try:
+        print('closest_voxels at divideintozones_with_vent_obb_with_four_centroid')
+        print(closest_voxels)
         sulci_vol, ventricle_vol,leftcountven,rightcountven,leftcountsul,rightcountsul,sulci_vol_above_vent,sulci_vol_below_vent,sulci_vol_at_vent=(0,0,0,0,0,0,0,0,0) #seg_explicit_thresholds, subtracted_image
         #######################
         reader_filename_vent_nonlinmask = sitk.ImageFileReader()
@@ -1025,7 +1027,7 @@ print('closest_voxels')
 print(np.array(closest_voxels).shape)
 nib.save(array_img, os.path.join(sys.argv[3],'ventricle_contour.nii'))
 filename_gray=sys.argv[4]
-filename_mask=sys.argv[5]
+filename_mask=sys.argv[2]
 filename_bet=sys.argv[6]
 filename_vent_obb=os.path.join(sys.argv[3],'ventricle_obb_mask.nii')
 zoneV_min_z=0
