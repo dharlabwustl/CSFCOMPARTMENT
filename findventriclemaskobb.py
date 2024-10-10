@@ -297,15 +297,15 @@ ventricle_mask=nib.load( os.path.join(sys.argv[3],'ventricle.nii')).get_fdata()
 # cv2.rectangle(binary_mask[6], (30, 30), (70, 70), 1, -1)  # Example filled rectangle in slice 6
 
 # Fit ellipses for each 2D slice and create the 3D mask of stacked ellipses
-ellipse_3d_mask = fit_ellipse_to_3d_mask(ventricle_mask)
+# ellipse_3d_mask = fit_ellipse_to_3d_mask(ventricle_mask)
+#
+# # Print or visualize the result
+# print("3D Mask with Fitted and Filled Ellipses for Each Slice:")
+# print(ellipse_3d_mask)
 
-# Print or visualize the result
-print("3D Mask with Fitted and Filled Ellipses for Each Slice:")
-print(ellipse_3d_mask)
 
-
-# filled_contour_mask =fill_dilate_and_fill_3d_mask(ventricle_mask, dilation_iterations=2) #process_3d_binary_mask(ventricle_mask, sigma=1) # process_3d_binary_mask(ventricle_mask)
-array_img = nib.Nifti1Image(ellipse_3d_mask, affine=csf_mask_nib.affine, header=csf_mask_nib.header)
+filled_contour_mask =fill_dilate_and_fill_3d_mask(ventricle_mask, dilation_iterations=2) #process_3d_binary_mask(ventricle_mask, sigma=1) # process_3d_binary_mask(ventricle_mask)
+array_img = nib.Nifti1Image(filled_contour_mask, affine=csf_mask_nib.affine, header=csf_mask_nib.header)
 nib.save(array_img, os.path.join(sys.argv[3],'ventricle_contour.nii'))
 #
 # # Example usage:
