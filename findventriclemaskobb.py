@@ -72,6 +72,9 @@ def fit_ellipse_to_3d_mask(binary_mask):
         # Fit and fill the ellipse for the current slice
         if np.sum(binary_mask[z])>5:
             ellipse_mask[z] = fit_and_fill_ellipse_2d(binary_mask[z])
+        else:
+            ellipse_mask[z] =binary_mask[z]
+
 
     return ellipse_mask
 
