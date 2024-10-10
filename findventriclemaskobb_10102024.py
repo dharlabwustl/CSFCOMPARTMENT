@@ -1028,4 +1028,6 @@ filename_gray=sys.argv[4]
 filename_mask=sys.argv[5]
 filename_bet=sys.argv[6]
 filename_vent_obb=os.path.join(sys.argv[3],'ventricle_obb_mask.nii')
-divideintozones_with_vent_obb_with_four_centroid(filename_gray,filename_mask,filename_bet,filename_vent_obb,closest_voxels,zoneV_min_z,zoneV_max_z):
+zoneV_min_z=0
+zoneV_max_z=0
+divideintozones_with_vent_obb_with_four_centroid(filename_gray,filename_mask,filename_bet,filename_vent_obb,closest_voxels,zoneV_min_z,zoneV_max_z)
