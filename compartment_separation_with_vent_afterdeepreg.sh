@@ -112,6 +112,7 @@ while IFS=',' read -ra array; do
         echo "${csffile}"
       fi
     done < <(tail -n +2 "${working_dir}/${output_csvfile_1}")
+echo "csffile:::::ATUL:::${csffile}"
 
     ##############################################
         resource_dir="PREPROCESS_SEGM"
