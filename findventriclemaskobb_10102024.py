@@ -1028,7 +1028,7 @@ print(np.array(closest_voxels).shape)
 nib.save(array_img, os.path.join(sys.argv[3],'ventricle_contour.nii'))
 filename_gray=sys.argv[4]
 filename_mask=sys.argv[2]
-filename_bet=sys.argv[6]
+filename_bet=sys.argv[5]
 filename_vent_obb=os.path.join(sys.argv[3],'ventricle_obb_mask.nii')
 zoneV_min_z=0
 zoneV_max_z=0
