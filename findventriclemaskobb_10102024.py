@@ -1045,5 +1045,5 @@ filename_bet=sys.argv[5]
 filename_vent_obb=os.path.join(sys.argv[3],'ventricle_obb_mask.nii')
 zoneV_min_z=0
 zoneV_max_z=0
-closest_voxels=find_closest_non_zero_voxel(nib.load(filename_mask).get_fdata(), closest_voxels)
+closest_voxels=find_closest_non_zero_voxel(nib.load(filename_mask).get_fdata(), centroids)
 divideintozones_with_vent_obb_with_four_centroid(filename_gray,filename_mask,filename_bet,filename_vent_obb,closest_voxels,zoneV_min_z,zoneV_max_z)
