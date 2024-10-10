@@ -996,8 +996,8 @@ def divideintozones_with_vent_obb_with_four_centroid(filename_gray,filename_mask
             # seg_explicit_thresholds = sitk.Or(seg_explicit_thresholds, seg_explicit_thresholds10 > 0)
             # seg_explicit_thresholds = sitk.Or(seg_explicit_thresholds, seg_explicit_thresholds11 > 0)
 
-            zoneV_min_z,zoneV_max_z=get_ventricles_range(sitk.GetArrayFromImage(seg_explicit_thresholds))
-            subtracted_image=subtract_binary_1(sitk.GetArrayFromImage(img_T1_1),sitk.GetArrayFromImage(seg_explicit_thresholds)*255)
+            zoneV_min_z_,zoneV_max_z=get_ventricles_range(sitk.GetArrayFromImage(seg_explicit_thresholds))
+            subtracted_image=img_T1_1 #subtract_binary_1(sitk.GetArrayFromImage(img_T1_1),sitk.GetArrayFromImage(seg_explicit_thresholds)*255)
             subtracted_image=sitk.GetImageFromArray(subtracted_image)
             above_ventricle_image= sitk.GetArrayFromImage(subtracted_image)
             above_ventricle_image[0:zoneV_max_z+1,:,:]=0
