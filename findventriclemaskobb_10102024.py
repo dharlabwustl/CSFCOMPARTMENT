@@ -939,7 +939,8 @@ def divideintozones_with_vent_obb_with_four_centroid(filename_gray,filename_mask
 
             initial_seed_point_indexes=[stats.GetMinimumIndex(stats.GetLabels()[id_of_maxsize_comp])]
             print('initial_seed_point_indexes::{}'.format(initial_seed_point_indexes))
-            initial_seed_point_indexes=[(closest_voxels[1][0],closest_voxels[1][1],closest_voxels[1][2])]
+            initial_seed_point_indexes=[(closest_voxels[0][0],closest_voxels[0][1],closest_voxels[0][2])]
+            print('initial_seed_point_indexes::{}'.format(initial_seed_point_indexes))
             seg_explicit_thresholds =sitk.ConnectedThreshold(img_T1, seedList=initial_seed_point_indexes, lower=100, upper=255)
             # seg_explicit_thresholds1 =sitk.ConnectedThreshold(img_T1, seedList=initial_seed_point_indexes, lower=100, upper=255)
             # seg_explicit_thresholds2 =sitk.ConnectedThreshold(img_T1, seedList=initial_seed_point_indexes, lower=100, upper=255)
