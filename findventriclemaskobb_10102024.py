@@ -1003,7 +1003,8 @@ def divideintozones_with_vent_obb_with_four_centroid(filename_gray,filename_mask
 
 
 ventricle_mask=Infarct_Mask_filename_June20_data_512=resizeinto_512by512_and_flip(nib.load(sys.argv[1]).get_fdata())
-ventricle_obb_mask = create_obb_mask_from_image_mask(ventricle_mask)
+# ventricle_obb_mask = create_obb_mask_from_image_mask(ventricle_mask)
+centroids, ventricle_obb_mask = process_3d_mask(ventricle_mask)
 csf_mask_nib=nib.load(sys.argv[2])
 # save_nifti_without_affine(ventricle_obb_mask, os.path.join(sys.argv[3],'ventricle_obb_mask.nii'))
 array_img = nib.Nifti1Image(ventricle_obb_mask, affine=csf_mask_nib.affine, header=csf_mask_nib.header)
@@ -1029,13 +1030,13 @@ print(upper_lower_limit_vent_df)
 upper_lower_limit_vent_df.to_csv(os.path.join(sys.argv[3],'ventricle_bounds.csv'),index=False)
 
 ventricle_mask=nib.load( os.path.join(sys.argv[3],'ventricle.nii')).get_fdata()
-centroids, obb_mask = process_3d_mask(ventricle_mask)
+
 
 print("Closest non-zero voxel coordinates to the centroids:")
 print(centroids)
 
 print("\nOBB Mask:")
-print(obb_mask)
+# print(obb_mask)
 print('closest_voxels')
 print(np.array(centroids).shape)
 nib.save(array_img, os.path.join(sys.argv[3],'ventricle_contour.nii'))
