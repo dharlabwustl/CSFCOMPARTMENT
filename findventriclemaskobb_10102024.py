@@ -975,12 +975,12 @@ def divideintozones_with_vent_obb_with_four_centroid(filename_gray,filename_mask
             seg_explicit_thresholds7 =sitk.ConnectedThreshold(img_T1, seedList=initial_seed_point_indexes, lower=100, upper=255)
             initial_seed_point_indexes=[(int(closest_voxels[8][0]),int(closest_voxels[8][1]),int(closest_voxels[8][2]))]
             seg_explicit_thresholds8 =sitk.ConnectedThreshold(img_T1, seedList=initial_seed_point_indexes, lower=100, upper=255)
-            initial_seed_point_indexes=[(int(closest_voxels[9][0]),int(closest_voxels[9][1]),int(closest_voxels[9][2]))]
-            seg_explicit_thresholds9 =sitk.ConnectedThreshold(img_T1, seedList=initial_seed_point_indexes, lower=100, upper=255)
-            initial_seed_point_indexes=[(int(closest_voxels[10][0]),int(closest_voxels[10][1]),int(closest_voxels[10][2]))]
-            seg_explicit_thresholds10 =sitk.ConnectedThreshold(img_T1, seedList=initial_seed_point_indexes, lower=100, upper=255)
-            initial_seed_point_indexes=[(int(closest_voxels[11][0]),int(closest_voxels[11][1]),int(closest_voxels[11][2]))]
-            seg_explicit_thresholds11 =sitk.ConnectedThreshold(img_T1, seedList=initial_seed_point_indexes, lower=100, upper=255)
+            # initial_seed_point_indexes=[(int(closest_voxels[9][0]),int(closest_voxels[9][1]),int(closest_voxels[9][2]))]
+            # seg_explicit_thresholds9 =sitk.ConnectedThreshold(img_T1, seedList=initial_seed_point_indexes, lower=100, upper=255)
+            # initial_seed_point_indexes=[(int(closest_voxels[10][0]),int(closest_voxels[10][1]),int(closest_voxels[10][2]))]
+            # seg_explicit_thresholds10 =sitk.ConnectedThreshold(img_T1, seedList=initial_seed_point_indexes, lower=100, upper=255)
+            # initial_seed_point_indexes=[(int(closest_voxels[11][0]),int(closest_voxels[11][1]),int(closest_voxels[11][2]))]
+            # seg_explicit_thresholds11 =sitk.ConnectedThreshold(img_T1, seedList=initial_seed_point_indexes, lower=100, upper=255)
 
 
             seg_explicit_thresholds = sitk.Or(seg_explicit_thresholds > 0, seg_explicit_thresholds1 > 0)
@@ -992,9 +992,9 @@ def divideintozones_with_vent_obb_with_four_centroid(filename_gray,filename_mask
             seg_explicit_thresholds = sitk.Or(seg_explicit_thresholds, seg_explicit_thresholds6 > 0)
             seg_explicit_thresholds = sitk.Or(seg_explicit_thresholds, seg_explicit_thresholds7 > 0)
             seg_explicit_thresholds = sitk.Or(seg_explicit_thresholds, seg_explicit_thresholds8 > 0)
-            seg_explicit_thresholds = sitk.Or(seg_explicit_thresholds, seg_explicit_thresholds9 > 0)
-            seg_explicit_thresholds = sitk.Or(seg_explicit_thresholds, seg_explicit_thresholds10 > 0)
-            seg_explicit_thresholds = sitk.Or(seg_explicit_thresholds, seg_explicit_thresholds11 > 0)
+            # seg_explicit_thresholds = sitk.Or(seg_explicit_thresholds, seg_explicit_thresholds9 > 0)
+            # seg_explicit_thresholds = sitk.Or(seg_explicit_thresholds, seg_explicit_thresholds10 > 0)
+            # seg_explicit_thresholds = sitk.Or(seg_explicit_thresholds, seg_explicit_thresholds11 > 0)
 
             zoneV_min_z_,zoneV_max_z=get_ventricles_range(sitk.GetArrayFromImage(seg_explicit_thresholds))
             subtracted_image=subtract_binary_1(sitk.GetArrayFromImage(img_T1_1),sitk.GetArrayFromImage(seg_explicit_thresholds)*255)
@@ -1049,7 +1049,7 @@ def divideintozones_with_vent_obb_with_four_centroid(filename_gray,filename_mask
 ventricle_mask=Infarct_Mask_filename_June20_data_512=resizeinto_512by512_and_flip(nib.load(sys.argv[1]).get_fdata())
 # ventricle_obb_mask = create_obb_mask_from_image_mask(ventricle_mask)
 ################
-centroids, ventricle_obb_mask = process_binary_mask_with_obb(ventricle_mask,n_subdivisions=12)
+centroids, ventricle_obb_mask = process_binary_mask_with_obb(ventricle_mask,n_subdivisions=9)
 # # Example usage:
 # binary_mask = np.zeros((100, 100, 100), dtype=np.uint8)
 # binary_mask[30:70, 30:70, 30:70] = 1  # Example filled 3D block
