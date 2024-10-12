@@ -1,3 +1,44 @@
+import sys,inspect,subprocess
+# import six
+import SimpleITK as sitk
+import os
+import nibabel as nib
+import numpy as np
+import glob
+import nibabel as nib
+from utilities_simple import *
+import os,subprocess,sys,glob
+import numpy as np
+import argparse
+import os
+import shutil
+import pandas as pd
+import numpy as np
+from sklearn.decomposition import PCA
+from scipy.spatial import ConvexHull, Delaunay
+
+import numpy as np
+import scipy.ndimage as ndi
+import numpy as np
+import scipy.ndimage as ndi
+from skimage import filters
+
+import numpy as np
+import scipy.ndimage as ndi
+##############################
+import numpy as np
+import cv2
+import numpy as np
+from sklearn.decomposition import PCA
+#########################################################
+import numpy as np
+from sklearn.decomposition import PCA
+from scipy.spatial import distance
+import numpy as np
+from sklearn.decomposition import PCA
+from scipy.spatial import distance
+from itertools import product
+
 import numpy as np
 import nibabel as nib
 import trimesh
@@ -135,7 +176,11 @@ def binarymask_to_convexhull_mask(input_nii_path,output_nii_path):
 
     convex_hull_mesh = trimesh.load('convex_hull_stl_1.stl') #'convex_hull_fixed_normals.stl')
     stl_to_binary_mask('convex_hull_stl_1.stl',input_nii_path, output_nii_path, binary_mask.shape)
+ventricle_mask=resizeinto_512by512_and_flip(nib.load(sys.argv[1]).get_fdata())
+csf_mask_nib=nib.load(sys.argv[2])
+array_img = nib.Nifti1Image(ventricle_mask, affine=csf_mask_nib.affine, header=csf_mask_nib.header)
+nib.save(array_img, os.path.join(sys.argv[3],'ventricle.nii'))
+input_nii_path=os.path.join(sys.argv[3],'ventricle.nii') #'/media/atul/WDJan20222/WASHU_WORKS/PROJECTS/DOCKERIZE/CSFSEPERATION/TESTING_CSF_SEPERATION/workinginput/ventricle.nii'
+output_nii_path=os.path.join(sys.argv[3],'ventricle_convexhull_mask.nii') #'../TESTING_CSF_SEPERATION/workinginput/ventricle_convexhull_mask.nii'
 
-input_nii_path='/media/atul/WDJan20222/WASHU_WORKS/PROJECTS/DOCKERIZE/CSFSEPERATION/TESTING_CSF_SEPERATION/workinginput/ventricle.nii'
-output_nii_path='../TESTING_CSF_SEPERATION/workinginput/ventricle_convexhull_mask.nii'
 binarymask_to_convexhull_mask(input_nii_path,output_nii_path)
