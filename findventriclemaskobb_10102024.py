@@ -958,7 +958,7 @@ def divideintozones_with_vent_obb_with_four_centroid(filename_gray,filename_mask
             print('initial_seed_point_indexes::{}'.format(type(initial_seed_point_indexes[0])))
             initial_seed_point_indexes=[(int(closest_voxels[0][0]),int(closest_voxels[0][1]),int(closest_voxels[0][2]))]
             print('initial_seed_point_indexes_nw::{}'.format(type(initial_seed_point_indexes[0])))
-            seg_explicit_thresholds =img_T1 #sitk.ConnectedThreshold(img_T1, seedList=initial_seed_point_indexes, lower=100, upper=255)
+            seg_explicit_thresholds =sitk.ConnectedThreshold(img_T1, seedList=initial_seed_point_indexes, lower=100, upper=255)
             # initial_seed_point_indexes=[(int(closest_voxels[1][0]),int(closest_voxels[1][1]),int(closest_voxels[1][2]))]
             # seg_explicit_thresholds1 =sitk.ConnectedThreshold(img_T1, seedList=initial_seed_point_indexes, lower=100, upper=255)
             # initial_seed_point_indexes=[(int(closest_voxels[2][0]),int(closest_voxels[2][1]),int(closest_voxels[2][2]))]
