@@ -959,22 +959,22 @@ def divideintozones_with_vent_obb_with_four_centroid(filename_gray,filename_mask
             initial_seed_point_indexes=[(int(closest_voxels[0][0]),int(closest_voxels[0][1]),int(closest_voxels[0][2]))]
             print('initial_seed_point_indexes_nw::{}'.format(type(initial_seed_point_indexes[0])))
             seg_explicit_thresholds =sitk.ConnectedThreshold(img_T1, seedList=initial_seed_point_indexes, lower=100, upper=255)
-            # initial_seed_point_indexes=[(int(closest_voxels[1][0]),int(closest_voxels[1][1]),int(closest_voxels[1][2]))]
-            # seg_explicit_thresholds1 =sitk.ConnectedThreshold(img_T1, seedList=initial_seed_point_indexes, lower=100, upper=255)
-            # initial_seed_point_indexes=[(int(closest_voxels[2][0]),int(closest_voxels[2][1]),int(closest_voxels[2][2]))]
-            # seg_explicit_thresholds2 =sitk.ConnectedThreshold(img_T1, seedList=initial_seed_point_indexes, lower=100, upper=255)
-            # initial_seed_point_indexes=[(int(closest_voxels[3][0]),int(closest_voxels[3][1]),int(closest_voxels[3][2]))]
-            # seg_explicit_thresholds3 =sitk.ConnectedThreshold(img_T1, seedList=initial_seed_point_indexes, lower=100, upper=255)
-            # initial_seed_point_indexes=[(int(closest_voxels[4][0]),int(closest_voxels[4][1]),int(closest_voxels[4][2]))]
-            # seg_explicit_thresholds4 =sitk.ConnectedThreshold(img_T1, seedList=initial_seed_point_indexes, lower=100, upper=255)
-            # initial_seed_point_indexes=[(int(closest_voxels[5][0]),int(closest_voxels[5][1]),int(closest_voxels[5][2]))]
-            # seg_explicit_thresholds5 =sitk.ConnectedThreshold(img_T1, seedList=initial_seed_point_indexes, lower=100, upper=255)
-            # initial_seed_point_indexes=[(int(closest_voxels[6][0]),int(closest_voxels[6][1]),int(closest_voxels[6][2]))]
-            # seg_explicit_thresholds6 =sitk.ConnectedThreshold(img_T1, seedList=initial_seed_point_indexes, lower=100, upper=255)
-            # initial_seed_point_indexes=[(int(closest_voxels[7][0]),int(closest_voxels[7][1]),int(closest_voxels[7][2]))]
-            # seg_explicit_thresholds7 =sitk.ConnectedThreshold(img_T1, seedList=initial_seed_point_indexes, lower=100, upper=255)
-            # initial_seed_point_indexes=[(int(closest_voxels[8][0]),int(closest_voxels[8][1]),int(closest_voxels[8][2]))]
-            # seg_explicit_thresholds8 =sitk.ConnectedThreshold(img_T1, seedList=initial_seed_point_indexes, lower=100, upper=255)
+            initial_seed_point_indexes=[(int(closest_voxels[1][0]),int(closest_voxels[1][1]),int(closest_voxels[1][2]))]
+            seg_explicit_thresholds1 =sitk.ConnectedThreshold(img_T1, seedList=initial_seed_point_indexes, lower=100, upper=255)
+            initial_seed_point_indexes=[(int(closest_voxels[2][0]),int(closest_voxels[2][1]),int(closest_voxels[2][2]))]
+            seg_explicit_thresholds2 =sitk.ConnectedThreshold(img_T1, seedList=initial_seed_point_indexes, lower=100, upper=255)
+            initial_seed_point_indexes=[(int(closest_voxels[3][0]),int(closest_voxels[3][1]),int(closest_voxels[3][2]))]
+            seg_explicit_thresholds3 =sitk.ConnectedThreshold(img_T1, seedList=initial_seed_point_indexes, lower=100, upper=255)
+            initial_seed_point_indexes=[(int(closest_voxels[4][0]),int(closest_voxels[4][1]),int(closest_voxels[4][2]))]
+            seg_explicit_thresholds4 =sitk.ConnectedThreshold(img_T1, seedList=initial_seed_point_indexes, lower=100, upper=255)
+            initial_seed_point_indexes=[(int(closest_voxels[5][0]),int(closest_voxels[5][1]),int(closest_voxels[5][2]))]
+            seg_explicit_thresholds5 =sitk.ConnectedThreshold(img_T1, seedList=initial_seed_point_indexes, lower=100, upper=255)
+            initial_seed_point_indexes=[(int(closest_voxels[6][0]),int(closest_voxels[6][1]),int(closest_voxels[6][2]))]
+            seg_explicit_thresholds6 =sitk.ConnectedThreshold(img_T1, seedList=initial_seed_point_indexes, lower=100, upper=255)
+            initial_seed_point_indexes=[(int(closest_voxels[7][0]),int(closest_voxels[7][1]),int(closest_voxels[7][2]))]
+            seg_explicit_thresholds7 =sitk.ConnectedThreshold(img_T1, seedList=initial_seed_point_indexes, lower=100, upper=255)
+            initial_seed_point_indexes=[(int(closest_voxels[8][0]),int(closest_voxels[8][1]),int(closest_voxels[8][2]))]
+            seg_explicit_thresholds8 =sitk.ConnectedThreshold(img_T1, seedList=initial_seed_point_indexes, lower=100, upper=255)
             # # initial_seed_point_indexes=[(int(closest_voxels[9][0]),int(closest_voxels[9][1]),int(closest_voxels[9][2]))]
             # # seg_explicit_thresholds9 =sitk.ConnectedThreshold(img_T1, seedList=initial_seed_point_indexes, lower=100, upper=255)
             # # initial_seed_point_indexes=[(int(closest_voxels[10][0]),int(closest_voxels[10][1]),int(closest_voxels[10][2]))]
@@ -983,20 +983,20 @@ def divideintozones_with_vent_obb_with_four_centroid(filename_gray,filename_mask
             # # seg_explicit_thresholds11 =sitk.ConnectedThreshold(img_T1, seedList=initial_seed_point_indexes, lower=100, upper=255)
 
 
-            # seg_explicit_thresholds = sitk.Or(seg_explicit_thresholds > 0, seg_explicit_thresholds1 > 0)
-            # seg_explicit_thresholds = sitk.Or(seg_explicit_thresholds, seg_explicit_thresholds2 > 0)
-            # seg_explicit_thresholds = sitk.Or(seg_explicit_thresholds, seg_explicit_thresholds3 > 0)
-            # seg_explicit_thresholds = sitk.Or(seg_explicit_thresholds, seg_explicit_thresholds4 > 0)
-            # seg_explicit_thresholds = sitk.Or(seg_explicit_thresholds, seg_explicit_thresholds5 > 0)
-            # seg_explicit_thresholds = sitk.Or(seg_explicit_thresholds, seg_explicit_thresholds5 > 0)
-            # seg_explicit_thresholds = sitk.Or(seg_explicit_thresholds, seg_explicit_thresholds6 > 0)
-            # seg_explicit_thresholds = sitk.Or(seg_explicit_thresholds, seg_explicit_thresholds7 > 0)
-            # seg_explicit_thresholds = sitk.Or(seg_explicit_thresholds, seg_explicit_thresholds8 > 0)
+            seg_explicit_thresholds = sitk.Or(seg_explicit_thresholds > 0, seg_explicit_thresholds1 > 0)
+            seg_explicit_thresholds = sitk.Or(seg_explicit_thresholds, seg_explicit_thresholds2 > 0)
+            seg_explicit_thresholds = sitk.Or(seg_explicit_thresholds, seg_explicit_thresholds3 > 0)
+            seg_explicit_thresholds = sitk.Or(seg_explicit_thresholds, seg_explicit_thresholds4 > 0)
+            seg_explicit_thresholds = sitk.Or(seg_explicit_thresholds, seg_explicit_thresholds5 > 0)
+            seg_explicit_thresholds = sitk.Or(seg_explicit_thresholds, seg_explicit_thresholds5 > 0)
+            seg_explicit_thresholds = sitk.Or(seg_explicit_thresholds, seg_explicit_thresholds6 > 0)
+            seg_explicit_thresholds = sitk.Or(seg_explicit_thresholds, seg_explicit_thresholds7 > 0)
+            seg_explicit_thresholds = sitk.Or(seg_explicit_thresholds, seg_explicit_thresholds8 > 0)
             # seg_explicit_thresholds = sitk.Or(seg_explicit_thresholds, seg_explicit_thresholds9 > 0)
             # seg_explicit_thresholds = sitk.Or(seg_explicit_thresholds, seg_explicit_thresholds10 > 0)
             # seg_explicit_thresholds = sitk.Or(seg_explicit_thresholds, seg_explicit_thresholds11 > 0)
 
-            zoneV_min_z_,zoneV_max_z_=get_ventricles_range(sitk.GetArrayFromImage(seg_explicit_thresholds))
+            zoneV_min_z,zoneV_max_z=get_ventricles_range(sitk.GetArrayFromImage(seg_explicit_thresholds))
             subtracted_image=subtract_binary_1(sitk.GetArrayFromImage(img_T1_1),sitk.GetArrayFromImage(seg_explicit_thresholds)*255)
             subtracted_image=sitk.GetImageFromArray(subtracted_image)
             above_ventricle_image= sitk.GetArrayFromImage(subtracted_image)
