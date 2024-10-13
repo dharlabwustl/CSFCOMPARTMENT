@@ -55,6 +55,130 @@ import os
 import nibabel as nib
 import numpy as np
 import glob
+def compute_obb(binary_mask):
+    """
+    Compute the Oriented Bounding Box (OBB) for the non-zero elements in a 3D binary mask using PCA.
+
+    Parameters:
+    - binary_mask: 3D numpy array (binary mask of the object)
+
+    Returns:
+    - obb_corners: The 8 corner points of the OBB (in the original space)
+    - pca_components: The principal components (directions of the OBB)
+    - obb_center: The center point of the OBB (in the original space)
+    - radii: The half-lengths of the OBB along the principal axes
+    """
+    # Find non-zero points (the object)
+    points = np.column_stack(np.nonzero(binary_mask))
+
+    if points.size == 0:
+        # If no object, return empty results
+        return None, None, None, None
+
+    # Apply PCA to get the principal axes of the object
+    pca = PCA(n_components=3)
+    pca.fit(points)
+
+    # Get the OBB center and its half-lengths (radii)
+    obb_center = np.mean(points, axis=0)
+    points_transformed = pca.transform(points)
+    radii = (np.max(points_transformed, axis=0) - np.min(points_transformed, axis=0)) / 2
+
+    # Get the 8 corners of the OBB
+    obb_corners_local = np.array(list(product([-1, 1], repeat=3))) * radii
+    obb_corners = pca.inverse_transform(obb_corners_local + pca.transform([obb_center])[0])
+
+    return obb_corners, pca.components_, obb_center, radii
+def proportional_subdivide_obb(obb_center, radii, pca_components, n_subdivisions):
+    """
+    Subdivide the Oriented Bounding Box (OBB) proportionally to its radii (dimensions) along the
+    principal axes.
+
+    Parameters:
+    - obb_center: The center of the OBB (in the original space)
+    - radii: The half-lengths of the OBB along each principal axis
+    - pca_components: The principal components (rotation matrix of the OBB)
+    - n_subdivisions: Number of divisions along the longest axis; the other axes will be divided
+      proportionally.
+
+    Returns:
+    - centroids: A list of centroids of each sub-box (in the original space)
+    """
+    # Step 1: Proportionally subdivide based on the radii along each axis
+    longest_axis_idx = np.argmax(radii)
+    longest_axis_length = radii[longest_axis_idx]
+
+    # Calculate the number of subdivisions along each axis based on the proportion to the longest axis
+    subdivisions_per_axis = np.ceil(n_subdivisions * (radii / longest_axis_length)).astype(int)
+
+    # Ensure that we at least have one subdivision along each axis
+    subdivisions_per_axis[subdivisions_per_axis == 0] = 1
+
+    # Step 2: Generate the ranges for the subdivisions along each axis in the local OBB space
+    ranges = [np.linspace(-radii[i], radii[i], subdivisions_per_axis[i] + 1) for i in range(3)]
+
+    centroids = []
+
+    for i, j, k in product(range(subdivisions_per_axis[0]), range(subdivisions_per_axis[1]), range(subdivisions_per_axis[2])):
+        # Min and max corners in local OBB space
+        sub_box_min_local = np.array([ranges[0][i], ranges[1][j], ranges[2][k]])
+        sub_box_max_local = np.array([ranges[0][i+1], ranges[1][j+1], ranges[2][k+1]])
+
+        # Compute the centroid in local space
+        centroid_local = (sub_box_min_local + sub_box_max_local) / 2
+
+        # Convert centroid to original space using the OBB's rotation and translation
+        centroid_original = pca_components.T @ centroid_local + obb_center
+        centroids.append(centroid_original)
+
+    return centroids
+def find_closest_non_zero_voxel(binary_mask, centroids):
+    """
+    For each centroid, find the closest non-zero voxel in the binary mask.
+
+    Parameters:
+    - binary_mask: 3D numpy array (binary mask of the object)
+    - centroids: List of centroids from the subdivided boxes
+
+    Returns:
+    - closest_voxels: List of coordinates of the closest non-zero voxels to the centroids
+    """
+    non_zero_voxels = np.column_stack(np.nonzero(binary_mask))
+
+    if non_zero_voxels.size == 0:
+        return []
+
+    closest_voxels = []
+
+    for centroid in centroids:
+        distances = distance.cdist([centroid], non_zero_voxels)
+        closest_idx = np.argmin(distances)
+        closest_voxels.append(non_zero_voxels[closest_idx])
+
+    return closest_voxels
+def create_obb_binary_mask(binary_mask, obb_corners):
+    """
+    Create a binary mask representing the OBB by filling in the OBB region.
+
+    Parameters:
+    - binary_mask: 3D numpy array (binary mask of the object)
+    - obb_corners: The 8 corner points of the OBB (in the original space)
+
+    Returns:
+    - obb_mask: 3D numpy array with the OBB region filled with 1s
+    """
+    # Create an empty mask of the same shape as the original binary mask
+    obb_mask = np.zeros_like(binary_mask)
+
+    # Get the bounding box of the OBB (min and max coordinates along each axis)
+    x_min, y_min, z_min = np.floor(np.min(obb_corners, axis=0)).astype(int)
+    x_max, y_max, z_max = np.ceil(np.max(obb_corners, axis=0)).astype(int)
+
+    # Fill the region inside the OBB (axis-aligned for simplicity in this example)
+    obb_mask[x_min:x_max+1, y_min:y_max+1, z_min:z_max+1] = 1
+
+    return obb_mask
+
 def process_binary_mask_with_obb(binary_mask, n_subdivisions=8):
     """
     Process the binary mask to compute the OBB, subdivide it, and find closest non-zero voxels.
