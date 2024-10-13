@@ -90,6 +90,46 @@ def filter_connected_components_by_size(binary_mask, min_size=1000):
             output_mask = output_mask | sitk.Cast(component_mask, sitk.sitkUInt8)
 
     return output_mask
+import SimpleITK as sitk
+
+def filter_and_combine_connected_components(binary_mask):
+    """
+    This function finds all connected components in a 3D binary mask, identifies the component
+    with the maximum number of voxels, and removes any components with fewer than 10% of that number.
+    The remaining components are combined into one binary mask.
+
+    Parameters:
+    binary_mask (SimpleITK.Image): The input 3D binary mask.
+
+    Returns:
+    SimpleITK.Image: A binary mask combining the filtered connected components.
+    """
+    # Ensure the binary mask is in the correct format (UInt8)
+    binary_mask = sitk.Cast(binary_mask, sitk.sitkUInt8)
+
+    # Step 1: Identify the connected components in the binary mask
+    connected_components = sitk.ConnectedComponent(binary_mask)
+
+    # Step 2: Get the statistics of the connected components (e.g., size of each component)
+    label_shape_filter = sitk.LabelShapeStatisticsImageFilter()
+    label_shape_filter.Execute(connected_components)
+
+    # Step 3: Find the largest component
+    max_size = max(label_shape_filter.GetNumberOfPixels(label) for label in label_shape_filter.GetLabels())
+
+    # Step 4: Create a new mask, keeping only components with size >= 10% of the largest component
+    output_mask = sitk.Image(connected_components.GetSize(), sitk.sitkUInt8)
+    output_mask.CopyInformation(connected_components)
+
+    for label in label_shape_filter.GetLabels():
+        size = label_shape_filter.GetNumberOfPixels(label)
+        if size >= 0.1 * max_size:
+            component_mask = connected_components == label
+            output_mask = output_mask | sitk.Cast(component_mask, sitk.sitkUInt8)
+
+    return output_mask
+
+
 
 
 
@@ -523,8 +563,8 @@ def divideintozones_with_vent_convexhull(filename_gray,filename_mask,filename_be
             # binary_mask = sitk.ReadImage("path_to_your_3d_mask.nii")
 
             # Filter connected components by size (keeping only components with more than 1000 pixels)
-            img_T1 = filter_connected_components_by_size(img_T1, min_size=10000)
-
+            # img_T1 = filter_connected_components_by_size(img_T1, min_size=10000)
+            img_T1 =filter_and_combine_connected_components(img_T1) #, min_size=10000)
             # Save the result or use it further in your pipeline
             # sitk.WriteImage(filtered_mask, "filtered_3d_mask.nii")
             initial_seed_point_indexes=[stats.GetMinimumIndex(stats.GetLabels()[id_of_maxsize_comp])]
