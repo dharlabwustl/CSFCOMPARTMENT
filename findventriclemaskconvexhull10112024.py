@@ -55,6 +55,43 @@ import os
 import nibabel as nib
 import numpy as np
 import glob
+import SimpleITK as sitk
+
+def filter_connected_components_by_size(binary_mask, min_size=1000):
+    """
+    This function filters connected components in a 3D binary mask,
+    keeping only those with a size greater than the specified `min_size`.
+
+    Parameters:
+    binary_mask (SimpleITK.Image): The input 3D binary mask.
+    min_size (int): The minimum number of pixels to retain a connected component (default is 1000).
+
+    Returns:
+    SimpleITK.Image: A binary mask with filtered connected components.
+    """
+    # Ensure the binary mask is in the correct format (UInt8)
+    binary_mask = sitk.Cast(binary_mask, sitk.sitkUInt8)
+
+    # Step 1: Identify the connected components in the binary mask
+    connected_components = sitk.ConnectedComponent(binary_mask)
+
+    # Step 2: Get the statistics of the connected components (e.g., size of each component)
+    label_shape_filter = sitk.LabelShapeStatisticsImageFilter()
+    label_shape_filter.Execute(connected_components)
+
+    # Step 3: Create a new mask, keeping only components with size > min_size
+    output_mask = sitk.Image(connected_components.GetSize(), sitk.sitkUInt8)
+    output_mask.CopyInformation(connected_components)
+
+    for label in label_shape_filter.GetLabels():
+        size = label_shape_filter.GetNumberOfPixels(label)
+        if size > min_size:
+            component_mask = connected_components == label
+            output_mask = output_mask | sitk.Cast(component_mask, sitk.sitkUInt8)
+
+    return output_mask
+
+
 
 def sortSecond(val):
     return val[1]
@@ -481,7 +518,15 @@ def divideintozones_with_vent_convexhull(filename_gray,filename_mask,filename_be
 
                 else:
                     id_of_maxsize_comp=csf_ids[0][0]
+            # Example usage:
+            # Load or create your 3D binary mask
+            # binary_mask = sitk.ReadImage("path_to_your_3d_mask.nii")
 
+            # Filter connected components by size (keeping only components with more than 1000 pixels)
+            img_T1 = filter_connected_components_by_size(img_T1, min_size=1000)
+
+            # Save the result or use it further in your pipeline
+            # sitk.WriteImage(filtered_mask, "filtered_3d_mask.nii")
             initial_seed_point_indexes=[stats.GetMinimumIndex(stats.GetLabels()[id_of_maxsize_comp])]
             seg_explicit_thresholds =img_T1 ##sitk.ConnectedThreshold(img_T1, seedList=initial_seed_point_indexes, lower=100, upper=255)
 
