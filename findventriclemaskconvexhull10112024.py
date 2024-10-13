@@ -523,7 +523,7 @@ def divideintozones_with_vent_convexhull(filename_gray,filename_mask,filename_be
             # binary_mask = sitk.ReadImage("path_to_your_3d_mask.nii")
 
             # Filter connected components by size (keeping only components with more than 1000 pixels)
-            img_T1 = filter_connected_components_by_size(img_T1, min_size=5000)
+            img_T1 = filter_connected_components_by_size(img_T1, min_size=10000)
 
             # Save the result or use it further in your pipeline
             # sitk.WriteImage(filtered_mask, "filtered_3d_mask.nii")
