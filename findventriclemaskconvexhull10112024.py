@@ -671,4 +671,4 @@ filename_mask=sys.argv[2]
 filename_bet=sys.argv[5]
 filename_vent_conv_hull=output_nii_path #os.path.join(sys.argv[3],'ventricle_convexhull_mask.nii')
 binarymask_to_convexhull_mask(input_nii_path,output_nii_path)
-# divideintozones_with_vent_convexhull(filename_gray,filename_mask,filename_bet,filename_vent_conv_hull)
+divideintozones_with_vent_convexhull(filename_gray,filename_mask,filename_bet,filename_vent_conv_hull)
