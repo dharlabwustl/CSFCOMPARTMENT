@@ -55,6 +55,35 @@ import os
 import nibabel as nib
 import numpy as np
 import glob
+def process_binary_mask_with_obb(binary_mask, n_subdivisions=8):
+    """
+    Process the binary mask to compute the OBB, subdivide it, and find closest non-zero voxels.
+    Also returns the OBB binary mask.
+
+    Parameters:
+    - binary_mask: 3D numpy array (binary mask of the object)
+    - n_subdivisions: Number of equal-sized sub-boxes to divide the OBB into
+
+    Returns:
+    - closest_voxels: Coordinates of the closest non-zero voxels to the centroids
+    - obb_mask: Binary mask of the OBB
+    """
+    # Step 1: Compute the OBB (Oriented Bounding Box)
+    obb_corners, pca_components, obb_center, radii = compute_obb(binary_mask)
+
+    if obb_corners is None:
+        return None, None
+
+    # Step 2: Subdivide the OBB and find the centroids of the subdivided boxes
+    centroids = proportional_subdivide_obb(obb_center, radii, pca_components, n_subdivisions)
+
+    # Step 3: Find the closest non-zero voxels to the centroids in the original binary mask
+    closest_voxels = find_closest_non_zero_voxel(binary_mask, centroids)
+
+    # Step 4: Create the binary mask of the OBB
+    obb_mask = create_obb_binary_mask(binary_mask, obb_corners)
+
+    return closest_voxels, obb_mask
 
 def sortSecond(val):
     return val[1]
@@ -371,7 +400,7 @@ def divideintozones_v1_with_vent_bound(filename_gray,filename_mask,filename_bet,
     return  sulci_vol, ventricle_vol,leftcountven,rightcountven,leftcountsul,rightcountsul,sulci_vol_above_vent,sulci_vol_below_vent,sulci_vol_at_vent
     # return sulci_vol, ventricle_vol,leftcountven*resol,rightcountven*resol,leftcountsul*resol,rightcountsul*resol,sulci_vol_above_vent,sulci_vol_below_vent,sulci_vol_at_vent #seg_explicit_thresholds, subtracted_image
 
-def divideintozones_with_vent_convexhull(filename_gray,filename_mask,filename_bet,filename_vent_conv_hull):
+def divideintozones_with_vent_convexhull(filename_gray,filename_mask,filename_bet,filename_vent_conv_hull,closest_voxels):
     try:
         sulci_vol, ventricle_vol,leftcountven,rightcountven,leftcountsul,rightcountsul,sulci_vol_above_vent,sulci_vol_below_vent,sulci_vol_at_vent=(0,0,0,0,0,0,0,0,0) #seg_explicit_thresholds, subtracted_image
         #######################
@@ -482,8 +511,40 @@ def divideintozones_with_vent_convexhull(filename_gray,filename_mask,filename_be
                 else:
                     id_of_maxsize_comp=csf_ids[0][0]
 
+            # initial_seed_point_indexes=[stats.GetMinimumIndex(stats.GetLabels()[id_of_maxsize_comp])]
+            # seg_explicit_thresholds=img_T1 ##sitk.ConnectedThreshold(img_T1, seedList=initial_seed_point_indexes, lower=100, upper=255)
             initial_seed_point_indexes=[stats.GetMinimumIndex(stats.GetLabels()[id_of_maxsize_comp])]
-            seg_explicit_thresholds =img_T1 ##sitk.ConnectedThreshold(img_T1, seedList=initial_seed_point_indexes, lower=100, upper=255)
+            print('initial_seed_point_indexes::{}'.format(type(initial_seed_point_indexes[0])))
+            initial_seed_point_indexes=[(int(closest_voxels[0][0]),int(closest_voxels[0][1]),int(closest_voxels[0][2]))]
+            print('initial_seed_point_indexes_nw::{}'.format(type(initial_seed_point_indexes[0])))
+            seg_explicit_thresholds =sitk.ConnectedThreshold(img_T1, seedList=initial_seed_point_indexes, lower=100, upper=255)
+            initial_seed_point_indexes=[(int(closest_voxels[1][0]),int(closest_voxels[1][1]),int(closest_voxels[1][2]))]
+            seg_explicit_thresholds1 =sitk.ConnectedThreshold(img_T1, seedList=initial_seed_point_indexes, lower=100, upper=255)
+            initial_seed_point_indexes=[(int(closest_voxels[2][0]),int(closest_voxels[2][1]),int(closest_voxels[2][2]))]
+            seg_explicit_thresholds2 =sitk.ConnectedThreshold(img_T1, seedList=initial_seed_point_indexes, lower=100, upper=255)
+            initial_seed_point_indexes=[(int(closest_voxels[3][0]),int(closest_voxels[3][1]),int(closest_voxels[3][2]))]
+            seg_explicit_thresholds3 =sitk.ConnectedThreshold(img_T1, seedList=initial_seed_point_indexes, lower=100, upper=255)
+            initial_seed_point_indexes=[(int(closest_voxels[4][0]),int(closest_voxels[4][1]),int(closest_voxels[4][2]))]
+            seg_explicit_thresholds4 =sitk.ConnectedThreshold(img_T1, seedList=initial_seed_point_indexes, lower=100, upper=255)
+            initial_seed_point_indexes=[(int(closest_voxels[5][0]),int(closest_voxels[5][1]),int(closest_voxels[5][2]))]
+            seg_explicit_thresholds5 =sitk.ConnectedThreshold(img_T1, seedList=initial_seed_point_indexes, lower=100, upper=255)
+            initial_seed_point_indexes=[(int(closest_voxels[6][0]),int(closest_voxels[6][1]),int(closest_voxels[6][2]))]
+            seg_explicit_thresholds6 =sitk.ConnectedThreshold(img_T1, seedList=initial_seed_point_indexes, lower=100, upper=255)
+            initial_seed_point_indexes=[(int(closest_voxels[7][0]),int(closest_voxels[7][1]),int(closest_voxels[7][2]))]
+            seg_explicit_thresholds7 =sitk.ConnectedThreshold(img_T1, seedList=initial_seed_point_indexes, lower=100, upper=255)
+            initial_seed_point_indexes=[(int(closest_voxels[8][0]),int(closest_voxels[8][1]),int(closest_voxels[8][2]))]
+            seg_explicit_thresholds8 =sitk.ConnectedThreshold(img_T1, seedList=initial_seed_point_indexes, lower=100, upper=255)
+
+
+            seg_explicit_thresholds = sitk.Or(seg_explicit_thresholds > 0, seg_explicit_thresholds1 > 0)
+            seg_explicit_thresholds = sitk.Or(seg_explicit_thresholds, seg_explicit_thresholds2 > 0)
+            seg_explicit_thresholds = sitk.Or(seg_explicit_thresholds, seg_explicit_thresholds3 > 0)
+            seg_explicit_thresholds = sitk.Or(seg_explicit_thresholds, seg_explicit_thresholds4 > 0)
+            seg_explicit_thresholds = sitk.Or(seg_explicit_thresholds, seg_explicit_thresholds5 > 0)
+            seg_explicit_thresholds = sitk.Or(seg_explicit_thresholds, seg_explicit_thresholds5 > 0)
+            seg_explicit_thresholds = sitk.Or(seg_explicit_thresholds, seg_explicit_thresholds6 > 0)
+            seg_explicit_thresholds = sitk.Or(seg_explicit_thresholds, seg_explicit_thresholds7 > 0)
+            seg_explicit_thresholds = sitk.Or(seg_explicit_thresholds, seg_explicit_thresholds8 > 0)
 
             zoneV_min_z,zoneV_max_z=get_ventricles_range(sitk.GetArrayFromImage(seg_explicit_thresholds))
             subtracted_image=subtract_binary_1(sitk.GetArrayFromImage(img_T1_1),sitk.GetArrayFromImage(seg_explicit_thresholds)*255)
@@ -634,6 +695,30 @@ def stl_to_binary_mask(stl_filename,inputniftifilename, output_nifti_filename, v
     nib.save(nifti_img, output_nifti_filename)
 
     print(f"Binary mask saved as {output_nifti_filename}")
+def find_closest_non_zero_voxel(binary_mask, centroids):
+    """
+    For each centroid, find the closest non-zero voxel in the binary mask.
+
+    Parameters:
+    - binary_mask: 3D numpy array (binary mask of the object)
+    - centroids: List of centroids from the subdivided boxes
+
+    Returns:
+    - closest_voxels: List of coordinates of the closest non-zero voxels to the centroids
+    """
+    non_zero_voxels = np.column_stack(np.nonzero(binary_mask))
+
+    if non_zero_voxels.size == 0:
+        return []
+
+    closest_voxels = []
+
+    for centroid in centroids:
+        distances = distance.cdist([centroid], non_zero_voxels)
+        closest_idx = np.argmin(distances)
+        closest_voxels.append(non_zero_voxels[closest_idx])
+
+    return closest_voxels
 
 
 def binarymask_to_convexhull_mask(input_nii_path,output_nii_path):
@@ -661,6 +746,7 @@ def binarymask_to_convexhull_mask(input_nii_path,output_nii_path):
     convex_hull_mesh = trimesh.load('convex_hull_stl_1.stl') #'convex_hull_fixed_normals.stl')
     stl_to_binary_mask('convex_hull_stl_1.stl',input_nii_path, output_nii_path, binary_mask.shape)
 ventricle_mask=resizeinto_512by512_and_flip(nib.load(sys.argv[1]).get_fdata())
+centroids, ventricle_obb_mask = process_binary_mask_with_obb(ventricle_mask,n_subdivisions=9)
 csf_mask_nib=nib.load(sys.argv[2])
 array_img = nib.Nifti1Image(ventricle_mask, affine=csf_mask_nib.affine, header=csf_mask_nib.header)
 nib.save(array_img, os.path.join(sys.argv[3],'ventricle.nii'))
@@ -671,4 +757,5 @@ filename_mask=sys.argv[2]
 filename_bet=sys.argv[5]
 filename_vent_conv_hull=output_nii_path #os.path.join(sys.argv[3],'ventricle_convexhull_mask.nii')
 binarymask_to_convexhull_mask(input_nii_path,output_nii_path)
-divideintozones_with_vent_convexhull(filename_gray,filename_mask,filename_bet,filename_vent_conv_hull)
+closest_voxels=find_closest_non_zero_voxel(nib.load(filename_mask).get_fdata(), centroids)
+divideintozones_with_vent_convexhull(filename_gray,filename_mask,filename_bet,filename_vent_conv_hull,closest_voxels)
