@@ -123,7 +123,7 @@ def filter_and_combine_connected_components(binary_mask):
 
     for label in label_shape_filter.GetLabels():
         size = label_shape_filter.GetNumberOfPixels(label)
-        if size >= 0.80 * max_size:
+        if size >= 0.25 * max_size:
             component_mask = connected_components == label
             output_mask = output_mask | sitk.Cast(component_mask, sitk.sitkUInt8)
 
