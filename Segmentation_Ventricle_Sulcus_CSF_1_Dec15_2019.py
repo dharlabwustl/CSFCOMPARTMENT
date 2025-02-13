@@ -568,10 +568,10 @@ def divideintozones_with_vent_obb_noregiongrow(csf_mask_path, ventricle_mask_pat
 
     print("Processing complete. Masks saved in:", output_dir)
 
-# Example usage
-csf_mask_path = "csf_mask.nii.gz"  # Replace with actual path
-ventricle_mask_path = "ventricle_mask.nii.gz"  # Replace with actual path
-output_dir = "output_masks"
-
-process_masks(csf_mask_path, ventricle_mask_path, output_dir)
+# # Example usage
+# csf_mask_path = "csf_mask.nii.gz"  # Replace with actual path
+# ventricle_mask_path = "ventricle_mask.nii.gz"  # Replace with actual path
+# output_dir = "output_masks"
+#
+# process_masks(csf_mask_path, ventricle_mask_path, output_dir)
 
