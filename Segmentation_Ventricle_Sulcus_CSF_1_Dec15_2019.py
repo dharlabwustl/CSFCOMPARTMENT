@@ -345,6 +345,7 @@ def divideintozones_v1_with_vent_bound(filename_gray,filename_mask,filename_bet,
     return  sulci_vol, ventricle_vol,leftcountven,rightcountven,leftcountsul,rightcountsul,sulci_vol_above_vent,sulci_vol_below_vent,sulci_vol_at_vent
     # return sulci_vol, ventricle_vol,leftcountven*resol,rightcountven*resol,leftcountsul*resol,rightcountsul*resol,sulci_vol_above_vent,sulci_vol_below_vent,sulci_vol_at_vent #seg_explicit_thresholds, subtracted_image
 
+
 def divideintozones_with_vent_obb(filename_gray,filename_mask,filename_bet,filename_vent_obb,zoneV_min_z,zoneV_max_z):
     try:
         sulci_vol, ventricle_vol,leftcountven,rightcountven,leftcountsul,rightcountsul,sulci_vol_above_vent,sulci_vol_below_vent,sulci_vol_at_vent=(0,0,0,0,0,0,0,0,0) #seg_explicit_thresholds, subtracted_image
@@ -460,8 +461,8 @@ def divideintozones_with_vent_obb(filename_gray,filename_mask,filename_bet,filen
                 else:
                     id_of_maxsize_comp=csf_ids[0][0]
 
-            initial_seed_point_indexes=[stats.GetMinimumIndex(stats.GetLabels()[id_of_maxsize_comp])]
-            seg_explicit_thresholds =img_T1 ##sitk.ConnectedThreshold(img_T1, seedList=initial_seed_point_indexes, lower=100, upper=255)
+            initial_seed_point_indexes=[stats.GetMinimumIndex(stats.GetLabels()[id_of_maxsize_comp])] ##img_T1 ##
+            seg_explicit_thresholds =sitk.ConnectedThreshold(img_T1, seedList=initial_seed_point_indexes, lower=100, upper=255)
 
             zoneV_min_z,zoneV_max_z=get_ventricles_range(sitk.GetArrayFromImage(seg_explicit_thresholds))
             subtracted_image=subtract_binary_1(sitk.GetArrayFromImage(img_T1_1),sitk.GetArrayFromImage(seg_explicit_thresholds)*255)
@@ -510,3 +511,67 @@ def divideintozones_with_vent_obb(filename_gray,filename_mask,filename_bet,filen
 
 
     return  sulci_vol, ventricle_vol,leftcountven,rightcountven,leftcountsul,rightcountsul,sulci_vol_above_vent,sulci_vol_below_vent,sulci_vol_at_vent
+#
+import nibabel as nib
+import numpy as np
+import os
+
+def load_nifti(file_path):
+    """ Load a NIfTI file and return its data and affine. """
+    nifti_img = nib.load(file_path)
+    nifti_data = nifti_img.get_fdata()
+    return nifti_data, nifti_img.affine, nifti_img.header
+
+def save_nifti(data, affine, header, file_path):
+    """ Save a NumPy array as a NIfTI file. """
+    nifti_img = nib.Nifti1Image(data, affine, header)
+    nib.save(nifti_img, file_path)
+
+def divideintozones_with_vent_obb_noregiongrow(csf_mask_path, ventricle_mask_path, output_dir):
+    # Load NIfTI masks
+    csf_data, affine, header = load_nifti(csf_mask_path)
+    ventricle_data, _, _ = load_nifti(ventricle_mask_path)
+
+    # Get slices where ventricle mask is present
+    slice_sums = np.sum(ventricle_data, axis=(0, 1))  # Sum along x, y axes
+    ventricle_slices = np.where(slice_sums > 0)[0]
+
+    if ventricle_slices.size == 0:
+        print("No ventricle region found.")
+        return
+
+    lower_bound = ventricle_slices[0]
+    upper_bound = ventricle_slices[-1]
+
+    # Create masks for above and below ventricle
+    above_ventricle = np.zeros_like(csf_data)
+    below_ventricle = np.zeros_like(csf_data)
+
+    above_ventricle[:, :, :lower_bound] = csf_data[:, :, :lower_bound]
+    below_ventricle[:, :, upper_bound + 1:] = csf_data[:, :, upper_bound + 1:]
+
+    # Save the above and below ventricle masks
+    os.makedirs(output_dir, exist_ok=True)
+    save_nifti(above_ventricle, affine, header, os.path.join(output_dir, "above_ventricle.nii.gz"))
+    save_nifti(below_ventricle, affine, header, os.path.join(output_dir, "below_ventricle.nii.gz"))
+
+    # Create ventricle inside and outside bounding box masks
+    ventricle_inside = np.zeros_like(ventricle_data)
+    ventricle_outside = np.zeros_like(csf_data)
+
+    ventricle_inside[ventricle_data > 0] = csf_data[ventricle_data > 0]  # Inside ventricle box
+    ventricle_outside[(csf_data > 0) & (ventricle_data == 0)] = csf_data[(csf_data > 0) & (ventricle_data == 0)]  # Outside box
+
+    # Save ventricle zone masks
+    save_nifti(ventricle_inside, affine, header, os.path.join(output_dir, "ventricle_inside.nii.gz"))
+    save_nifti(ventricle_outside, affine, header, os.path.join(output_dir, "ventricle_outside.nii.gz"))
+
+    print("Processing complete. Masks saved in:", output_dir)
+
+# Example usage
+csf_mask_path = "csf_mask.nii.gz"  # Replace with actual path
+ventricle_mask_path = "ventricle_mask.nii.gz"  # Replace with actual path
+output_dir = "output_masks"
+
+process_masks(csf_mask_path, ventricle_mask_path, output_dir)
+
