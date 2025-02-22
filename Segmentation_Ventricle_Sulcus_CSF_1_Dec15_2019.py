@@ -632,7 +632,7 @@ def divideintozones_with_vent_obb_ven_hem_given(filename_gray,filename_mask,file
 
                 csf_ids.append([l,stats.GetPhysicalSize(stats.GetLabels()[l])])
             csf_ids.sort(key = sortSecond, reverse = True)
-            # subprocess.call("echo " + "SUCCEEDED AT ::{}  > error.txt".format(inspect.stack()[0][3]) ,shell=True )
+            subprocess.call("echo " + "SUCCEEDED AT ::{}  > error.txt".format(inspect.stack()[0][3]) ,shell=True )
             first_seg_centroid=np.array(stats.GetCentroid(stats.GetLabels()[csf_ids[0][0]]))
             second_seg_centroid=np.array(stats.GetCentroid(stats.GetLabels()[csf_ids[1][0]]))
             bet_centroid=np.array(stats.GetCentroid(stats.GetLabels()[id_of_maxsize_comp_1]))
