@@ -116,6 +116,11 @@ while IFS=',' read -ra array; do
     done < <(tail -n +2 "${working_dir}/${output_csvfile_1}")
 
     ######################################
+    rm /workinginput/*_resaved_levelset_sulci_total.nii.gz
+    rm /workinginput/*_resaved_levelset_ventricle_total.nii.gz
+    rm /workinginput/*_resaved_levelset_sulci_below_ventricle.nii.gz
+    rm /workinginput/*_resaved_levelset_sulci_above_ventricle.nii.gz
+    rm /workinginput/*_resaved_levelset_sulci_at_ventricle.nii.gz
     resource_dir="SAH_SEGM"
     working_dir_1="/input"
     output_csvfile_2=${sessionID}_MASK_METADATA.csv
