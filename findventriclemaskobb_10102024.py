@@ -1030,8 +1030,8 @@ def divideintozones_with_vent_obb_with_four_centroid(filename_gray,filename_mask
 
             sitk.WriteImage(covering_ventricle_image_sitkimg, filename_gray.split(".nii")[0]+ "_sulci_at_ventricle.nii.gz", True)
 
-            subprocess.call("echo " + "SUCCEEDED AT ::{}  > error.txt".format(inspect.stack()[0][3]) ,shell=True )
-            subprocess.call("echo " + "SUCCEEDED AT ::{}:{}:{}  > error.txt".format(inspect.stack()[0][3],zoneV_max_z,zoneV_min_z) ,shell=True )
+            subprocess.call("echo " + "SUCCEEDED AT ::{}  >> error.txt".format(inspect.stack()[0][3]) ,shell=True )
+            subprocess.call("echo " + "SUCCEEDED AT ::{}:{}:{}  >> error.txt".format(inspect.stack()[0][3],zoneV_max_z,zoneV_min_z) ,shell=True )
 
 
     except     Exception as e:
