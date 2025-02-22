@@ -178,6 +178,8 @@ echo "csffile:::::ATUL:::${csffile}"
           zoneV_min_z=0 #${array3[3]}
           zoneV_max_z=60 #${array3[4]}
         done < <(tail -n +2 "${ventricleboundfile}")
+              zoneV_min_z=0 #${array3[3]}
+              zoneV_max_z=60 #${array3[4]}
     #############################################
     ######################################
     rm /workinginput/*_resaved_levelset_sulci_total.nii.gz
