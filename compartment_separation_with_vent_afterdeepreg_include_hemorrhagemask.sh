@@ -180,26 +180,26 @@ echo "csffile:::::ATUL:::${csffile}"
         done < <(tail -n +2 "${ventricleboundfile}")
     #############################################
 
-    call_csf_compartments_arguments=('call_csf_compartments_vent_obb_given' ${greyfile} ${csffile} ${betfile} ${ventricle_obb_mask} ${zoneV_min_z} ${zoneV_max_z} )
-    outputfiles_present=$(python3 /software/CSF_COMPARTMENT_GITHUB_July212023.py "${call_csf_compartments_arguments[@]}")
-    #  echo ${outputfiles_present}
-    #fi
-    echo ${outputfiles_present}
-    URI_1=${url2%/resource*}
-    filename_prefix=$(basename ${url}) #${url2%/resource*} #filename=
-    filename_prefix=${filename_prefix%_NIFTILOCATION*}
-    resource_dirname="MASKS"
-          this_data_basename=$(basename {greyfile})
-          this_data_basename_noext=${this_data_basename%_resaved*}
-    for file_name in ${dir_to_save}/${filename_prefix}*.nii.gz; do
-      echo ${file_name}
-      if [[ ${file_name} == *"${this_data_basename_noext}"* ]] || [[ ${file_name} == *"ventricle"* ]] || [[ ${file_name} == *"sulci"* ]]; then
-        call_uploadsinglefile_with_URI_arguments=('call_uploadsinglefile_with_URI' ${URI_1} ${file_name} ${resource_dirname})
-        outputfiles_present=$(python3 /software/download_with_session_ID.py "${call_uploadsinglefile_with_URI_arguments[@]}")
-        echo ${outputfiles_present}
-
-      fi
-    done
+#    call_csf_compartments_arguments=('call_csf_compartments_vent_obb_given' ${greyfile} ${csffile} ${betfile} ${ventricle_obb_mask} ${zoneV_min_z} ${zoneV_max_z} )
+#    outputfiles_present=$(python3 /software/CSF_COMPARTMENT_GITHUB_July212023.py "${call_csf_compartments_arguments[@]}")
+#    #  echo ${outputfiles_present}
+#    #fi
+#    echo ${outputfiles_present}
+#    URI_1=${url2%/resource*}
+#    filename_prefix=$(basename ${url}) #${url2%/resource*} #filename=
+#    filename_prefix=${filename_prefix%_NIFTILOCATION*}
+#    resource_dirname="MASKS"
+#          this_data_basename=$(basename {greyfile})
+#          this_data_basename_noext=${this_data_basename%_resaved*}
+#    for file_name in ${dir_to_save}/${filename_prefix}*.nii.gz; do
+#      echo ${file_name}
+#      if [[ ${file_name} == *"${this_data_basename_noext}"* ]] || [[ ${file_name} == *"ventricle"* ]] || [[ ${file_name} == *"sulci"* ]]; then
+#        call_uploadsinglefile_with_URI_arguments=('call_uploadsinglefile_with_URI' ${URI_1} ${file_name} ${resource_dirname})
+#        outputfiles_present=$(python3 /software/download_with_session_ID.py "${call_uploadsinglefile_with_URI_arguments[@]}")
+#        echo ${outputfiles_present}
+#
+#      fi
+#    done
   done < <(tail -n +2 "${dir_to_save}/${filename}")
 
 done \
