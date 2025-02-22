@@ -64,7 +64,7 @@ def call_csf_compartments_ventbound_given(args):
 def call_csf_compartments_vent_obb_given(args):
     returnvalue=0
     try:
-        subprocess.call("echo " + "SUCCEEDED 1 AT ::{}  > error.txt".format(inspect.stack()[0][3]) ,shell=True )
+        subprocess.call("echo " + "SUCCEEDED 1 AT ::{}  >> error.txt".format(inspect.stack()[0][3]) ,shell=True )
         filename_gray=args.stuff[1]
         filename_mask=args.stuff[2]
         filename_bet=args.stuff[3]
@@ -72,10 +72,10 @@ def call_csf_compartments_vent_obb_given(args):
         zoneV_min_z=int(args.stuff[5])
         zoneV_max_z=int(args.stuff[6])
         csf_compartments_ventobb_given(filename_gray,filename_mask,filename_bet,filename_ventricle_obb_mask,zoneV_min_z,zoneV_max_z)
-        subprocess.call("echo " + "SUCCEEDED 2 AT ::{}  > error.txt".format(inspect.stack()[0][3]) ,shell=True )
+        subprocess.call("echo " + "SUCCEEDED 2 AT ::{}  >> error.txt".format(inspect.stack()[0][3]) ,shell=True )
         returnvalue=1
     except:
-        subprocess.call("echo " + "FAILED AT ::{}  > error.txt".format(inspect.stack()[0][3]) ,shell=True )
+        subprocess.call("echo " + "FAILED AT ::{}  >> error.txt".format(inspect.stack()[0][3]) ,shell=True )
         pass
     return returnvalue
 def call_csf_compartments_ventbound_given_args():
