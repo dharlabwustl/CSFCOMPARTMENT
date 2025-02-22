@@ -175,8 +175,8 @@ echo "csffile:::::ATUL:::${csffile}"
         ventricle_obb_mask=${dir_to_save}/ventricle_obb_mask.nii
         while IFS=',' read -ra array3; do
           echo "${array3[3]}::${array3[4]}"
-          zoneV_min_z=${array3[3]}
-          zoneV_max_z=${array3[4]}
+          zoneV_min_z=0 #${array3[3]}
+          zoneV_max_z=60 #${array3[4]}
         done < <(tail -n +2 "${ventricleboundfile}")
     #############################################
     ######################################
