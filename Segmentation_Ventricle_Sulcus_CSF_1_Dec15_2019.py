@@ -574,7 +574,7 @@ def divideintozones_with_vent_obb_ven_hem_given(filename_gray,filename_mask,file
             vent_hem_mask_itk.SetFileName(vent_hem_mask)
             vent_hem_mask_itk_object = vent_hem_mask_itk.Execute()
             vent_hem_mask_itk_object_np=sitk.GetArrayFromImage(vent_hem_mask_itk_object)
-            img_T1_temp_np[vent_hem_mask_itk_object_np>0]=1.0
+            # img_T1_temp_np[vent_hem_mask_itk_object_np>0]=1.0
 
 
         # img_T1_temp_np[ventricle_nonlin_mask_np<1]=0.0
