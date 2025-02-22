@@ -565,7 +565,7 @@ def divideintozones_with_vent_obb_ven_hem_given(filename_gray,filename_mask,file
         img_T1_1_forsubtract_itk.CopyInformation(img_T1_1)
         img_T1_temp_np[ventricle_obb_np<1]=0.0
         ## ventricle_hemorrhage mask:
-        vent_hem_mask_list=glob.glob('/workinginput/*_resaved_4DL_seg_ventri.nii.gz')
+        vent_hem_mask_list=glob.glob('/input/*_resaved_4DL_seg_ventri.nii.gz')
         if len(vent_hem_mask_list)>0:
             vent_hem_mask=vent_hem_mask_list[0]
             vent_hem_mask_itk = sitk.ImageFileReader()
