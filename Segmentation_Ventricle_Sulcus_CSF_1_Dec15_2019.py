@@ -567,6 +567,7 @@ def divideintozones_with_vent_obb_ven_hem_given(filename_gray,filename_mask,file
         ## ventricle_hemorrhage mask:
         vent_hem_mask_list=glob.glob('/input/*_resaved_4DL_seg_ventri.nii.gz')
         if len(vent_hem_mask_list)>0:
+            print(f"I am at{vent_hem_mask_list}")
             vent_hem_mask=vent_hem_mask_list[0]
             vent_hem_mask_itk = sitk.ImageFileReader()
             vent_hem_mask_itk.SetImageIO("NiftiImageIO")
