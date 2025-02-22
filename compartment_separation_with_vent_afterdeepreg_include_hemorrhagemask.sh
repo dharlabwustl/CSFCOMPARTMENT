@@ -115,12 +115,7 @@ while IFS=',' read -ra array; do
       fi
     done < <(tail -n +2 "${working_dir}/${output_csvfile_1}")
 
-    ######################################
-    rm /workinginput/*_resaved_levelset_sulci_total.nii.gz
-    rm /workinginput/*_resaved_levelset_ventricle_total.nii.gz
-    rm /workinginput/*_resaved_levelset_sulci_below_ventricle.nii.gz
-    rm /workinginput/*_resaved_levelset_sulci_above_ventricle.nii.gz
-    rm /workinginput/*_resaved_levelset_sulci_at_ventricle.nii.gz
+
     resource_dir="SAH_SEGM"
     working_dir_1="/input"
     output_csvfile_2=${sessionID}_MASK_METADATA.csv
@@ -184,7 +179,12 @@ echo "csffile:::::ATUL:::${csffile}"
           zoneV_max_z=${array3[4]}
         done < <(tail -n +2 "${ventricleboundfile}")
     #############################################
-
+    ######################################
+    rm /workinginput/*_resaved_levelset_sulci_total.nii.gz
+    rm /workinginput/*_resaved_levelset_ventricle_total.nii.gz
+    rm /workinginput/*_resaved_levelset_sulci_below_ventricle.nii.gz
+    rm /workinginput/*_resaved_levelset_sulci_above_ventricle.nii.gz
+    rm /workinginput/*_resaved_levelset_sulci_at_ventricle.nii.gz
 #    call_csf_compartments_arguments=('call_csf_compartments_vent_obb_given' ${greyfile} ${csffile} ${betfile} ${ventricle_obb_mask} ${zoneV_min_z} ${zoneV_max_z} )
 #    outputfiles_present=$(python3 /software/CSF_COMPARTMENT_GITHUB_July212023.py "${call_csf_compartments_arguments[@]}")
 #    #  echo ${outputfiles_present}
