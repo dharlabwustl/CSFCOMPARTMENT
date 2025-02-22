@@ -62,6 +62,39 @@ import numpy as np
 from sklearn.decomposition import PCA
 from scipy.spatial import distance
 from itertools import product
+def find_upper_lower_slices(nifti_mask_path):
+    """
+    Given a NIfTI 3D binary mask, this function returns the indices
+    of the first (lower) and last (upper) slices that contain non-zero values.
+
+    Parameters:
+        nifti_mask_path (str): Path to the NIfTI mask file.
+
+    Returns:
+        lower_slice (int): Index of the lower (first) slice with non-zero values.
+        upper_slice (int): Index of the upper (last) slice with non-zero values.
+                           Returns (None, None) if no non-zero slices are found.
+    """
+    # Load the image using nibabel
+    img = nib.load(nifti_mask_path)
+    data = img.get_fdata()  # Get the image data as a numpy array
+
+    # Sum across the first two dimensions for each slice along the third axis.
+    # This gives us an array where each element represents the total intensity of a slice.
+    slice_sums = np.sum(data, axis=(0, 1))
+
+    # Find indices where the slice has non-zero sum (i.e., contains non-zero voxels)
+    non_zero_slices = np.where(slice_sums > 0)[0]
+
+    if non_zero_slices.size == 0:
+        # No non-zero slices found
+        return None, None
+
+    # The first and last indices of non-zero slices represent the lower and upper bounds.
+    lower_slice = int(non_zero_slices[0])
+    upper_slice = int(non_zero_slices[-1])
+
+    return lower_slice, upper_slice
 
 def compute_obb(binary_mask):
     """
@@ -1074,19 +1107,19 @@ nib.save(array_img, os.path.join(sys.argv[3],'ventricle.nii'))
 non_zero_slice_num=[]
 ventricle_obb_mask=nib.load(os.path.join(sys.argv[3],'ventricle_obb_mask.nii')).get_fdata()
 # print(ventricle_mask.get_fdata().shape[2])
-# for slice_num in range(ventricle_mask.shape[2]):
-#     this_slice_sum=np.sum(ventricle_mask[:,:,slice_num])
-#     if this_slice_sum >0 :
-#         # print(this_slice_sum)
-#         non_zero_slice_num.append(slice_num)
-# if len(non_zero_slice_num)>0:
-#     upper_lower_limit_vent=["sessionID","scanID","original_nifti_filename",min(non_zero_slice_num),max(non_zero_slice_num)]
+for slice_num in range(ventricle_mask.shape[2]):
+    this_slice_sum=np.sum(ventricle_mask[:,:,slice_num])
+    if this_slice_sum >0 :
+        # print(this_slice_sum)
+        non_zero_slice_num.append(slice_num)
+if len(non_zero_slice_num)>0:
+    upper_lower_limit_vent=["sessionID","scanID","original_nifti_filename",min(non_zero_slice_num),max(non_zero_slice_num)]
 # print(upper_lower_limit_vent)
-# upper_lower_limit_vent_df=pd.DataFrame(upper_lower_limit_vent).T
-# upper_lower_limit_vent_df.columns=['SESSION_ID','SCAN_ID','NIFTI_FILENAME','LOWER_SLICE_NUM','UPPER_SCLICE_NUM']
+upper_lower_limit_vent_df=pd.DataFrame(upper_lower_limit_vent).T
+upper_lower_limit_vent_df.columns=['SESSION_ID','SCAN_ID','NIFTI_FILENAME','LOWER_SLICE_NUM','UPPER_SCLICE_NUM']
 # print(upper_lower_limit_vent_df)
 # upper_lower_limit_vent_df.to_csv(os.path.join(SAVE_PATH,original_nifti_filename.split('.nii')[0]+'_ventricle_bounds.csv'),index=False)
-# upper_lower_limit_vent_df.to_csv(os.path.join(sys.argv[3],'ventricle_bounds.csv'),index=False)
+upper_lower_limit_vent_df.to_csv(os.path.join(sys.argv[3],'ventricle_bounds.csv'),index=False)
 
 ventricle_mask=nib.load( os.path.join(sys.argv[3],'ventricle.nii')).get_fdata()
 
@@ -1106,4 +1139,5 @@ filename_vent_obb=os.path.join(sys.argv[3],'ventricle_obb_mask.nii')
 zoneV_min_z=0
 zoneV_max_z=0
 closest_voxels=find_closest_non_zero_voxel(nib.load(filename_mask).get_fdata(), centroids)
-divideintozones_with_vent_obb_with_four_centroid(filename_gray,filename_mask,filename_bet,filename_vent_obb,closest_voxels,zoneV_min_z,zoneV_max_z)
+zoneV_min_z,zoneV_max_z=lower_slice,upper_slice=find_upper_lower_slices(filename_vent_obb)
+# divideintozones_with_vent_obb_with_four_centroid(filename_gray,filename_mask,filename_bet,filename_vent_obb,closest_voxels,zoneV_min_z,zoneV_max_z)
