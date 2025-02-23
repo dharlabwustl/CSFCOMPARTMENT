@@ -574,6 +574,8 @@ def divideintozones_with_vent_obb_ven_hem_given(filename_gray,filename_mask,file
             vent_hem_mask_itk.SetFileName(vent_hem_mask)
             vent_hem_mask_itk_object = vent_hem_mask_itk.Execute()
             vent_hem_mask_itk_object_np=sitk.GetArrayFromImage(vent_hem_mask_itk_object)
+            vent_hem_mask_itk_object_np[0:zoneV_min_z,:,:]=0
+            vent_hem_mask_itk_object_np[zoneV_max_z+1:vent_hem_mask_itk_object_np.shape[0],:,:]=0
             img_T1_temp_np[vent_hem_mask_itk_object_np>0.5]=1.0
 
 
@@ -653,7 +655,9 @@ def divideintozones_with_vent_obb_ven_hem_given(filename_gray,filename_mask,file
             seg_explicit_thresholds =sitk.ConnectedThreshold(img_T1, seedList=initial_seed_point_indexes, lower=100, upper=255)
             img_T1_temp_np_1=sitk.GetArrayFromImage(seg_explicit_thresholds)
             img_T1_temp_np_1[vent_hem_mask_itk_object_np>0.5]=1.0
+
             seg_explicit_thresholds=sitk.GetImageFromArray(img_T1_temp_np_1)
+
             # zoneV_min_z,zoneV_max_z=get_ventricles_range(sitk.GetArrayFromImage(seg_explicit_thresholds))
             subtracted_image=subtract_binary_1(sitk.GetArrayFromImage(img_T1_1),sitk.GetArrayFromImage(seg_explicit_thresholds)*255)
             subtracted_image=sitk.GetImageFromArray(subtracted_image)
