@@ -555,17 +555,29 @@ def divideintozones_with_vent_obb_ven_hem_given(filename_gray,filename_mask,file
         reader.SetFileName(file)
         img_T1_1 = reader.Execute();
         # img_T1_Copy=img_T1
+        sah_hem_mask=glob.glob('/input/*_resaved_4DL_seg_total.nii.gz')[0]
+        sah_hem_mask_itk = sitk.ImageFileReader()
+        sah_hem_mask_itk.SetImageIO("NiftiImageIO")
+        sah_hem_mask_itk.SetFileName(sah_hem_mask)
+        sah_hem_mask_itk_object = sah_hem_mask_itk.Execute()
+        sah_hem_mask_itk_object_np=sitk.GetArrayFromImage(sah_hem_mask_itk_object)
         ####################################################
         img_T1_temp_np=sitk.GetArrayFromImage(img_T1_1)
         img_T1_temp_np_alllabels=np.copy(img_T1_temp_np)
         img_T1_temp_np_alllabels=slicenum_at_end(img_T1_temp_np_alllabels)
         img_T1_temp_np[img_T1_temp_np>1]=0.0
+        img_T1_temp_np_copy=np.copy(img_T1_temp_np)
+        img_T1_temp_np_copy[sah_hem_mask_itk_object_np>0.5]=1
         img_T1_1_forsubtract_np=np.copy(img_T1_temp_np)
         img_T1_1_forsubtract_itk=sitk.GetImageFromArray(img_T1_1_forsubtract_np)
         img_T1_1_forsubtract_itk.CopyInformation(img_T1_1)
         img_T1_temp_np[ventricle_obb_np<1]=0.0
         ## ventricle_hemorrhage mask:
+        img_T1_temp_np_copy_itk=sitk.GetImageFromArray(img_T1_temp_np_copy)
+        img_T1_temp_np_copy_itk.CopyInformation(img_T1_1)
+        img_T1_1=img_T1_temp_np_copy_itk
         vent_hem_mask_list=glob.glob('/input/*_resaved_4DL_seg_ventri.nii.gz')
+
         if len(vent_hem_mask_list)>0:
             print(f"I am at{vent_hem_mask_list}")
             vent_hem_mask=vent_hem_mask_list[0]
