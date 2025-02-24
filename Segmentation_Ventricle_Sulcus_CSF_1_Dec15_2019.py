@@ -670,7 +670,7 @@ def divideintozones_with_vent_obb_ven_hem_given(filename_gray,filename_mask,file
 
             seg_explicit_thresholds=sitk.GetImageFromArray(img_T1_temp_np_1)
 
-            # zoneV_min_z,zoneV_max_z=get_ventricles_range(sitk.GetArrayFromImage(seg_explicit_thresholds))
+            zoneV_min_z2,zoneV_max_z=get_ventricles_range(sitk.GetArrayFromImage(seg_explicit_thresholds))
             subtracted_image=subtract_binary_1(sitk.GetArrayFromImage(img_T1_1),sitk.GetArrayFromImage(seg_explicit_thresholds)*255)
             subtracted_image=sitk.GetImageFromArray(subtracted_image)
             above_ventricle_image= sitk.GetArrayFromImage(subtracted_image)
