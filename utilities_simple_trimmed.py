@@ -39,6 +39,7 @@ def coninuous2binary0_255(coninuous_image_file):
 
 
 
+
 def whenOFsize512x512(levelset_file,OUTPUT_DIRECTORY):
     if "WUSTL" in levelset_file:
         image_levelset_nib=nib.load(levelset_file)

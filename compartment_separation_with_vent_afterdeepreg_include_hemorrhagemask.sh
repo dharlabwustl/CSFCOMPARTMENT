@@ -132,6 +132,16 @@ while IFS=',' read -ra array; do
               greyfile1=${working_dir_1}/${filename3}
               echo "${greyfile1}"
             fi
+            if [[ ${url3} == *"resaved_4DL_seg_total.nii.gz"* ]]; then #  || [[ ${url2} == *"_levelset_bet"* ]]  || [[ ${url2} == *"csf_unet"* ]]  ; then ##[[ $string == *"My long"* ]]; then
+              echo "It's there!"
+              echo "${array3[6]}"
+              filename4=$(basename ${url3})
+              call_download_a_singlefile_with_URIString_arguments=('call_download_a_singlefile_with_URIString' ${url3} ${filename4} ${working_dir_1})
+              outputfiles_present=$(python3 download_with_session_ID.py "${call_download_a_singlefile_with_URIString_arguments[@]}")
+              sah_total=${working_dir_1}/${filename4}
+              echo "${sah_total}"
+            fi
+
     done < <(tail -n +2 "${working_dir_1}/${output_csvfile_2}")
 #############################################
     ##############################################
@@ -194,6 +204,8 @@ echo "csffile:::::ATUL:::${csffile}"
     outputfiles_present=$(python3 /software/CSF_COMPARTMENT_GITHUB_July212023.py "${call_csf_compartments_arguments[@]}")
     #  echo ${outputfiles_present}
     #fi
+    call_csf_compartments_arguments=('call_combine_sah_to_csf' ${sah_total} ${csffile}  )
+    outputfiles_present=$(python3 /software/CSF_COMPARTMENT_GITHUB_July212023.py "${call_csf_compartments_arguments[@]}")
     echo ${outputfiles_present}
     URI_1=${url2%/resource*}
     filename_prefix=$(basename ${url}) #${url2%/resource*} #filename=

@@ -132,12 +132,53 @@ def main():
         if name_of_the_function == "call_csf_compartments_vent_obb_given":
             print("WO ZAI ::{}".format("call_csf_compartments_vent_obb_given"))
             return_value=call_csf_compartments_vent_obb_given(args)
+        if name_of_the_function == "call_combine_sah_to_csf":
+            print("WO ZAI ::{}".format("call_combine_sah_to_csf"))
+            return_value=call_combine_sah_to_csf(args)
     except:
         x=0
         
 
     return return_value
+def combine_sah_to_csf(sah_totalf,csf_maskf):
 
+    # Load the binary masks
+    sah_mask1 = nib.load(sah_totalf).get_fdata()
+    csf_mask = nib.load(csf_maskf).get_fdata()
+
+    # Create an empty mask with the same shape
+    combined_mask = np.zeros_like(sah_mask1)
+
+    # Assign unique labels
+    combined_mask[sah_mask1 > 0.5] = 1  # Label 1 for first SAH mask
+    combined_mask[csf_mask > 0.5] = 1   # Label 4 for CSF mask
+
+    # Load header and affine from one of the original masks
+    affine = nib.load(sah_totalf).affine
+    header = nib.load(sah_totalf).header
+
+    # Create a new NIfTI image
+    combined_nifti = nib.Nifti1Image(combined_mask, affine, header)
+
+    # Save the combined mask
+    nib.save(combined_nifti, csf_maskf.split('.nii')[0]+'_with_sah.nii.gz')
+
+    print("Combined mask saved as combined_mask.nii.gz")
+def call_combine_sah_to_csf(args):
+    returnvalue=0
+
+
+    try:
+        filename_csf=args.stuff[2]
+        filename_sah=args.stuff[1]
+        # filename_bet=args.stuff[3]
+        combine_sah_to_csf(filename_sah,filename_csf) #,filename_bet)
+        print("I SUCCEED AT ::{}".format(inspect.stack()[0][3]))
+        returnvalue=1
+    except:
+        print("I FAILED AT ::{}".format(inspect.stack()[0][3]))
+        pass
+    return returnvalue
 
 if __name__ == '__main__':
     main()
