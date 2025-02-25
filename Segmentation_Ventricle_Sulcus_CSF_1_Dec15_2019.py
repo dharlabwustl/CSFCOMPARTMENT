@@ -567,7 +567,7 @@ def divideintozones_with_vent_obb_ven_hem_given(filename_gray,filename_mask,file
         img_T1_temp_np_alllabels=slicenum_at_end(img_T1_temp_np_alllabels)
         img_T1_temp_np[img_T1_temp_np>1]=0.0
         img_T1_temp_np_copy=np.copy(img_T1_temp_np)
-        img_T1_temp_np_copy[sah_hem_mask_itk_object_np>0.1]=1
+        img_T1_temp_np_copy[sah_hem_mask_itk_object_np>0.01]=1
         img_T1_1_forsubtract_np=np.copy(img_T1_temp_np)
         img_T1_1_forsubtract_itk=sitk.GetImageFromArray(img_T1_1_forsubtract_np)
         img_T1_1_forsubtract_itk.CopyInformation(img_T1_1)
@@ -588,7 +588,7 @@ def divideintozones_with_vent_obb_ven_hem_given(filename_gray,filename_mask,file
             vent_hem_mask_itk_object_np=sitk.GetArrayFromImage(vent_hem_mask_itk_object)
             vent_hem_mask_itk_object_np[0:zoneV_min_z,:,:]=0
             # vent_hem_mask_itk_object_np[zoneV_max_z+1:vent_hem_mask_itk_object_np.shape[0],:,:]=0
-            img_T1_temp_np[vent_hem_mask_itk_object_np>0.1]=1.0
+            img_T1_temp_np[vent_hem_mask_itk_object_np>0.01]=1.0
 
 
 
