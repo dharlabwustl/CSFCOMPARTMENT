@@ -588,7 +588,7 @@ def divideintozones_with_vent_obb_ven_hem_given(filename_gray,filename_mask,file
             vent_hem_mask_itk_object_np=sitk.GetArrayFromImage(vent_hem_mask_itk_object)
             vent_hem_mask_itk_object_np[0:zoneV_min_z,:,:]=0
             # vent_hem_mask_itk_object_np[zoneV_max_z+1:vent_hem_mask_itk_object_np.shape[0],:,:]=0
-            img_T1_temp_np[vent_hem_mask_itk_object_np>0.01]=1.0
+            img_T1_temp_np[vent_hem_mask_itk_object_np>0.001]=1.0
 
 
 
