@@ -666,7 +666,7 @@ def divideintozones_with_vent_obb_ven_hem_given(filename_gray,filename_mask,file
             initial_seed_point_indexes=[stats.GetMinimumIndex(stats.GetLabels()[id_of_maxsize_comp])] ##img_T1 ##
             seg_explicit_thresholds =sitk.ConnectedThreshold(img_T1, seedList=initial_seed_point_indexes, lower=100, upper=255)
             img_T1_temp_np_1=sitk.GetArrayFromImage(seg_explicit_thresholds)
-            img_T1_temp_np_1[vent_hem_mask_itk_object_np>0.001]=1.0
+            img_T1_temp_np_1[vent_hem_mask_itk_object_np>0.5]=1.0
             # img_T1_temp_np_1[vent_hem_mask_itk_object_np > 0.0] = vent_hem_mask_itk_object_np[vent_hem_mask_itk_object_np > 0.0]
             # img_T1_temp_np_1 = np.where(vent_hem_mask_itk_object_np > 0, vent_hem_mask_itk_object_np, img_T1_temp_np_1)
             seg_explicit_thresholds=sitk.GetImageFromArray(img_T1_temp_np_1)
