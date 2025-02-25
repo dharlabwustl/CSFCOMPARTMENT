@@ -567,7 +567,7 @@ def divideintozones_with_vent_obb_ven_hem_given(filename_gray,filename_mask,file
         img_T1_temp_np_alllabels=slicenum_at_end(img_T1_temp_np_alllabels)
         img_T1_temp_np[img_T1_temp_np>1]=0.0
         img_T1_temp_np_copy=np.copy(img_T1_temp_np)
-        img_T1_temp_np_copy[sah_hem_mask_itk_object_np>0.001]=1
+        img_T1_temp_np_copy[sah_hem_mask_itk_object_np>0.5]=1
         img_T1_1_forsubtract_np=np.copy(img_T1_temp_np)
         img_T1_1_forsubtract_itk=sitk.GetImageFromArray(img_T1_1_forsubtract_np)
         img_T1_1_forsubtract_itk.CopyInformation(img_T1_1)
@@ -673,7 +673,7 @@ def divideintozones_with_vent_obb_ven_hem_given(filename_gray,filename_mask,file
 
             zoneV_min_z2,zoneV_max_z=get_ventricles_range(sitk.GetArrayFromImage(seg_explicit_thresholds))
             img_T1_1_arr=sitk.GetArrayFromImage(img_T1_1)
-            img_T1_1_arr = np.where(sah_hem_mask_itk_object_np > 0, sah_hem_mask_itk_object_np, img_T1_1_arr)
+            # img_T1_1_arr = np.where(sah_hem_mask_itk_object_np > 0, sah_hem_mask_itk_object_np, img_T1_1_arr)
             # img_T1_1_arr[sah_hem_mask_itk_object_np > 0] = sah_hem_mask_itk_object_np[sah_hem_mask_itk_object_np > 0]
 
 
