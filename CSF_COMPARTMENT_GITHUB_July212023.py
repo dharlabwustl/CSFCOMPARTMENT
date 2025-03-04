@@ -160,9 +160,9 @@ def main():
         if name_of_the_function == "call_csf_compartments_vent_obb_given":
             print("WO ZAI ::{}".format("call_csf_compartments_vent_obb_given"))
             return_value=call_csf_compartments_vent_obb_given(args)
-        if name_of_the_function == "call_csf_compartments_ventobb_no_hem":
-            print("WO ZAI ::{}".format("call_csf_compartments_ventobb_no_hem"))
-            return_value=call_csf_compartments_vent_obb_given(args)
+        if name_of_the_function == "call_csf_compartments_ventbound_no_hem":
+            print("WO ZAI ::{}".format("call_csf_compartments_ventbound_no_hem"))
+            return_value=call_csf_compartments_ventbound_no_hem(args)
         if name_of_the_function == "call_combine_sah_to_csf":
             print("WO ZAI ::{}".format("call_combine_sah_to_csf"))
             return_value=call_combine_sah_to_csf(args)
