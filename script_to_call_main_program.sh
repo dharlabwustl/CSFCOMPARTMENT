@@ -41,6 +41,13 @@ echo " I AM IN TYPE_OF_PROGRAM == VENT_BOUND_IN_SNIPR_DEBUG"
 /software/compartment_separation_with_vent_afterdeepreg.sh  $SESSION_ID $XNAT_USER $XNAT_PASS $XNAT_HOST
 #/software/compartment_separation_with_vent_afterdeepreg_include_hemorrhagemask.sh  $SESSION_ID $XNAT_USER $XNAT_PASS $XNAT_HOST
 fi
+if [[ ${TYPE_OF_PROGRAM} == "VENT_BOUND_IN_SNIPR_NODEEPREG" ]] ;
+then
+echo " I AM IN TYPE_OF_PROGRAM == VENT_BOUND_IN_SNIPR_NODEEPREG"
+/software/compartment_separation_with_vent_nodeepreg_nohem.sh  $SESSION_ID $XNAT_USER $XNAT_PASS $XNAT_HOST
+#/software/compartment_separation_with_vent_afterdeepreg_include_hemorrhagemask.sh  $SESSION_ID $XNAT_USER $XNAT_PASS $XNAT_HOST
+fi
+
 if [[ ${TYPE_OF_PROGRAM} == 1 ]] ;
 then
 echo " I AM IN TYPE_OF_PROGRAM == 1"
