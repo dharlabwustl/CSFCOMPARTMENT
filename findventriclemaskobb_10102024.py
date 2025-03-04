@@ -77,7 +77,7 @@ def expand_mask_distance(mask, expansion_factor=1.2):
     original_volume = np.sum(mask)
 
     # Compute distance transform (distance from non-mask to the nearest mask voxel)
-    dist_transform = distance_transform_edt(~mask)
+    dist_transform = distance_transform_edt(~mask.astype(bool))
 
     # Find threshold distance to achieve the desired volume expansion
     sorted_distances = np.sort(dist_transform[dist_transform > 0])  # Exclude background
