@@ -115,7 +115,7 @@ while IFS=',' read -ra array; do
 
 
     ##############################################
-        resource_dir="PREPROCESS_SEGM"
+        resource_dir="PREPROCESS_SEGM_2"
         output_csvfile_2=${sessionID}_PREPROCESS_SEGM_METADATA.csv
         call_get_resourcefiles_metadata_saveascsv_args ${url1} ${resource_dir} ${working_dir} ${output_csvfile_2}
         #      filename1=$(basename ${url1})
@@ -160,7 +160,7 @@ echo "csffile:::::ATUL:::${csffile}"
         done < <(tail -n +2 "${ventricleboundfile}")
     #############################################
 
-    call_csf_compartments_arguments=('call_csf_compartments_vent_obb_given' ${greyfile} ${csffile} ${betfile} ${ventricle_obb_mask} ${zoneV_min_z} ${zoneV_max_z} )
+    call_csf_compartments_arguments=('csf_compartments_ventobb_no_hem' ${greyfile} ${csffile} ${betfile} ${ventricle_obb_mask} ${zoneV_min_z} ${zoneV_max_z} )
     outputfiles_present=$(python3 /software/CSF_COMPARTMENT_GITHUB_July212023.py "${call_csf_compartments_arguments[@]}")
     #  echo ${outputfiles_present}
     #fi
