@@ -23,6 +23,7 @@
 # import matplotlib.pyplot as plt
 # from vtk import *
 import sys,inspect,subprocess
+from scipy.ndimage import distance_transform_edt
 # import six
 import SimpleITK as sitk
 import os
@@ -62,6 +63,37 @@ import numpy as np
 from sklearn.decomposition import PCA
 from scipy.spatial import distance
 from itertools import product
+def expand_mask_distance(mask, expansion_factor=1.2):
+    """
+    Expands the mask using distance transform to increase volume by a given factor.
+
+    Parameters:
+        mask (numpy array): Binary mask (3D) where 1 represents the region of interest.
+        expansion_factor (float): The desired volume increase (e.g., 1.2 for 20% increase).
+
+    Returns:
+        expanded_mask (numpy array): The expanded binary mask.
+    """
+    original_volume = np.sum(mask)
+
+    # Compute distance transform (distance from non-mask to the nearest mask voxel)
+    dist_transform = distance_transform_edt(~mask)
+
+    # Find threshold distance to achieve the desired volume expansion
+    sorted_distances = np.sort(dist_transform[dist_transform > 0])  # Exclude background
+    target_volume = original_volume * expansion_factor
+
+    if target_volume >= mask.size:  # Prevents expansion beyond the image bounds
+        print("Expansion factor too large, filling entire volume.")
+        return np.ones_like(mask, dtype=np.uint8)
+
+    threshold_index = min(len(sorted_distances) - 1, int(target_volume - original_volume))
+    threshold = sorted_distances[threshold_index]
+
+    # Create expanded mask
+    expanded_mask = dist_transform <= threshold
+
+    return expanded_mask
 def find_upper_lower_slices(nifti_mask_path):
     """
     Given a NIfTI 3D binary mask, this function returns the indices
@@ -1077,7 +1109,18 @@ def divideintozones_with_vent_obb_with_four_centroid(filename_gray,filename_mask
 
     return  sulci_vol, ventricle_vol,leftcountven,rightcountven,leftcountsul,rightcountsul,sulci_vol_above_vent,sulci_vol_below_vent,sulci_vol_at_vent
 
+##########################
+nii_path =sys.argv[1] # "path_to_your_nifti.nii.gz"
+nii = nib.load(nii_path)
+mask = nii.get_fdata() #.astype(bool)  # Ensure it's a binary mask
 
+# Expand mask using distance transform
+expanded_mask = expand_mask_distance(mask, expansion_factor=1.2)  # 20% increase
+
+# Save expanded mask as new NIfTI file
+expanded_nii = nib.Nifti1Image(expanded_mask.astype(np.uint8), nii.affine, nii.header)
+nib.save(expanded_nii, nii_path ) #######"expanded_mask.nii.gz")
+#############################
 
 ventricle_mask=resizeinto_512by512_and_flip(nib.load(sys.argv[1]).get_fdata())
 # ventricle_obb_mask = create_obb_mask_from_image_mask(ventricle_mask)
