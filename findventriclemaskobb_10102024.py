@@ -94,7 +94,7 @@ def expand_mask_distance(mask, expansion_factor=1.2):
     expanded_mask = dist_transform <= threshold
 
     return expanded_mask
-def find_upper_lower_slices(nifti_mask_path):
+def find_upper_lower_slices_1(nifti_mask_path):
     """
     Given a NIfTI 3D binary mask, this function returns the indices
     of the first (lower) and last (upper) slices that contain non-zero values.
@@ -127,6 +127,55 @@ def find_upper_lower_slices(nifti_mask_path):
     upper_slice = int(non_zero_slices[-1])
 
     return lower_slice, upper_slice
+
+# import nibabel as nib
+# import numpy as np
+
+def find_upper_lower_slices(nifti_mask_path):
+    """
+    Given a NIfTI 3D binary mask, this function returns the indices
+    of the first (lower) and last (upper) slices that meet the threshold criteria.
+
+    The lower slice is the first slice (starting from the bottom) that contains
+    at least 2% of the total nonzero voxels.
+
+    The upper slice is the last slice (starting from the top) that contains
+    at least 0.1% of the total nonzero voxels.
+
+    Parameters:
+        nifti_mask_path (str): Path to the NIfTI mask file.
+
+    Returns:
+        lower_slice (int): Index of the lower (first) slice meeting the threshold.
+        upper_slice (int): Index of the upper (last) slice meeting the threshold.
+                           Returns (None, None) if no valid slices are found.
+    """
+    # Load the NIfTI file
+    img = nib.load(nifti_mask_path)
+    data = img.get_fdata().astype(bool)  # Convert to binary mask (1 = mask, 0 = background)
+
+    # Compute total number of non-zero voxels
+    total_voxels = np.sum(data)
+
+    if total_voxels == 0:
+        return None, None  # No non-zero voxels in the mask
+
+    # Compute the sum of non-zero voxels per slice along the Z-axis
+    slice_sums = np.sum(data, axis=(0, 1))  # Sum of voxels per slice
+
+    # Compute percentage contribution of each slice
+    slice_percentages = (slice_sums / total_voxels) * 100
+
+    # Find the first slice where % of non-zero voxels >= 2%
+    lower_slice_candidates = np.where(slice_percentages >= 2.0)[0]
+    lower_slice = int(lower_slice_candidates[0]) if lower_slice_candidates.size > 0 else None
+
+    # Find the last slice where % of non-zero voxels >= 0.1%
+    upper_slice_candidates = np.where(slice_percentages >= 0.1)[0]
+    upper_slice = int(upper_slice_candidates[-1]) if upper_slice_candidates.size > 0 else None
+
+    return lower_slice, upper_slice
+
 
 def compute_obb(binary_mask):
     """
