@@ -1217,7 +1217,7 @@ import numpy as np
 from sklearn.decomposition import PCA
 from scipy.spatial import ConvexHull
 
-def compute_obb_1(nifti_mask_path, output_path):
+def compute_obb_1(data): ##, output_path):
     """
     Computes the Oriented Bounding Box (OBB) of a 3D ventricle mask and saves it as a new NIfTI file.
 
@@ -1229,8 +1229,8 @@ def compute_obb_1(nifti_mask_path, output_path):
         None
     """
     # Load the NIfTI mask
-    img = nib.load(nifti_mask_path)
-    data = img.get_fdata().astype(bool)  # Convert to binary mask (1 = mask, 0 = background)
+    # img = nib.load(nifti_mask_path)
+    data = data.astype(bool)  # Convert to binary mask (1 = mask, 0 = background)
 
     # Extract nonzero voxel coordinates
     coords = np.array(np.nonzero(data)).T  # Shape (N, 3), where N is the number of foreground voxels
@@ -1275,9 +1275,9 @@ def compute_obb_1(nifti_mask_path, output_path):
         obb_mask[x, y, z] = 1
 
     # Save the OBB mask as a new NIfTI file
-    new_img = nib.Nifti1Image(obb_mask, img.affine, img.header)
-    nib.save(new_img, output_path)
-    print(f"Oriented Bounding Box (OBB) mask saved to: {output_path}")
+    # new_img = nib.Nifti1Image(obb_mask, img.affine, img.header)
+    # nib.save(new_img, output_path)
+    # print(f"Oriented Bounding Box (OBB) mask saved to: {output_path}")
     return obb_mask
 
 
@@ -1298,7 +1298,7 @@ ventricle_mask=resizeinto_512by512_and_flip(nib.load(sys.argv[1]).get_fdata())
 # ventricle_obb_mask = create_obb_mask_from_image_mask(ventricle_mask)
 ################
 # centroids, ventricle_obb_mask = process_binary_mask_with_obb(ventricle_mask,n_subdivisions=12)
-ventricle_obb_mask=compute_obb_1(ventricle_mask, os.path.join(sys.argv[3],'ventricle_obb_mask_1.nii'))
+ventricle_obb_mask=compute_obb_1(ventricle_mask) ##, os.path.join(sys.argv[3],'ventricle_obb_mask_1.nii'))
 # # Example usage:
 # binary_mask = np.zeros((100, 100, 100), dtype=np.uint8)
 # binary_mask[30:70, 30:70, 30:70] = 1  # Example filled 3D block
