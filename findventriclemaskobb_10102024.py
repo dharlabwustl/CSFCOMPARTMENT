@@ -1212,6 +1212,74 @@ def divideintozones_with_vent_obb_with_four_centroid(filename_gray,filename_mask
 
 
     return  sulci_vol, ventricle_vol,leftcountven,rightcountven,leftcountsul,rightcountsul,sulci_vol_above_vent,sulci_vol_below_vent,sulci_vol_at_vent
+import nibabel as nib
+import numpy as np
+from sklearn.decomposition import PCA
+from scipy.spatial import ConvexHull
+
+def compute_obb_1(nifti_mask_path, output_path):
+    """
+    Computes the Oriented Bounding Box (OBB) of a 3D ventricle mask and saves it as a new NIfTI file.
+
+    Parameters:
+        nifti_mask_path (str): Path to the input NIfTI mask file.
+        output_path (str): Path to save the new NIfTI file containing the OBB.
+
+    Returns:
+        None
+    """
+    # Load the NIfTI mask
+    img = nib.load(nifti_mask_path)
+    data = img.get_fdata().astype(bool)  # Convert to binary mask (1 = mask, 0 = background)
+
+    # Extract nonzero voxel coordinates
+    coords = np.array(np.nonzero(data)).T  # Shape (N, 3), where N is the number of foreground voxels
+
+    if coords.shape[0] == 0:
+        print("No nonzero voxels found in the mask.")
+        return
+
+    # Apply PCA to find the orientation of the mask
+    pca = PCA(n_components=3)
+    transformed_coords = pca.fit_transform(coords)
+
+    # Compute the bounding box in the transformed space
+    min_bounds = np.min(transformed_coords, axis=0)
+    max_bounds = np.max(transformed_coords, axis=0)
+
+    # Generate the 8 corner points of the OBB in transformed space
+    corner_points = np.array([
+        [min_bounds[0], min_bounds[1], min_bounds[2]],
+        [min_bounds[0], min_bounds[1], max_bounds[2]],
+        [min_bounds[0], max_bounds[1], min_bounds[2]],
+        [min_bounds[0], max_bounds[1], max_bounds[2]],
+        [max_bounds[0], min_bounds[1], min_bounds[2]],
+        [max_bounds[0], min_bounds[1], max_bounds[2]],
+        [max_bounds[0], max_bounds[1], min_bounds[2]],
+        [max_bounds[0], max_bounds[1], max_bounds[2]]
+    ])
+
+    # Transform the corner points back to the original coordinate space
+    obb_corners = pca.inverse_transform(corner_points)
+
+    # Create a new mask for the OBB
+    obb_mask = np.zeros_like(data, dtype=np.uint8)
+
+    # Get the convex hull of the OBB to fill the mask
+    hull = ConvexHull(obb_corners)
+    hull_vertices = np.round(hull.points[hull.vertices]).astype(int)
+
+    # Fill the OBB mask using the hull points
+    for point in hull_vertices:
+        x, y, z = np.clip(point, 0, np.array(data.shape) - 1)  # Ensure points are within bounds
+        obb_mask[x, y, z] = 1
+
+    # Save the OBB mask as a new NIfTI file
+    new_img = nib.Nifti1Image(obb_mask, img.affine, img.header)
+    nib.save(new_img, output_path)
+    print(f"Oriented Bounding Box (OBB) mask saved to: {output_path}")
+    return obb_mask
+
 
 # ##########################
 # nii_path =sys.argv[1] # "path_to_your_nifti.nii.gz"
@@ -1229,7 +1297,8 @@ process_nifti_mask(sys.argv[1], sys.argv[1])
 ventricle_mask=resizeinto_512by512_and_flip(nib.load(sys.argv[1]).get_fdata())
 # ventricle_obb_mask = create_obb_mask_from_image_mask(ventricle_mask)
 ################
-centroids, ventricle_obb_mask = process_binary_mask_with_obb(ventricle_mask,n_subdivisions=12)
+# centroids, ventricle_obb_mask = process_binary_mask_with_obb(ventricle_mask,n_subdivisions=12)
+ventricle_obb_mask=compute_obb_1(ventricle_mask, os.path.join(sys.argv[3],'ventricle_obb_mask_1.nii'))
 # # Example usage:
 # binary_mask = np.zeros((100, 100, 100), dtype=np.uint8)
 # binary_mask[30:70, 30:70, 30:70] = 1  # Example filled 3D block
@@ -1272,19 +1341,19 @@ ventricle_mask=nib.load( os.path.join(sys.argv[3],'ventricle.nii')).get_fdata()
 
 
 print("Closest non-zero voxel coordinates to the centroids:")
-print(centroids)
+# print(centroids)
 
 print("\nOBB Mask:")
 # print(obb_mask)
 print('closest_voxels')
-print(np.array(centroids).shape)
+# print(np.array(centroids).shape)
 nib.save(array_img, os.path.join(sys.argv[3],'ventricle_contour.nii'))
 filename_gray=sys.argv[4]
 filename_mask=sys.argv[2]
 filename_bet=sys.argv[5]
 filename_vent_obb=os.path.join(sys.argv[3],'ventricle_obb_mask.nii')
-zoneV_min_z=0
-zoneV_max_z=0
-closest_voxels=find_closest_non_zero_voxel(nib.load(filename_mask).get_fdata(), centroids)
-zoneV_min_z,zoneV_max_z=find_upper_lower_slices(filename_vent_obb)
+# zoneV_min_z=0
+# zoneV_max_z=0
+# closest_voxels=find_closest_non_zero_voxel(nib.load(filename_mask).get_fdata(), centroids)
+# zoneV_min_z,zoneV_max_z=find_upper_lower_slices(filename_vent_obb)
 # divideintozones_with_vent_obb_with_four_centroid(filename_gray,filename_mask,filename_bet,filename_vent_obb,closest_voxels,zoneV_min_z,zoneV_max_z)
