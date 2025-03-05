@@ -1222,10 +1222,17 @@ from sklearn.decomposition import PCA
 from scipy.spatial import ConvexHull
 from scipy.ndimage import binary_fill_holes
 
+import numpy as np
+from sklearn.decomposition import PCA
+from scipy.spatial import ConvexHull
+from scipy.ndimage import binary_fill_holes
+
 def compute_obb_1(data):
     """
     Computes the Oriented Bounding Box (OBB) of a 3D ventricle mask
     and returns a new binary mask containing the filled OBB.
+
+    The OBB is clipped to ensure it does not exceed the original highest and lowest slices.
 
     Parameters:
         data (numpy.ndarray): 3D binary mask of the ventricle (1 = mask, 0 = background).
@@ -1241,6 +1248,10 @@ def compute_obb_1(data):
     if coords.shape[0] == 0:
         print("No nonzero voxels found in the mask.")
         return np.zeros_like(data, dtype=np.uint8)  # Return empty mask
+
+    # Get the original lowest and highest Z-slices
+    original_z_min = np.min(coords[:, 2])
+    original_z_max = np.max(coords[:, 2])
 
     # Apply PCA to find the orientation of the mask
     pca = PCA(n_components=3)
@@ -1271,6 +1282,11 @@ def compute_obb_1(data):
     # Ensure indices are within valid range
     valid_indices = np.all((obb_voxel_indices >= 0) & (obb_voxel_indices < np.array(data.shape)), axis=1)
     obb_voxel_indices = obb_voxel_indices[valid_indices]
+
+    # Clip the OBB to respect the original Z-limits
+    obb_voxel_indices = obb_voxel_indices[
+        (obb_voxel_indices[:, 2] >= original_z_min) & (obb_voxel_indices[:, 2] <= original_z_max)
+        ]
 
     # Set the OBB region in the mask
     obb_mask[obb_voxel_indices[:, 0], obb_voxel_indices[:, 1], obb_voxel_indices[:, 2]] = 1
