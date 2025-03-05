@@ -63,6 +63,61 @@ import numpy as np
 from sklearn.decomposition import PCA
 from scipy.spatial import distance
 from itertools import product
+
+import nibabel as nib
+import numpy as np
+
+def process_nifti_mask(nifti_mask_path, output_path):
+    """
+    Given a NIfTI 3D binary mask, this function:
+    - Finds the lower and upper slice limits based on voxel percentage thresholds.
+    - Removes all voxels above the upper limit and below the lower limit.
+    - Saves the modified mask as a new NIfTI file.
+
+    Parameters:
+        nifti_mask_path (str): Path to the input NIfTI mask file.
+        output_path (str): Path to save the new processed NIfTI file.
+
+    Returns:
+        lower_slice (int): The lower slice index that meets the 2% threshold.
+        upper_slice (int): The upper slice index that meets the 0.1% threshold.
+    """
+    # Load the NIfTI file
+    img = nib.load(nifti_mask_path)
+    data = img.get_fdata().astype(bool)  # Convert to binary mask (1 = mask, 0 = background)
+
+    # Compute total number of non-zero voxels
+    total_voxels = np.sum(data)
+
+    if total_voxels == 0:
+        return None, None  # No non-zero voxels in the mask
+
+    # Compute the sum of non-zero voxels per slice along the Z-axis
+    slice_sums = np.sum(data, axis=(0, 1))  # Sum of voxels per slice
+
+    # Compute percentage contribution of each slice
+    slice_percentages = (slice_sums / total_voxels) * 100
+
+    # Find the first slice where % of non-zero voxels >= 2%
+    lower_slice_candidates = np.where(slice_percentages >= 2.0)[0]
+    lower_slice = int(lower_slice_candidates[0]) if lower_slice_candidates.size > 0 else None
+
+    # Find the last slice where % of non-zero voxels >= 0.1%
+    upper_slice_candidates = np.where(slice_percentages >= 0.1)[0]
+    upper_slice = int(upper_slice_candidates[-1]) if upper_slice_candidates.size > 0 else None
+
+    # Modify the mask: Set voxels outside the range to zero
+    if lower_slice is not None and upper_slice is not None:
+        data[:, :, :lower_slice] = 0  # Remove below lower limit
+        data[:, :, upper_slice+1:] = 0  # Remove above upper limit
+
+        # Save the processed mask as a new NIfTI file
+        new_img = nib.Nifti1Image(data.astype(np.uint8), img.affine, img.header)
+        nib.save(new_img, output_path)
+        print(f"Processed mask saved to: {output_path}")
+
+    return lower_slice, upper_slice
+
 def expand_mask_distance(mask, expansion_factor=1.2):
     """
     Expands the mask using distance transform to increase volume by a given factor.
@@ -1170,7 +1225,7 @@ def divideintozones_with_vent_obb_with_four_centroid(filename_gray,filename_mask
 # expanded_nii = nib.Nifti1Image(expanded_mask.astype(np.uint8), nii.affine, nii.header)
 # nib.save(expanded_nii, nii_path ) #######"expanded_mask.nii.gz")
 # #############################
-
+process_nifti_mask(sys.argv[1], sys.argv[1])
 ventricle_mask=resizeinto_512by512_and_flip(nib.load(sys.argv[1]).get_fdata())
 # ventricle_obb_mask = create_obb_mask_from_image_mask(ventricle_mask)
 ################
