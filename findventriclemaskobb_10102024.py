@@ -1110,16 +1110,16 @@ def divideintozones_with_vent_obb_with_four_centroid(filename_gray,filename_mask
     return  sulci_vol, ventricle_vol,leftcountven,rightcountven,leftcountsul,rightcountsul,sulci_vol_above_vent,sulci_vol_below_vent,sulci_vol_at_vent
 
 ##########################
-# nii_path =sys.argv[1] # "path_to_your_nifti.nii.gz"
-# nii = nib.load(nii_path)
-# mask = nii.get_fdata() #.astype(bool)  # Ensure it's a binary mask
-#
-# # Expand mask using distance transform
-# expanded_mask = expand_mask_distance(mask, expansion_factor=1.2)  # 20% increase
-#
-# # Save expanded mask as new NIfTI file
-# expanded_nii = nib.Nifti1Image(expanded_mask.astype(np.uint8), nii.affine, nii.header)
-# nib.save(expanded_nii, nii_path ) #######"expanded_mask.nii.gz")
+nii_path =sys.argv[1] # "path_to_your_nifti.nii.gz"
+nii = nib.load(nii_path)
+mask = nii.get_fdata() #.astype(bool)  # Ensure it's a binary mask
+
+# Expand mask using distance transform
+expanded_mask = expand_mask_distance(mask, expansion_factor=1.2)  # 20% increase
+
+# Save expanded mask as new NIfTI file
+expanded_nii = nib.Nifti1Image(expanded_mask.astype(np.uint8), nii.affine, nii.header)
+nib.save(expanded_nii, nii_path ) #######"expanded_mask.nii.gz")
 #############################
 
 ventricle_mask=resizeinto_512by512_and_flip(nib.load(sys.argv[1]).get_fdata())
