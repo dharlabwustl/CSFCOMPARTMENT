@@ -1217,27 +1217,30 @@ import numpy as np
 from sklearn.decomposition import PCA
 from scipy.spatial import ConvexHull
 
-def compute_obb_1(data): ##, output_path):
+import numpy as np
+from sklearn.decomposition import PCA
+from scipy.spatial import ConvexHull
+from scipy.ndimage import binary_fill_holes
+
+def compute_obb_1(data):
     """
-    Computes the Oriented Bounding Box (OBB) of a 3D ventricle mask and saves it as a new NIfTI file.
+    Computes the Oriented Bounding Box (OBB) of a 3D ventricle mask
+    and returns a new binary mask containing the filled OBB.
 
     Parameters:
-        nifti_mask_path (str): Path to the input NIfTI mask file.
-        output_path (str): Path to save the new NIfTI file containing the OBB.
+        data (numpy.ndarray): 3D binary mask of the ventricle (1 = mask, 0 = background).
 
     Returns:
-        None
+        obb_mask (numpy.ndarray): 3D binary mask of the computed OBB.
     """
-    # Load the NIfTI mask
-    # img = nib.load(nifti_mask_path)
-    data = data.astype(bool)  # Convert to binary mask (1 = mask, 0 = background)
+    data = data.astype(bool)  # Ensure binary mask (1 = mask, 0 = background)
 
     # Extract nonzero voxel coordinates
     coords = np.array(np.nonzero(data)).T  # Shape (N, 3), where N is the number of foreground voxels
 
     if coords.shape[0] == 0:
         print("No nonzero voxels found in the mask.")
-        return
+        return np.zeros_like(data, dtype=np.uint8)  # Return empty mask
 
     # Apply PCA to find the orientation of the mask
     pca = PCA(n_components=3)
@@ -1247,39 +1250,35 @@ def compute_obb_1(data): ##, output_path):
     min_bounds = np.min(transformed_coords, axis=0)
     max_bounds = np.max(transformed_coords, axis=0)
 
-    # Generate the 8 corner points of the OBB in transformed space
-    corner_points = np.array([
-        [min_bounds[0], min_bounds[1], min_bounds[2]],
-        [min_bounds[0], min_bounds[1], max_bounds[2]],
-        [min_bounds[0], max_bounds[1], min_bounds[2]],
-        [min_bounds[0], max_bounds[1], max_bounds[2]],
-        [max_bounds[0], min_bounds[1], min_bounds[2]],
-        [max_bounds[0], min_bounds[1], max_bounds[2]],
-        [max_bounds[0], max_bounds[1], min_bounds[2]],
-        [max_bounds[0], max_bounds[1], max_bounds[2]]
-    ])
+    # Generate grid points inside the bounding box in PCA space
+    grid_x, grid_y, grid_z = np.mgrid[
+                             min_bounds[0]:max_bounds[0]:1,
+                             min_bounds[1]:max_bounds[1]:1,
+                             min_bounds[2]:max_bounds[2]:1
+                             ]
 
-    # Transform the corner points back to the original coordinate space
-    obb_corners = pca.inverse_transform(corner_points)
+    grid_points = np.vstack([grid_x.ravel(), grid_y.ravel(), grid_z.ravel()]).T
+
+    # Transform the grid points back to original space
+    obb_points = pca.inverse_transform(grid_points)
 
     # Create a new mask for the OBB
     obb_mask = np.zeros_like(data, dtype=np.uint8)
 
-    # Get the convex hull of the OBB to fill the mask
-    hull = ConvexHull(obb_corners)
-    hull_vertices = np.round(hull.points[hull.vertices]).astype(int)
+    # Convert OBB voxel locations into integer indices
+    obb_voxel_indices = np.round(obb_points).astype(int)
 
-    # Fill the OBB mask using the hull points
-    for point in hull_vertices:
-        x, y, z = np.clip(point, 0, np.array(data.shape) - 1)  # Ensure points are within bounds
-        obb_mask[x, y, z] = 1
+    # Ensure indices are within valid range
+    valid_indices = np.all((obb_voxel_indices >= 0) & (obb_voxel_indices < np.array(data.shape)), axis=1)
+    obb_voxel_indices = obb_voxel_indices[valid_indices]
 
-    # Save the OBB mask as a new NIfTI file
-    # new_img = nib.Nifti1Image(obb_mask, img.affine, img.header)
-    # nib.save(new_img, output_path)
-    # print(f"Oriented Bounding Box (OBB) mask saved to: {output_path}")
+    # Set the OBB region in the mask
+    obb_mask[obb_voxel_indices[:, 0], obb_voxel_indices[:, 1], obb_voxel_indices[:, 2]] = 1
+
+    # Fill the interior of the bounding box to ensure a complete volume
+    obb_mask = binary_fill_holes(obb_mask).astype(np.uint8)
+
     return obb_mask
-
 
 # ##########################
 # nii_path =sys.argv[1] # "path_to_your_nifti.nii.gz"
