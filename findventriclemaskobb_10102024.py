@@ -1226,6 +1226,55 @@ import numpy as np
 from sklearn.decomposition import PCA
 from scipy.spatial import ConvexHull
 from scipy.ndimage import binary_fill_holes
+import nibabel as nib
+import numpy as np
+import scipy.ndimage as ndi
+
+def scale_mask(nifti_mask_path, output_path, scale_factor=1.5):
+    """
+    Scales a 3D binary mask by a given factor while keeping it centered.
+
+    Parameters:
+        nifti_mask_path (str): Path to the input NIfTI mask file.
+        output_path (str): Path to save the scaled NIfTI file.
+        scale_factor (float): Scaling factor for mask enlargement (default=1.5).
+
+    Returns:
+        None
+    """
+    # Load NIfTI mask
+    img = nib.load(nifti_mask_path)
+    mask = img.get_fdata().astype(np.uint8)
+
+    # Compute the center of mass of the mask
+    center = ndi.center_of_mass(mask)
+
+    # Define affine transformation matrix for scaling
+    scale_matrix = np.array([
+        [1/scale_factor, 0, 0, 0],
+        [0, 1/scale_factor, 0, 0],
+        [0, 0, 1/scale_factor, 0],
+        [0, 0, 0, 1]
+    ])
+
+    # Compute translation to keep the mask centered
+    translation = np.array(mask.shape) / 2 - np.array(center)
+    translation_matrix = np.eye(4)
+    translation_matrix[:3, 3] = translation
+
+    # Apply the scaling transformation
+    scaled_mask = ndi.affine_transform(mask.astype(float), scale_matrix, offset=-translation, order=1)
+
+    # Convert back to binary mask (thresholding)
+    scaled_mask = (scaled_mask > 0.5).astype(np.uint8)
+
+    # Save the new scaled mask as a NIfTI file
+    new_img = nib.Nifti1Image(scaled_mask, img.affine, img.header)
+    nib.save(new_img, output_path)
+
+    print(f"Scaled mask saved to: {output_path}")
+
+
 
 def compute_obb_1(data):
     """
@@ -1309,6 +1358,7 @@ def compute_obb_1(data):
 # nib.save(expanded_nii, nii_path ) #######"expanded_mask.nii.gz")
 # #############################
 # process_nifti_mask(sys.argv[1], sys.argv[1])
+scale_mask(sys.argv[1], sys.argv[1], scale_factor=1.5)
 ventricle_mask=resizeinto_512by512_and_flip(nib.load(sys.argv[1]).get_fdata())
 # ventricle_obb_mask = create_obb_mask_from_image_mask(ventricle_mask)
 ################
