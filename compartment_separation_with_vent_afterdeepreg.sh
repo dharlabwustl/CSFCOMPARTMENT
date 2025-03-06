@@ -56,6 +56,12 @@ while IFS=',' read -ra array; do
     url1=${array1[0]}
     #      URI=/data/experiments/${sessionID}
     resource_dir="MASKS"
+    function_with_arguments=('call_delete_file_with_ext' ${sessionID} ${scanID} ${snipr_output_foldername} '_ventricle.nii.gz' ) ##'warped_1_mov_mri_region_' )
+#    echo "outputfiles_present="'$(python3 utilities_simple_trimmed.py' "${function_with_arguments[@]}"
+    outputfiles_present=$(python3 download_with_session_ID.py "${function_with_arguments[@]}")
+    function_with_arguments=('call_delete_file_with_ext' ${sessionID} ${scanID} ${snipr_output_foldername} '_total.nii.gz' ) ##'warped_1_mov_mri_region_' )
+#    echo "outputfiles_present="'$(python3 utilities_simple_trimmed.py' "${function_with_arguments[@]}"
+    outputfiles_present=$(python3 download_with_session_ID.py "${function_with_arguments[@]}")
     output_csvfile_1=${sessionID}_MASK_METADATA.csv
     call_get_resourcefiles_metadata_saveascsv_args ${url1} ${resource_dir} ${working_dir} ${output_csvfile_1}
     #      filename1=$(basename ${url1})
@@ -159,6 +165,7 @@ echo "csffile:::::ATUL:::${csffile}"
           zoneV_max_z=${array3[4]}
         done < <(tail -n +2 "${ventricleboundfile}")
     #############################################
+
 echo "    call_csf_compartments_arguments=('call_csf_compartments_ventbound_no_hem' ${greyfile} ${csffile} ${betfile} ${ventricle_obb_mask} ${zoneV_min_z} ${zoneV_max_z} )"
     call_csf_compartments_arguments=('call_csf_compartments_ventbound_no_hem' ${greyfile} ${csffile} ${betfile} ${ventricle_obb_mask} ${zoneV_min_z} ${zoneV_max_z} )
     outputfiles_present=$(python3 /software/CSF_COMPARTMENT_GITHUB_July212023.py "${call_csf_compartments_arguments[@]}")
