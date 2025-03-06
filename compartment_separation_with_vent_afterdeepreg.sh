@@ -32,6 +32,8 @@ URI=/data/experiments/${sessionID}
 resource_dir="NIFTI_LOCATION"
 output_csvfile=${sessionID}_SCANSELECTION_METADATA.csv
 call_get_resourcefiles_metadata_saveascsv_args ${URI} ${resource_dir} ${working_dir} ${output_csvfile}
+
+
 dir_to_save=${working_dir}
 greyfile="NONE" ##'/media/atul/WDJan2022/WASHU_WORKS/PROJECTS/DOCKERIZE/CSFSEPERATION/TESTING_CSF_SEPERATION/Krak_003_09042014_0949_MOZG_6.0_H31s_levelset.nii.gz'
 betfile="NONE"  ##'/media/atul/WDJan2022/WASHU_WORKS/PROJECTS/DOCKERIZE/CSFSEPERATION/TESTING_CSF_SEPERATION/Krak_003_09042014_0949_MOZG_6.0_H31s_levelset_bet.nii.gz'
@@ -51,17 +53,15 @@ while IFS=',' read -ra array; do
   call_download_a_singlefile_with_URIString_arguments=('call_download_a_singlefile_with_URIString' ${url} ${filename} ${dir_to_save})
   outputfiles_present=$(python3 download_with_session_ID.py "${call_download_a_singlefile_with_URIString_arguments[@]}")
 
+#call_download_files_in_a_resource_in_a_session_arguments=('call_download_files_in_a_resource_in_a_session' ${sessionID} "NIFTI_LOCATION" ${working_dir})
+#outputfiles_present=$(python3 download_with_session_ID.py "${call_download_files_in_a_resource_in_a_session_arguments[@]}")
+
   while IFS=',' read -ra array1; do
     #      echo "${array1[0]}"
     url1=${array1[0]}
     #      URI=/data/experiments/${sessionID}
     resource_dir="MASKS"
-    function_with_arguments=('call_delete_file_with_ext' ${sessionID} ${scanID} ${snipr_output_foldername} '_ventricle.nii.gz' ) ##'warped_1_mov_mri_region_' )
-#    echo "outputfiles_present="'$(python3 utilities_simple_trimmed.py' "${function_with_arguments[@]}"
-    outputfiles_present=$(python3 download_with_session_ID.py "${function_with_arguments[@]}")
-    function_with_arguments=('call_delete_file_with_ext' ${sessionID} ${scanID} ${snipr_output_foldername} '_total.nii.gz' ) ##'warped_1_mov_mri_region_' )
-#    echo "outputfiles_present="'$(python3 utilities_simple_trimmed.py' "${function_with_arguments[@]}"
-    outputfiles_present=$(python3 download_with_session_ID.py "${function_with_arguments[@]}")
+
     output_csvfile_1=${sessionID}_MASK_METADATA.csv
     call_get_resourcefiles_metadata_saveascsv_args ${url1} ${resource_dir} ${working_dir} ${output_csvfile_1}
     #      filename1=$(basename ${url1})
@@ -165,6 +165,24 @@ echo "csffile:::::ATUL:::${csffile}"
           zoneV_max_z=${array3[4]}
         done < <(tail -n +2 "${ventricleboundfile}")
     #############################################
+
+    ############
+#    for niftifile_csvfilename in ${working_dir}/*NIFTILOCATION.csv; do
+    niftifile_csvfilename=$(ls ${working_dir}/*NIFTILOCATION.csv)
+    while IFS=',' read -ra array5; do
+    scanID=${array5[2]}
+    echo sessionId::${sessionID}
+    echo scanId::${scanID}
+    done < <(tail -n +2 "${niftifile_csvfilename}")
+#    done
+        function_with_arguments=('call_delete_file_with_ext' ${sessionID} ${scanID} MASKS '_ventricle.nii.gz' ) ##'warped_1_mov_mri_region_' )
+    #    echo "outputfiles_present="'$(python3 utilities_simple_trimmed.py' "${function_with_arguments[@]}"
+        outputfiles_present=$(python3 download_with_session_ID.py "${function_with_arguments[@]}")
+        function_with_arguments=('call_delete_file_with_ext' ${sessionID} ${scanID} MASKS '_total.nii.gz' ) ##'warped_1_mov_mri_region_' )
+    #    echo "outputfiles_present="'$(python3 utilities_simple_trimmed.py' "${function_with_arguments[@]}"
+        outputfiles_present=$(python3 download_with_session_ID.py "${function_with_arguments[@]}")
+
+    ################
 
 echo "    call_csf_compartments_arguments=('call_csf_compartments_ventbound_no_hem' ${greyfile} ${csffile} ${betfile} ${ventricle_obb_mask} ${zoneV_min_z} ${zoneV_max_z} )"
     call_csf_compartments_arguments=('call_csf_compartments_ventbound_no_hem' ${greyfile} ${csffile} ${betfile} ${ventricle_obb_mask} ${zoneV_min_z} ${zoneV_max_z} )
