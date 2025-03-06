@@ -1274,6 +1274,76 @@ def scale_mask(nifti_mask_path, output_path, scale_factor=1.5):
 
     print(f"Scaled mask saved to: {output_path}")
 
+import nibabel as nib
+import numpy as np
+import scipy.ndimage as ndi
+
+def scale_mask_xyz(nifti_mask_path, output_path, scale_factor=1.5):
+    """
+    Scales a 3D binary mask in X, Y, and Z dimensions but ensures the final image
+    has the same number of slices as the original.
+
+    Parameters:
+        nifti_mask_path (str): Path to the input NIfTI mask file.
+        output_path (str): Path to save the scaled NIfTI file.
+        scale_factor (float): Scaling factor for all dimensions (default=1.5).
+
+    Returns:
+        None
+    """
+    # Load NIfTI mask
+    img = nib.load(nifti_mask_path)
+    mask = img.get_fdata().astype(np.uint8)
+
+    # Get original shape
+    orig_shape = mask.shape
+
+    # Compute the center of mass to maintain alignment
+    center = ndi.center_of_mass(mask)
+
+    # Scale in X, Y, and Z
+    scaled_mask = ndi.zoom(mask, zoom=scale_factor, order=1)
+
+    # Resample Z-axis back to original number of slices
+    target_z_slices = orig_shape[2]
+    scaled_z_indices = np.linspace(0, scaled_mask.shape[2] - 1, target_z_slices)
+    resampled_mask = np.zeros((scaled_mask.shape[0], scaled_mask.shape[1], target_z_slices))
+
+    for i, z in enumerate(scaled_z_indices):
+        resampled_mask[:, :, i] = ndi.map_coordinates(scaled_mask,
+                                                      np.array([[x for x in range(scaled_mask.shape[0])],
+                                                                [y for y in range(scaled_mask.shape[1])],
+                                                                [np.full((scaled_mask.shape[0], scaled_mask.shape[1]), z)]]
+                                                               ).reshape(3, -1),
+                                                      order=1).reshape(scaled_mask.shape[:2])
+
+    # Ensure the shape matches the original image
+    new_mask = np.zeros_like(mask)
+
+    # Compute new scaled shape
+    new_x, new_y, _ = resampled_mask.shape
+    orig_x, orig_y, _ = orig_shape
+
+    # Compute start positions to center the mask
+    start_x = max((orig_x - new_x) // 2, 0)
+    start_y = max((orig_y - new_y) // 2, 0)
+
+    # Compute end positions
+    end_x = min(start_x + new_x, orig_x)
+    end_y = min(start_y + new_y, orig_y)
+
+    # Place the resampled mask within the original frame
+    new_mask[start_x:end_x, start_y:end_y, :] = resampled_mask[:end_x-start_x, :end_y-start_y, :]
+
+    # Convert to binary mask
+    new_mask = (new_mask > 0.5).astype(np.uint8)
+
+    # Save the new scaled mask as a NIfTI file
+    new_img = nib.Nifti1Image(new_mask, img.affine, img.header)
+    nib.save(new_img, output_path)
+
+    print(f"Scaled mask saved to: {output_path}")
+
 
 
 def compute_obb_1(data):
@@ -1358,7 +1428,7 @@ def compute_obb_1(data):
 # nib.save(expanded_nii, nii_path ) #######"expanded_mask.nii.gz")
 # #############################
 # process_nifti_mask(sys.argv[1], sys.argv[1])
-scale_mask(sys.argv[1], sys.argv[1], scale_factor=2)
+scale_mask_xyz(sys.argv[1], sys.argv[1], scale_factor=2)
 ventricle_mask=resizeinto_512by512_and_flip(nib.load(sys.argv[1]).get_fdata())
 # ventricle_obb_mask = create_obb_mask_from_image_mask(ventricle_mask)
 ################
