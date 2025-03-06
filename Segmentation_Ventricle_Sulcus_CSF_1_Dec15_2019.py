@@ -387,7 +387,7 @@ def divideintozones_with_vent_obb(filename_gray,filename_mask,filename_bet,filen
         img_T1_temp_np=sitk.GetArrayFromImage(img_T1_1)
         img_T1_temp_np_alllabels=np.copy(img_T1_temp_np)
         img_T1_temp_np_alllabels=slicenum_at_end(img_T1_temp_np_alllabels)
-        img_T1_temp_np[img_T1_temp_np>1]=0.0
+        # img_T1_temp_np[img_T1_temp_np>1]=0.0
         img_T1_1_forsubtract_np=np.copy(img_T1_temp_np)
         img_T1_1_forsubtract_itk=sitk.GetImageFromArray(img_T1_1_forsubtract_np)
         img_T1_1_forsubtract_itk.CopyInformation(img_T1_1)
