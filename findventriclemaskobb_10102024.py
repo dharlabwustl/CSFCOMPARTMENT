@@ -1358,7 +1358,7 @@ def compute_obb_1(data):
 # nib.save(expanded_nii, nii_path ) #######"expanded_mask.nii.gz")
 # #############################
 # process_nifti_mask(sys.argv[1], sys.argv[1])
-scale_mask(sys.argv[1], sys.argv[1], scale_factor=1.5)
+scale_mask(sys.argv[1], sys.argv[1], scale_factor=2)
 ventricle_mask=resizeinto_512by512_and_flip(nib.load(sys.argv[1]).get_fdata())
 # ventricle_obb_mask = create_obb_mask_from_image_mask(ventricle_mask)
 ################
