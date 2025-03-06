@@ -184,6 +184,15 @@ def delete_file_with_ext(session_id,scan_id,resource_dir,extensions_to_delete,pr
 
     except:
         pass
+def delete_a_file_with_URIString(url):
+    try:
+        xnatSession = XnatSession(username=XNAT_USER, password=XNAT_PASS, host=XNAT_HOST)
+        xnatSession.renew_httpsession()
+        response = xnatSession.httpsess.delete(xnatSession.host +url)
+        subprocess.call("echo " + "I PASSED AT ::{}::RESPONSE::{}  >> /workingoutput/error.txt".format(inspect.stack()[0][3],response) ,shell=True )
+    except:
+        subprocess.call("echo " + "I FAILED AT ::{}  >> /workingoutput/error.txt".format(inspect.stack()[0][3]) ,shell=True )
+        pass
 
 def copy_latest_pdffile(pdffileprefix,pdffiledirectory,destinationdirectory):
     pdffilesuffix='.pdf'
