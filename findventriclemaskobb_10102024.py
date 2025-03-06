@@ -1344,7 +1344,30 @@ def scale_mask_xyz(nifti_mask_path, output_path, scale_factor=1.5):
 
     print(f"Scaled mask saved to: {output_path}")
 
+def expand_nifti_mask(nifti_path, output_stl_path, scale_factor=1.5):
+    # Load NIfTI mask
+    nii = nib.load(nifti_path)
+    mask = nii.get_fdata() > 0  # Ensure binary mask
 
+    # Compute Euclidean Distance Transform (EDT)
+    dist_inside = ndi.distance_transform_edt(mask)
+    dist_outside = ndi.distance_transform_edt(~mask)
+
+    # Determine expansion threshold based on desired scale factor
+    max_dist = np.max(dist_inside)  # Largest internal distance
+    expansion_threshold = max_dist * (scale_factor - 1)  # Extra distance to expand
+
+    # Create expanded mask
+    expanded_mask = (dist_inside >= -expansion_threshold) | (dist_outside <= expansion_threshold)
+
+    # Convert to Mesh using Marching Cubes
+    verts, faces, _, _ = measure.marching_cubes(expanded_mask.astype(np.uint8), level=0.5)
+
+    # Create Trimesh object and save as STL
+    mesh = trimesh.Trimesh(vertices=verts, faces=faces)
+    mesh.export(output_stl_path)
+
+    print(f"Expanded 3D model saved to: {output_stl_path}")
 
 def compute_obb_1(data):
     """
@@ -1428,7 +1451,8 @@ def compute_obb_1(data):
 # nib.save(expanded_nii, nii_path ) #######"expanded_mask.nii.gz")
 # #############################
 # process_nifti_mask(sys.argv[1], sys.argv[1])
-scale_mask_xyz(sys.argv[1], sys.argv[1], scale_factor=2)
+expand_nifti_mask(sys.argv[1], sys.argv[1], scale_factor=2)
+# expand_nifti_mask(nifti_path, output_stl_path, scale_factor=1.5)
 ventricle_mask=resizeinto_512by512_and_flip(nib.load(sys.argv[1]).get_fdata())
 # ventricle_obb_mask = create_obb_mask_from_image_mask(ventricle_mask)
 ################
