@@ -346,175 +346,175 @@ def divideintozones_v1_with_vent_bound(filename_gray,filename_mask,filename_bet,
     # return sulci_vol, ventricle_vol,leftcountven*resol,rightcountven*resol,leftcountsul*resol,rightcountsul*resol,sulci_vol_above_vent,sulci_vol_below_vent,sulci_vol_at_vent #seg_explicit_thresholds, subtracted_image
 
 
-def divideintozones_with_vent_obb(filename_gray,filename_mask,filename_bet,filename_vent_obb,zoneV_min_z,zoneV_max_z):
-    try:
-        print('I am here')
-        asdhfjk
-        command=f'echo  I am at {inspect.stack()[3][0]} >> /software/error.txt'
-        subprocess.call(command,shell=True)
-        sulci_vol, ventricle_vol,leftcountven,rightcountven,leftcountsul,rightcountsul,sulci_vol_above_vent,sulci_vol_below_vent,sulci_vol_at_vent=(0,0,0,0,0,0,0,0,0) #seg_explicit_thresholds, subtracted_image
-        #######################
-        reader_filename_vent_nonlinmask = sitk.ImageFileReader()
-        reader_filename_vent_nonlinmask.SetImageIO("NiftiImageIO")
-        reader_filename_vent_nonlinmask.SetFileName('/workinginput/ventricle_contour.nii')
-        ventricle_nonlin_mask = reader_filename_vent_nonlinmask.Execute()
-        ventricle_nonlin_mask_np=sitk.GetArrayFromImage(ventricle_nonlin_mask)
-
-        #################################
-
-        reader_filename_vent_obb = sitk.ImageFileReader()
-        reader_filename_vent_obb.SetImageIO("NiftiImageIO")
-        reader_filename_vent_obb.SetFileName(filename_vent_obb)
-        ventricle_obb = reader_filename_vent_obb.Execute()
-        ventricle_obb_np=sitk.GetArrayFromImage(ventricle_obb)
-        ########################
-        file_gray = filename_gray
-        reader_gray = sitk.ImageFileReader()
-        reader_gray.SetImageIO("NiftiImageIO")
-        reader_gray.SetFileName(file_gray)
-
-
-        gray_scale_file=filename_gray
-        gray_image=nib.load(gray_scale_file)
-        zoneV_min_z1=zoneV_min_z
-        zoneV_max_z1=zoneV_max_z
-
-        file =filename_mask
-        reader = sitk.ImageFileReader()
-        reader.SetImageIO("NiftiImageIO")
-        reader.SetFileName(file)
-        img_T1_1 = reader.Execute();
-        # img_T1_Copy=img_T1
-        ####################################################
-        img_T1_temp_np=sitk.GetArrayFromImage(img_T1_1)
-        img_T1_temp_np_alllabels=np.copy(img_T1_temp_np)
-        img_T1_temp_np_alllabels=slicenum_at_end(img_T1_temp_np_alllabels)
-        # img_T1_temp_np[img_T1_temp_np>1]=0.0
-        img_T1_1_forsubtract_np=np.copy(img_T1_temp_np)
-        img_T1_1_forsubtract_itk=sitk.GetImageFromArray(img_T1_1_forsubtract_np)
-        img_T1_1_forsubtract_itk.CopyInformation(img_T1_1)
-        # img_T1_temp_np[ventricle_obb_np<1]=0.0
-        # img_T1_temp_np[ventricle_nonlin_mask_np<1]=0.0
-        # img_T1_temp_np[0:zoneV_min_z1,:,:]=0.0
-        # img_T1_temp_np[zoneV_max_z1+1:img_T1_temp_np.shape[0],:,:]=0.0
-        img_T1_temp_itk=sitk.GetImageFromArray(img_T1_temp_np)
-        img_T1_temp_itk.CopyInformation(img_T1_1)
-
-
-        img_T1_temp_np_Ven=np.copy(img_T1_temp_np)
-        #    img_T1_temp_np_Ven[0:zoneV_min_z1,:,:]=0.0
-        #    img_T1_temp_np_Ven[zoneV_max_z1:img_T1_temp_np.shape[0],:,:]=0.0
-        img_T1_temp_np_Ven_itk=sitk.GetImageFromArray(img_T1_temp_np_Ven)
-        img_T1_temp_np_Ven_itk.CopyInformation(img_T1_1)
-
-        img_T2=img_T1_temp_itk
-        img_T2_Copy=img_T2
-
-        img_T1=img_T1_temp_np_Ven_itk
-        img_T1_Copy=img_T1
-
-
-
-        ###############################################
-        imagenparray=sitk.GetArrayFromImage(img_T1)
-
-        if np.sum(imagenparray)>200:
-            img_T1=img_T1*255
-
-            img_T1_255 = sitk.Cast(sitk.IntensityWindowing(img_T1) ,sitk.sitkUInt8)
-
-            file1 = filename_bet
-            reader1 = sitk.ImageFileReader()
-            reader1.SetImageIO("NiftiImageIO")
-            reader1.SetFileName(file1)
-            img_T1_bet = reader1.Execute();
-            cc1 = sitk.ConnectedComponent(img_T1_bet>0)
-            stats1 = sitk.LabelIntensityStatisticsImageFilter()
-            stats1.Execute(cc1,img_T1_bet)
-            #
-            cc = sitk.ConnectedComponent(img_T1_255>0)
-            stats = sitk.LabelIntensityStatisticsImageFilter()
-            stats.Execute(cc,img_T1)
-
-            maxsize_comp_1=0
-            id_of_maxsize_comp_1=0
-
-            for l in range(len(stats1.GetLabels())):
-                if stats1.GetPhysicalSize(stats1.GetLabels()[l])>maxsize_comp_1:
-                    maxsize_comp_1=stats1.GetPhysicalSize(stats1.GetLabels()[l])
-
-                    id_of_maxsize_comp_1=l
-            csf_ids=[]
-            for l in range(len(stats.GetLabels())):
-
-                csf_ids.append([l,stats.GetPhysicalSize(stats.GetLabels()[l])])
-            csf_ids.sort(key = sortSecond, reverse = True)
-            # subprocess.call("echo " + "SUCCEEDED AT ::{}  > error.txt".format(inspect.stack()[0][3]) ,shell=True )
-            first_seg_centroid=np.array(stats.GetCentroid(stats.GetLabels()[csf_ids[0][0]]))
-            second_seg_centroid=np.array(stats.GetCentroid(stats.GetLabels()[csf_ids[1][0]]))
-            bet_centroid=np.array(stats.GetCentroid(stats.GetLabels()[id_of_maxsize_comp_1]))
-            first2bet_centroid=np.linalg.norm(first_seg_centroid - bet_centroid)
-            second2bet_centroid=np.linalg.norm(second_seg_centroid - bet_centroid)
-            if first2bet_centroid< second2bet_centroid:
-                id_of_maxsize_comp=csf_ids[0][0]
-
-            else:
-                if stats.GetPhysicalSize(stats.GetLabels()[csf_ids[1][0]]) > 10000:
-                    id_of_maxsize_comp=csf_ids[1][0]
-
-                else:
-                    id_of_maxsize_comp=csf_ids[0][0]
-
-            initial_seed_point_indexes=[stats.GetMinimumIndex(stats.GetLabels()[id_of_maxsize_comp])] ##img_T1 ##
-            seg_explicit_thresholds =sitk.ConnectedThreshold(img_T1, seedList=initial_seed_point_indexes, lower=100, upper=255)
-
-            zoneV_min_z,zoneV_max_z=get_ventricles_range(sitk.GetArrayFromImage(seg_explicit_thresholds))
-            subtracted_image=subtract_binary_1(sitk.GetArrayFromImage(img_T1_1),sitk.GetArrayFromImage(seg_explicit_thresholds)*255)
-            subtracted_image=sitk.GetImageFromArray(subtracted_image)
-            above_ventricle_image= sitk.GetArrayFromImage(subtracted_image)
-            above_ventricle_image[0:zoneV_max_z+1,:,:]=0
-            covering_ventricle_image= sitk.GetArrayFromImage(subtracted_image)
-            covering_ventricle_image[0:zoneV_min_z,:,:]=0
-            covering_ventricle_image[zoneV_max_z+1:above_ventricle_image.shape[0],:,:]=0
-            below_ventricle_image= sitk.GetArrayFromImage(subtracted_image)
-            below_ventricle_image[zoneV_min_z:above_ventricle_image.shape[0],:,:]=0
-
-            above_ventricle_image_sitkimg=sitk.GetImageFromArray(above_ventricle_image)
-            above_ventricle_image_sitkimg.CopyInformation(img_T1_bet)
-            # sulci_vol_below_vent=calculate_volume(gray_image,below_ventricle_image)
-            below_ventricle_image_sitkimg=sitk.GetImageFromArray(below_ventricle_image)
-            below_ventricle_image_sitkimg.CopyInformation(img_T1_bet)
-            # sulci_vol_at_vent=calculate_volume(gray_image,covering_ventricle_image)
-
-            covering_ventricle_image_sitkimg=sitk.GetImageFromArray(covering_ventricle_image)
-            covering_ventricle_image_sitkimg.CopyInformation(img_T1_bet)
-
-
-            subtracted_image.CopyInformation( img_T1_bet)
-            sitk.WriteImage(subtracted_image, filename_gray.split(".nii")[0]+ "_sulci_total.nii.gz", True)
-
-            seg_explicit_thresholds.CopyInformation( img_T1_bet)
-            sitk.WriteImage(seg_explicit_thresholds, filename_gray.split(".nii")[0]+ "_ventricle_total.nii.gz", True)
-
-            sitk.WriteImage(above_ventricle_image_sitkimg, filename_gray.split(".nii")[0]+ "_sulci_above_ventricle.nii.gz", True)
-
-            sitk.WriteImage(below_ventricle_image_sitkimg, filename_gray.split(".nii")[0]+ "_sulci_below_ventricle.nii.gz", True)
-
-            sitk.WriteImage(covering_ventricle_image_sitkimg, filename_gray.split(".nii")[0]+ "_sulci_at_ventricle.nii.gz", True)
-
-            subprocess.call("echo " + "SUCCEEDED AT ::{}  > error.txt".format(inspect.stack()[0][3]) ,shell=True )
-            subprocess.call("echo " + "SUCCEEDED AT ::{}:{}:{}  > error.txt".format(inspect.stack()[0][3],zoneV_max_z,zoneV_min_z) ,shell=True )
-
-
-    except     Exception as e:
-        # Print the error message
-        print(f"Error: {e}")
-        subprocess.call("echo " + "FAILED AT ::{}::{}  >> error.txt".format(inspect.stack()[0][3],e) ,shell=True )
-
-
-
-
-    return  sulci_vol, ventricle_vol,leftcountven,rightcountven,leftcountsul,rightcountsul,sulci_vol_above_vent,sulci_vol_below_vent,sulci_vol_at_vent
+# def divideintozones_with_vent_obb(filename_gray,filename_mask,filename_bet,filename_vent_obb,zoneV_min_z,zoneV_max_z):
+#     try:
+#         print('I am here')
+#
+#         command=f'echo  I am at {inspect.stack()[3][0]} >> /software/error.txt'
+#         subprocess.call(command,shell=True)
+#         sulci_vol, ventricle_vol,leftcountven,rightcountven,leftcountsul,rightcountsul,sulci_vol_above_vent,sulci_vol_below_vent,sulci_vol_at_vent=(0,0,0,0,0,0,0,0,0) #seg_explicit_thresholds, subtracted_image
+#         #######################
+#         reader_filename_vent_nonlinmask = sitk.ImageFileReader()
+#         reader_filename_vent_nonlinmask.SetImageIO("NiftiImageIO")
+#         reader_filename_vent_nonlinmask.SetFileName('/workinginput/ventricle_contour.nii')
+#         ventricle_nonlin_mask = reader_filename_vent_nonlinmask.Execute()
+#         ventricle_nonlin_mask_np=sitk.GetArrayFromImage(ventricle_nonlin_mask)
+#
+#         #################################
+#
+#         reader_filename_vent_obb = sitk.ImageFileReader()
+#         reader_filename_vent_obb.SetImageIO("NiftiImageIO")
+#         reader_filename_vent_obb.SetFileName(filename_vent_obb)
+#         ventricle_obb = reader_filename_vent_obb.Execute()
+#         ventricle_obb_np=sitk.GetArrayFromImage(ventricle_obb)
+#         ########################
+#         file_gray = filename_gray
+#         reader_gray = sitk.ImageFileReader()
+#         reader_gray.SetImageIO("NiftiImageIO")
+#         reader_gray.SetFileName(file_gray)
+#
+#
+#         gray_scale_file=filename_gray
+#         gray_image=nib.load(gray_scale_file)
+#         zoneV_min_z1=zoneV_min_z
+#         zoneV_max_z1=zoneV_max_z
+#
+#         file =filename_mask
+#         reader = sitk.ImageFileReader()
+#         reader.SetImageIO("NiftiImageIO")
+#         reader.SetFileName(file)
+#         img_T1_1 = reader.Execute();
+#         # img_T1_Copy=img_T1
+#         ####################################################
+#         img_T1_temp_np=sitk.GetArrayFromImage(img_T1_1)
+#         img_T1_temp_np_alllabels=np.copy(img_T1_temp_np)
+#         img_T1_temp_np_alllabels=slicenum_at_end(img_T1_temp_np_alllabels)
+#         # img_T1_temp_np[img_T1_temp_np>1]=0.0
+#         img_T1_1_forsubtract_np=np.copy(img_T1_temp_np)
+#         img_T1_1_forsubtract_itk=sitk.GetImageFromArray(img_T1_1_forsubtract_np)
+#         img_T1_1_forsubtract_itk.CopyInformation(img_T1_1)
+#         # img_T1_temp_np[ventricle_obb_np<1]=0.0
+#         # img_T1_temp_np[ventricle_nonlin_mask_np<1]=0.0
+#         # img_T1_temp_np[0:zoneV_min_z1,:,:]=0.0
+#         # img_T1_temp_np[zoneV_max_z1+1:img_T1_temp_np.shape[0],:,:]=0.0
+#         img_T1_temp_itk=sitk.GetImageFromArray(img_T1_temp_np)
+#         img_T1_temp_itk.CopyInformation(img_T1_1)
+#
+#
+#         img_T1_temp_np_Ven=np.copy(img_T1_temp_np)
+#         #    img_T1_temp_np_Ven[0:zoneV_min_z1,:,:]=0.0
+#         #    img_T1_temp_np_Ven[zoneV_max_z1:img_T1_temp_np.shape[0],:,:]=0.0
+#         img_T1_temp_np_Ven_itk=sitk.GetImageFromArray(img_T1_temp_np_Ven)
+#         img_T1_temp_np_Ven_itk.CopyInformation(img_T1_1)
+#
+#         img_T2=img_T1_temp_itk
+#         img_T2_Copy=img_T2
+#
+#         img_T1=img_T1_temp_np_Ven_itk
+#         img_T1_Copy=img_T1
+#
+#
+#
+#         ###############################################
+#         imagenparray=sitk.GetArrayFromImage(img_T1)
+#
+#         if np.sum(imagenparray)>200:
+#             img_T1=img_T1*255
+#
+#             img_T1_255 = sitk.Cast(sitk.IntensityWindowing(img_T1) ,sitk.sitkUInt8)
+#
+#             file1 = filename_bet
+#             reader1 = sitk.ImageFileReader()
+#             reader1.SetImageIO("NiftiImageIO")
+#             reader1.SetFileName(file1)
+#             img_T1_bet = reader1.Execute();
+#             cc1 = sitk.ConnectedComponent(img_T1_bet>0)
+#             stats1 = sitk.LabelIntensityStatisticsImageFilter()
+#             stats1.Execute(cc1,img_T1_bet)
+#             #
+#             cc = sitk.ConnectedComponent(img_T1_255>0)
+#             stats = sitk.LabelIntensityStatisticsImageFilter()
+#             stats.Execute(cc,img_T1)
+#
+#             maxsize_comp_1=0
+#             id_of_maxsize_comp_1=0
+#
+#             for l in range(len(stats1.GetLabels())):
+#                 if stats1.GetPhysicalSize(stats1.GetLabels()[l])>maxsize_comp_1:
+#                     maxsize_comp_1=stats1.GetPhysicalSize(stats1.GetLabels()[l])
+#
+#                     id_of_maxsize_comp_1=l
+#             csf_ids=[]
+#             for l in range(len(stats.GetLabels())):
+#
+#                 csf_ids.append([l,stats.GetPhysicalSize(stats.GetLabels()[l])])
+#             csf_ids.sort(key = sortSecond, reverse = True)
+#             # subprocess.call("echo " + "SUCCEEDED AT ::{}  > error.txt".format(inspect.stack()[0][3]) ,shell=True )
+#             first_seg_centroid=np.array(stats.GetCentroid(stats.GetLabels()[csf_ids[0][0]]))
+#             second_seg_centroid=np.array(stats.GetCentroid(stats.GetLabels()[csf_ids[1][0]]))
+#             bet_centroid=np.array(stats.GetCentroid(stats.GetLabels()[id_of_maxsize_comp_1]))
+#             first2bet_centroid=np.linalg.norm(first_seg_centroid - bet_centroid)
+#             second2bet_centroid=np.linalg.norm(second_seg_centroid - bet_centroid)
+#             if first2bet_centroid< second2bet_centroid:
+#                 id_of_maxsize_comp=csf_ids[0][0]
+#
+#             else:
+#                 if stats.GetPhysicalSize(stats.GetLabels()[csf_ids[1][0]]) > 10000:
+#                     id_of_maxsize_comp=csf_ids[1][0]
+#
+#                 else:
+#                     id_of_maxsize_comp=csf_ids[0][0]
+#
+#             initial_seed_point_indexes=[stats.GetMinimumIndex(stats.GetLabels()[id_of_maxsize_comp])] ##img_T1 ##
+#             seg_explicit_thresholds =sitk.ConnectedThreshold(img_T1, seedList=initial_seed_point_indexes, lower=100, upper=255)
+#
+#             zoneV_min_z,zoneV_max_z=get_ventricles_range(sitk.GetArrayFromImage(seg_explicit_thresholds))
+#             subtracted_image=subtract_binary_1(sitk.GetArrayFromImage(img_T1_1),sitk.GetArrayFromImage(seg_explicit_thresholds)*255)
+#             subtracted_image=sitk.GetImageFromArray(subtracted_image)
+#             above_ventricle_image= sitk.GetArrayFromImage(subtracted_image)
+#             above_ventricle_image[0:zoneV_max_z+1,:,:]=0
+#             covering_ventricle_image= sitk.GetArrayFromImage(subtracted_image)
+#             covering_ventricle_image[0:zoneV_min_z,:,:]=0
+#             covering_ventricle_image[zoneV_max_z+1:above_ventricle_image.shape[0],:,:]=0
+#             below_ventricle_image= sitk.GetArrayFromImage(subtracted_image)
+#             below_ventricle_image[zoneV_min_z:above_ventricle_image.shape[0],:,:]=0
+#
+#             above_ventricle_image_sitkimg=sitk.GetImageFromArray(above_ventricle_image)
+#             above_ventricle_image_sitkimg.CopyInformation(img_T1_bet)
+#             # sulci_vol_below_vent=calculate_volume(gray_image,below_ventricle_image)
+#             below_ventricle_image_sitkimg=sitk.GetImageFromArray(below_ventricle_image)
+#             below_ventricle_image_sitkimg.CopyInformation(img_T1_bet)
+#             # sulci_vol_at_vent=calculate_volume(gray_image,covering_ventricle_image)
+#
+#             covering_ventricle_image_sitkimg=sitk.GetImageFromArray(covering_ventricle_image)
+#             covering_ventricle_image_sitkimg.CopyInformation(img_T1_bet)
+#
+#
+#             subtracted_image.CopyInformation( img_T1_bet)
+#             sitk.WriteImage(subtracted_image, filename_gray.split(".nii")[0]+ "_sulci_total.nii.gz", True)
+#
+#             seg_explicit_thresholds.CopyInformation( img_T1_bet)
+#             sitk.WriteImage(seg_explicit_thresholds, filename_gray.split(".nii")[0]+ "_ventricle_total.nii.gz", True)
+#
+#             sitk.WriteImage(above_ventricle_image_sitkimg, filename_gray.split(".nii")[0]+ "_sulci_above_ventricle.nii.gz", True)
+#
+#             sitk.WriteImage(below_ventricle_image_sitkimg, filename_gray.split(".nii")[0]+ "_sulci_below_ventricle.nii.gz", True)
+#
+#             sitk.WriteImage(covering_ventricle_image_sitkimg, filename_gray.split(".nii")[0]+ "_sulci_at_ventricle.nii.gz", True)
+#
+#             subprocess.call("echo " + "SUCCEEDED AT ::{}  > error.txt".format(inspect.stack()[0][3]) ,shell=True )
+#             subprocess.call("echo " + "SUCCEEDED AT ::{}:{}:{}  > error.txt".format(inspect.stack()[0][3],zoneV_max_z,zoneV_min_z) ,shell=True )
+#
+#
+#     except     Exception as e:
+#         # Print the error message
+#         print(f"Error: {e}")
+#         subprocess.call("echo " + "FAILED AT ::{}::{}  >> error.txt".format(inspect.stack()[0][3],e) ,shell=True )
+#
+#
+#
+#
+#     return  sulci_vol, ventricle_vol,leftcountven,rightcountven,leftcountsul,rightcountsul,sulci_vol_above_vent,sulci_vol_below_vent,sulci_vol_at_vent
 
 def divideintozones_with_vent_obb_ven_hem_given(filename_gray,filename_mask,filename_bet,filename_vent_obb,zoneV_min_z,zoneV_max_z):
     try:
