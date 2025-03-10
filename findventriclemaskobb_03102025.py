@@ -1439,15 +1439,15 @@ def compute_obb_1(data):
     return obb_mask
 
 # ##########################
-ventricle_mask=resizeinto_512by512_and_flip(nib.load(sys.argv[1]).get_fdata())
+cistern_mask=resizeinto_512by512_and_flip(nib.load(sys.argv[1]).get_fdata())
 
-ventricle_obb_mask=compute_obb_1(ventricle_mask)
+cistern_obb_mask=compute_obb_1(cistern_mask)
 # # Example usage:
 ####################
 print('sys.argv[2]::{}'.format(sys.argv[2]))
 csf_mask_nib=nib.load(sys.argv[2])
 # save_nifti_without_affine(ventricle_obb_mask, os.path.join(sys.argv[3],'ventricle_obb_mask.nii'))
-array_img = nib.Nifti1Image(ventricle_obb_mask, affine=csf_mask_nib.affine, header=csf_mask_nib.header)
+array_img = nib.Nifti1Image(cistern_obb_mask, affine=csf_mask_nib.affine, header=csf_mask_nib.header)
 nib.save(array_img, os.path.join(sys.argv[3],'cistern_obb_mask.nii'))
-array_img = nib.Nifti1Image(ventricle_mask, affine=csf_mask_nib.affine, header=csf_mask_nib.header)
+array_img = nib.Nifti1Image(cistern_mask, affine=csf_mask_nib.affine, header=csf_mask_nib.header)
 nib.save(array_img, os.path.join(sys.argv[3],'cistern_after_deepreg.nii'))
