@@ -129,8 +129,7 @@ while IFS=',' read -ra array; do
         #  outputfiles_present=$(python3 download_with_session_ID.py "${call_download_a_singlefile_with_URIString_arguments[@]}")
         echo "csffile:::::ATUL:::${csffile}"
         while IFS=',' read -ra array2; do
-
-          url2=${array2[6]}
+        url2=${array2[6]}
 
 #          if [[ ${url2} == *"ventricle_bounds.csv"* ]]; then #  || [[ ${url2} == *"_levelset_bet"* ]]  || [[ ${url2} == *"csf_unet"* ]]  ; then ##[[ $string == *"My long"* ]]; then
 #            echo "It's there!"
