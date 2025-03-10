@@ -202,7 +202,6 @@ echo "    call_csf_compartments_arguments=('call_csf_compartments_ventbound_no_h
         call_uploadsinglefile_with_URI_arguments=('call_uploadsinglefile_with_URI' ${URI_1} ${file_name} ${resource_dirname})
         outputfiles_present=$(python3 /software/download_with_session_ID.py "${call_uploadsinglefile_with_URI_arguments[@]}")
         echo ${outputfiles_present}
-
       fi
     done
   done < <(tail -n +2 "${dir_to_save}/${filename}")
