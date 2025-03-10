@@ -202,9 +202,9 @@ def main():
         if name_of_the_function == "call_combine_sah_to_csf":
             print("WO ZAI ::{}".format("call_combine_sah_to_csf"))
             return_value=call_combine_sah_to_csf(args)
-        if name_of_the_function == "csf_compartments_ventobb_no_hem_with_cistern":
-            print("WO ZAI ::{}".format("csf_compartments_ventobb_no_hem_with_cistern"))
-            return_value=csf_compartments_ventobb_no_hem_with_cistern(args)
+        if name_of_the_function == "call_csf_compartments_ventbound_no_hem_with_cis":
+            print("WO ZAI ::{}".format("call_csf_compartments_ventbound_no_hem_with_cis"))
+            return_value=call_csf_compartments_ventbound_no_hem_with_cis(args)
 
     except:
         x=0
