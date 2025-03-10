@@ -127,7 +127,7 @@ while IFS=',' read -ra array; do
         #      filename1=$(basename ${url1})
         #  call_download_a_singlefile_with_URIString_arguments=('call_download_a_singlefile_with_URIString' ${url1} ${filename1} ${dir_to_save})
         #  outputfiles_present=$(python3 download_with_session_ID.py "${call_download_a_singlefile_with_URIString_arguments[@]}")
-echo "csffile:::::ATUL:::${csffile}"
+        echo "csffile:::::ATUL:::${csffile}"
         while IFS=',' read -ra array2; do
 
           url2=${array2[6]}
