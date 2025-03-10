@@ -347,7 +347,7 @@ def divideintozones_v1_with_vent_bound(filename_gray,filename_mask,filename_bet,
 
 def divideintozones_with_vent_obb_with_cistern(filename_gray,filename_mask,filename_bet,filename_vent_obb,zoneV_min_z,zoneV_max_z):
     try:
-        return "ATUL"
+        # return "ATUL"
         command=f'echo  I am at {inspect.stack()[3][0]} >> /software/error.txt'
         subprocess.call(command,shell=True)
         sulci_vol, ventricle_vol,leftcountven,rightcountven,leftcountsul,rightcountsul,sulci_vol_above_vent,sulci_vol_below_vent,sulci_vol_at_vent=(0,0,0,0,0,0,0,0,0) #seg_explicit_thresholds, subtracted_image
