@@ -140,7 +140,7 @@ url2=${array2[6]}
 #            ventricleboundfile=${dir_to_save}/${filename2}
 #            echo "${ventricleboundfile}"
 #          fi
-if [[ ${url2} == *"warped_1_"* ]]; then #  || [[ ${url2} == *"_levelset_bet"* ]]  || [[ ${url2} == *"csf_unet"* ]]  ; then ##[[ $string == *"My long"* ]]; then
+if [[ ${url2} == *"warped_1_mov_scct_strippedResampled1_onlyventricle"* ]]; then #  || [[ ${url2} == *"_levelset_bet"* ]]  || [[ ${url2} == *"csf_unet"* ]]  ; then ##[[ $string == *"My long"* ]]; then
 echo "It's there!"
 echo "${array2[6]}"
 filename2=$(basename ${url2})
@@ -149,6 +149,27 @@ outputfiles_present=$(python3 download_with_session_ID.py "${call_download_a_sin
 venticle_only_mask=${dir_to_save}/${filename2}
 echo "${venticle_only_mask}"
 fi
+
+if [[ ${url2} == *"warped_1_mov_cistern_area"* ]]; then #  || [[ ${url2} == *"_levelset_bet"* ]]  || [[ ${url2} == *"csf_unet"* ]]  ; then ##[[ $string == *"My long"* ]]; then
+echo "It's there!"
+echo "${array2[6]}"
+filename2=$(basename ${url2})
+call_download_a_singlefile_with_URIString_arguments=('call_download_a_singlefile_with_URIString' ${url2} ${filename2} ${dir_to_save})
+outputfiles_present=$(python3 download_with_session_ID.py "${call_download_a_singlefile_with_URIString_arguments[@]}")
+cintern_only_mask=${dir_to_save}/${filename2}
+echo "${cintern_only_mask}"
+fi
+
+if [[ ${url2} == *"warped_1_mov_midlinecssfResampled1"* ]]; then #  || [[ ${url2} == *"_levelset_bet"* ]]  || [[ ${url2} == *"csf_unet"* ]]  ; then ##[[ $string == *"My long"* ]]; then
+echo "It's there!"
+echo "${array2[6]}"
+filename2=$(basename ${url2})
+call_download_a_singlefile_with_URIString_arguments=('call_download_a_singlefile_with_URIString' ${url2} ${filename2} ${dir_to_save})
+outputfiles_present=$(python3 download_with_session_ID.py "${call_download_a_singlefile_with_URIString_arguments[@]}")
+midline_only_mask=${dir_to_save}/${filename2}
+echo "${midline_only_mask}"
+fi
+
 done < <(tail -n +2 "${working_dir}/${output_csvfile_2}")
 #        venticle_only_mask=${betfile}
 #        echo "${venticle_only_mask} ${csffile} ${dir_to_save} ${greyfile} ${betfile}"
