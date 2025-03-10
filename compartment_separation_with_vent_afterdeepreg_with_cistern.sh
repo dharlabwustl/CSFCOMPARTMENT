@@ -176,8 +176,10 @@ done < <(tail -n +2 "${working_dir}/${output_csvfile_2}")
 #        python3 findventriclemaskconvexhull10112024.py  ${venticle_only_mask} ${csffile} ${dir_to_save} ${greyfile} ${betfile}
 ventricleboundfile=${dir_to_save}/'ventricle_bounds.csv'
 echo "python3 findventriclemaskobb_10102024.py  ${venticle_only_mask} ${csffile} ${dir_to_save} ${greyfile} ${betfile}"
+python3 findventriclemaskobb_10102024.py  ${venticle_only_mask} ${csffile} ${dir_to_save} ${greyfile} ${betfile}
 #
 echo "python3 findventriclemaskobb_03102025.py  ${cistern_only_mask} ${csffile} ${dir_to_save} ${greyfile} ${betfile}"
+python3 findventriclemaskobb_03102025.py  ${cistern_only_mask} ${csffile} ${dir_to_save} ${greyfile} ${betfile}
 #ventricle_obb_mask=${dir_to_save}/ventricle_obb_mask.nii
 #while IFS=',' read -ra array3; do
 #echo "${array3[3]}::${array3[4]}"
