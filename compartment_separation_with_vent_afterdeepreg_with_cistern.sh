@@ -175,55 +175,55 @@ done < <(tail -n +2 "${working_dir}/${output_csvfile_2}")
 #        echo "${venticle_only_mask} ${csffile} ${dir_to_save} ${greyfile} ${betfile}"
 #        python3 findventriclemaskconvexhull10112024.py  ${venticle_only_mask} ${csffile} ${dir_to_save} ${greyfile} ${betfile}
 ventricleboundfile=${dir_to_save}/'ventricle_bounds.csv'
-python3 findventriclemaskobb_10102024.py  ${venticle_only_mask} ${csffile} ${dir_to_save} ${greyfile} ${betfile}
+echo "python3 findventriclemaskobb_10102024.py  ${venticle_only_mask} ${csffile} ${dir_to_save} ${greyfile} ${betfile}"
 #
-python3 findventriclemaskobb_03102025.py  ${cistern_only_mask} ${csffile} ${dir_to_save} ${greyfile} ${betfile}
-ventricle_obb_mask=${dir_to_save}/ventricle_obb_mask.nii
-while IFS=',' read -ra array3; do
-echo "${array3[3]}::${array3[4]}"
-zoneV_min_z=${array3[3]}
-zoneV_max_z=${array3[4]}
-done < <(tail -n +2 "${ventricleboundfile}")
-#############################################
-
-############
-#    for niftifile_csvfilename in ${working_dir}/*NIFTILOCATION.csv; do
-niftifile_csvfilename=$(ls ${working_dir}/*NIFTILOCATION.csv)
-while IFS=',' read -ra array5; do
-scanID=${array5[2]}
-echo sessionId::${sessionID}
-echo scanId::${scanID}
-done < <(tail -n +2 "${niftifile_csvfilename}")
-#    done
-function_with_arguments=('call_delete_file_with_ext' ${sessionID} ${scanID} MASKS '_ventricle.nii.gz' ) ##'warped_1_mov_mri_region_' )
-#    echo "outputfiles_present="'$(python3 utilities_simple_trimmed.py' "${function_with_arguments[@]}"
-outputfiles_present=$(python3 download_with_session_ID.py "${function_with_arguments[@]}")
-function_with_arguments=('call_delete_file_with_ext' ${sessionID} ${scanID} MASKS '_total.nii.gz' ) ##'warped_1_mov_mri_region_' )
-#    echo "outputfiles_present="'$(python3 utilities_simple_trimmed.py' "${function_with_arguments[@]}"
-outputfiles_present=$(python3 download_with_session_ID.py "${function_with_arguments[@]}")
-
-################
-
-echo "call_csf_compartments_arguments=('call_csf_compartments_ventbound_no_hem' ${greyfile} ${csffile} ${betfile} ${ventricle_obb_mask} ${zoneV_min_z} ${zoneV_max_z} )"
-call_csf_compartments_arguments=('call_csf_compartments_ventbound_no_hem' ${greyfile} ${csffile} ${betfile} ${ventricle_obb_mask} ${zoneV_min_z} ${zoneV_max_z} )
-outputfiles_present=$(python3 /software/CSF_COMPARTMENT_GITHUB_July212023.py "${call_csf_compartments_arguments[@]}")
-#  echo ${outputfiles_present}
+#python3 findventriclemaskobb_03102025.py  ${cistern_only_mask} ${csffile} ${dir_to_save} ${greyfile} ${betfile}
+#ventricle_obb_mask=${dir_to_save}/ventricle_obb_mask.nii
+#while IFS=',' read -ra array3; do
+#echo "${array3[3]}::${array3[4]}"
+#zoneV_min_z=${array3[3]}
+#zoneV_max_z=${array3[4]}
+#done < <(tail -n +2 "${ventricleboundfile}")
+##############################################
+#
+#############
+##    for niftifile_csvfilename in ${working_dir}/*NIFTILOCATION.csv; do
+#niftifile_csvfilename=$(ls ${working_dir}/*NIFTILOCATION.csv)
+#while IFS=',' read -ra array5; do
+#scanID=${array5[2]}
+#echo sessionId::${sessionID}
+#echo scanId::${scanID}
+#done < <(tail -n +2 "${niftifile_csvfilename}")
+##    done
+#function_with_arguments=('call_delete_file_with_ext' ${sessionID} ${scanID} MASKS '_ventricle.nii.gz' ) ##'warped_1_mov_mri_region_' )
+##    echo "outputfiles_present="'$(python3 utilities_simple_trimmed.py' "${function_with_arguments[@]}"
+#outputfiles_present=$(python3 download_with_session_ID.py "${function_with_arguments[@]}")
+#function_with_arguments=('call_delete_file_with_ext' ${sessionID} ${scanID} MASKS '_total.nii.gz' ) ##'warped_1_mov_mri_region_' )
+##    echo "outputfiles_present="'$(python3 utilities_simple_trimmed.py' "${function_with_arguments[@]}"
+#outputfiles_present=$(python3 download_with_session_ID.py "${function_with_arguments[@]}")
+#
+#################
+#
+#echo "call_csf_compartments_arguments=('call_csf_compartments_ventbound_no_hem' ${greyfile} ${csffile} ${betfile} ${ventricle_obb_mask} ${zoneV_min_z} ${zoneV_max_z} )"
+#call_csf_compartments_arguments=('call_csf_compartments_ventbound_no_hem' ${greyfile} ${csffile} ${betfile} ${ventricle_obb_mask} ${zoneV_min_z} ${zoneV_max_z} )
+#outputfiles_present=$(python3 /software/CSF_COMPARTMENT_GITHUB_July212023.py "${call_csf_compartments_arguments[@]}")
+##  echo ${outputfiles_present}
+##fi
+#echo ${outputfiles_present}
+#URI_1=${url2%/resource*}
+#filename_prefix=$(basename ${url}) #${url2%/resource*} #filename=
+#filename_prefix=${filename_prefix%_NIFTILOCATION*}
+#resource_dirname="MASKS"
+#this_data_basename=$(basename {greyfile})
+#this_data_basename_noext=${this_data_basename%_resaved*}
+#for file_name in ${dir_to_save}/${filename_prefix}*.nii.gz; do
+#echo ${file_name}
+#if [[ ${file_name} == *"${this_data_basename_noext}"* ]] || [[ ${file_name} == *"ventricle"* ]] || [[ ${file_name} == *"sulci"* ]]; then
+#call_uploadsinglefile_with_URI_arguments=('call_uploadsinglefile_with_URI' ${URI_1} ${file_name} ${resource_dirname})
+#outputfiles_present=$(python3 /software/download_with_session_ID.py "${call_uploadsinglefile_with_URI_arguments[@]}")
+#echo ${outputfiles_present}
 #fi
-echo ${outputfiles_present}
-URI_1=${url2%/resource*}
-filename_prefix=$(basename ${url}) #${url2%/resource*} #filename=
-filename_prefix=${filename_prefix%_NIFTILOCATION*}
-resource_dirname="MASKS"
-this_data_basename=$(basename {greyfile})
-this_data_basename_noext=${this_data_basename%_resaved*}
-for file_name in ${dir_to_save}/${filename_prefix}*.nii.gz; do
-echo ${file_name}
-if [[ ${file_name} == *"${this_data_basename_noext}"* ]] || [[ ${file_name} == *"ventricle"* ]] || [[ ${file_name} == *"sulci"* ]]; then
-call_uploadsinglefile_with_URI_arguments=('call_uploadsinglefile_with_URI' ${URI_1} ${file_name} ${resource_dirname})
-outputfiles_present=$(python3 /software/download_with_session_ID.py "${call_uploadsinglefile_with_URI_arguments[@]}")
-echo ${outputfiles_present}
-fi
-done
+#done
 done < <(tail -n +2 "${dir_to_save}/${filename}")
 
 done \
