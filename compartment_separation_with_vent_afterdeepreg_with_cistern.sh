@@ -194,8 +194,8 @@ echo "csffile:::::ATUL:::${csffile}"
     filename_prefix=$(basename ${url}) #${url2%/resource*} #filename=
     filename_prefix=${filename_prefix%_NIFTILOCATION*}
     resource_dirname="MASKS"
-          this_data_basename=$(basename {greyfile})
-          this_data_basename_noext=${this_data_basename%_resaved*}
+    this_data_basename=$(basename {greyfile})
+    this_data_basename_noext=${this_data_basename%_resaved*}
     for file_name in ${dir_to_save}/${filename_prefix}*.nii.gz; do
       echo ${file_name}
       if [[ ${file_name} == *"${this_data_basename_noext}"* ]] || [[ ${file_name} == *"ventricle"* ]] || [[ ${file_name} == *"sulci"* ]]; then
