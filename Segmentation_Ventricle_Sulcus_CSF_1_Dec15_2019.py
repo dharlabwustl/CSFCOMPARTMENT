@@ -357,10 +357,10 @@ def divideintozones_with_vent_obb_with_cistern(filename_gray,filename_mask,filen
         ventricle_nonlin_mask = reader_filename_vent_nonlinmask.Execute()
         ventricle_nonlin_mask_np=sitk.GetArrayFromImage(ventricle_nonlin_mask)
 ##########################################
-        reader_cistern_obb_mask = sitk.ImageFileReader()
-        reader_cistern_obb_mask.SetImageIO("NiftiImageIO")
-        reader_cistern_obb_mask.SetFileName('/workinginput/cistern_obb_mask.nii')
-        reader_cistern_obb_mask = reader_cistern_obb_mask.Execute()
+        reader_cistern_obb_mask1 = sitk.ImageFileReader()
+        reader_cistern_obb_mask1.SetImageIO("NiftiImageIO")
+        reader_cistern_obb_mask1.SetFileName('/workinginput/cistern_obb_mask.nii')
+        reader_cistern_obb_mask = reader_cistern_obb_mask1.Execute()
         reader_cistern_obb_mask_np=sitk.GetArrayFromImage(reader_cistern_obb_mask)
         reader_cistern_obb_mask_np[reader_cistern_obb_mask_np<=0.5]=0
         reader_cistern_obb_mask_np[reader_cistern_obb_mask_np>0.5]=1
