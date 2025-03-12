@@ -344,7 +344,9 @@ def divideintozones_v1_with_vent_bound(filename_gray,filename_mask,filename_bet,
 
     return  sulci_vol, ventricle_vol,leftcountven,rightcountven,leftcountsul,rightcountsul,sulci_vol_above_vent,sulci_vol_below_vent,sulci_vol_at_vent
     # return sulci_vol, ventricle_vol,leftcountven*resol,rightcountven*resol,leftcountsul*resol,rightcountsul*resol,sulci_vol_above_vent,sulci_vol_below_vent,sulci_vol_at_vent #seg_explicit_thresholds, subtracted_image
+def region_growing_for_small_segment():
 
+    return 0
 def divideintozones_with_vent_obb_with_cistern(filename_gray,filename_mask,filename_bet,filename_vent_obb,zoneV_min_z,zoneV_max_z):
     try:
         # return "ATUL"
@@ -397,8 +399,9 @@ def divideintozones_with_vent_obb_with_cistern(filename_gray,filename_mask,filen
         img_T1_temp_np_alllabels=slicenum_at_end(img_T1_temp_np_alllabels)
         img_T1_temp_np[img_T1_temp_np>1]=0.0
         img_T1_temp_np_2=np.copy(img_T1_temp_np)
-        img_T1_temp_np_2[reader_cistern_obb_mask_np<=0.5]=0
-        img_T1_temp_np_2[reader_cistern_obb_mask_np>0.5]=1
+        reader_cistern_obb_mask_np[reader_cistern_obb_mask_np>0.5]=1
+        img_T1_temp_np_2=img_T1_temp_np_2*reader_cistern_obb_mask_np
+        # img_T1_temp_np_2[reader_cistern_obb_mask_np>]=1
         img_T1_temp_sitk = sitk.GetImageFromArray(img_T1_temp_np_2)
         img_T1_temp_sitk.CopyInformation(img_T1_1)
         sitk.WriteImage(img_T1_temp_sitk, filename_gray.split(".nii")[0]+ "_cistern_only.nii.gz", True)
