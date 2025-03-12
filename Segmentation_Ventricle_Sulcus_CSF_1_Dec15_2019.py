@@ -404,7 +404,7 @@ def divideintozones_with_vent_obb_with_cistern(filename_gray,filename_mask,filen
         # img_T1_temp_np_2[reader_cistern_obb_mask_np>]=1
         img_T1_temp_sitk = sitk.GetImageFromArray(img_T1_temp_np_2)
         img_T1_temp_sitk.CopyInformation(img_T1_1)
-        sitk.WriteImage(img_T1_temp_sitk, filename_gray.split(".nii")[0]+ "_ventricl_cistern.nii.gz", True)
+        sitk.WriteImage(img_T1_temp_sitk, filename_gray.split(".nii")[0]+ "_ventricle_cistern.nii.gz", True)
         img_T1_1_forsubtract_np=np.copy(img_T1_temp_np)
         img_T1_1_forsubtract_itk=sitk.GetImageFromArray(img_T1_1_forsubtract_np)
         img_T1_1_forsubtract_itk.CopyInformation(img_T1_1)
