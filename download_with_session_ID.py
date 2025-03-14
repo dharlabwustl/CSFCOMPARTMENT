@@ -27,7 +27,6 @@ def merge_csvs(csvfileslist,columntomatchlist,outputfilename):
         if x > 0:
             df2=pd.read_csv(csvfileslist[x])
             df_cd = pd.merge(df1, df2, how='inner', left_on = 'Id', right_on = 'Id')
-
             df2.rename(columns={csvfileslist[x]:left_on}, inplace=True)
             df1 = df1.merge(df2, left_on = left_on, right_on = columntomatchlist[x])
             left_on=columntomatchlist[x]
