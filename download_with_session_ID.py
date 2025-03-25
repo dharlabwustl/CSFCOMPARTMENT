@@ -1741,6 +1741,7 @@ def main():
         return_value=0
         globals()[args.stuff[0]](args)
         return return_value
+    xnatSession.close_httpsession()
     return return_value
 if __name__ == '__main__':
     main()
