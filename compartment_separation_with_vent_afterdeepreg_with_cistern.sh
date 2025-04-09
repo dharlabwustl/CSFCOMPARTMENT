@@ -197,10 +197,10 @@ echo sessionId::${sessionID}
 echo scanId::${scanID}
 done < <(tail -n +2 "${niftifile_csvfilename}")
 #    done
-function_with_arguments=('call_delete_file_with_ext' ${sessionID} ${scanID} MASKS '_ventricle.nii.gz' ) ##'warped_1_mov_mri_region_' )
+function_with_arguments=('call_delete_file_with_ext' ${sessionID} ${scanID} MASKS '_ventricle' ) ##'warped_1_mov_mri_region_' )
 #    echo "outputfiles_present="'$(python3 utilities_simple_trimmed.py' "${function_with_arguments[@]}"
 outputfiles_present=$(python3 download_with_session_ID.py "${function_with_arguments[@]}")
-function_with_arguments=('call_delete_file_with_ext' ${sessionID} ${scanID} MASKS '_total.nii.gz' ) ##'warped_1_mov_mri_region_' )
+function_with_arguments=('call_delete_file_with_ext' ${sessionID} ${scanID} MASKS '_total' ) ##'warped_1_mov_mri_region_' )
 #    echo "outputfiles_present="'$(python3 utilities_simple_trimmed.py' "${function_with_arguments[@]}"
 outputfiles_present=$(python3 download_with_session_ID.py "${function_with_arguments[@]}")
 
