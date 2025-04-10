@@ -64,10 +64,23 @@ resource_dir="MASKS"
 
 output_csvfile_1=${sessionID}_MASK_METADATA.csv
 call_get_resourcefiles_metadata_saveascsv_args ${url1} ${resource_dir} ${working_dir} ${output_csvfile_1}
+
+#    for niftifile_csvfilename in ${working_dir}/*NIFTILOCATION.csv; do
+niftifile_csvfilename=$(ls ${working_dir}/*NIFTILOCATION.csv)
+while IFS=',' read -ra array5; do
+scanID=${array5[2]}
+echo sessionId::${sessionID}
+echo scanId::${scanID}
+done < <(tail -n +2 "${niftifile_csvfilename}")
 #      filename1=$(basename ${url1})
 #  call_download_a_singlefile_with_URIString_arguments=('call_download_a_singlefile_with_URIString' ${url1} ${filename1} ${dir_to_save})
 #  outputfiles_present=$(python3 download_with_session_ID.py "${call_download_a_singlefile_with_URIString_arguments[@]}")
-
+function_with_arguments=('call_delete_file_with_ext' ${sessionID} ${scanID} MASKS '_ventricle' ) ##'warped_1_mov_mri_region_' )
+#    echo "outputfiles_present="'$(python3 utilities_simple_trimmed.py' "${function_with_arguments[@]}"
+outputfiles_present=$(python3 download_with_session_ID.py "${function_with_arguments[@]}")
+function_with_arguments=('call_delete_file_with_ext' ${sessionID} ${scanID} MASKS '_total' ) ##'warped_1_mov_mri_region_' )
+#    echo "outputfiles_present="'$(python3 utilities_simple_trimmed.py' "${function_with_arguments[@]}"
+outputfiles_present=$(python3 download_with_session_ID.py "${function_with_arguments[@]}")
 while IFS=',' read -ra array2; do
 
 url2=${array2[6]}
@@ -189,20 +202,9 @@ done < <(tail -n +2 "${ventricleboundfile}")
 #############################################
 
 ############
-#    for niftifile_csvfilename in ${working_dir}/*NIFTILOCATION.csv; do
-niftifile_csvfilename=$(ls ${working_dir}/*NIFTILOCATION.csv)
-while IFS=',' read -ra array5; do
-scanID=${array5[2]}
-echo sessionId::${sessionID}
-echo scanId::${scanID}
-done < <(tail -n +2 "${niftifile_csvfilename}")
+
 #    done
-function_with_arguments=('call_delete_file_with_ext' ${sessionID} ${scanID} MASKS '_ventricle' ) ##'warped_1_mov_mri_region_' )
-#    echo "outputfiles_present="'$(python3 utilities_simple_trimmed.py' "${function_with_arguments[@]}"
-outputfiles_present=$(python3 download_with_session_ID.py "${function_with_arguments[@]}")
-function_with_arguments=('call_delete_file_with_ext' ${sessionID} ${scanID} MASKS '_total' ) ##'warped_1_mov_mri_region_' )
-#    echo "outputfiles_present="'$(python3 utilities_simple_trimmed.py' "${function_with_arguments[@]}"
-outputfiles_present=$(python3 download_with_session_ID.py "${function_with_arguments[@]}")
+
 
 ################
 
