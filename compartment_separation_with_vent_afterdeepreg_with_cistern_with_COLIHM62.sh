@@ -215,8 +215,9 @@ done < <(tail -n +2 "${ventricleboundfile}")
 #outputfiles_present=$(python3 /software/CSF_COMPARTMENT_GITHUB_July212023.py "${call_csf_compartments_arguments[@]}")
 ##  echo ${outputfiles_present}
 #fi
-echo "call_csf_compartments_arguments=('call_csf_compartments_ventbound_no_hem_with_cis_1' ${greyfile} ${csffile} ${betfile} ${ventricle_obb_mask} ${zoneV_min_z} ${zoneV_max_z} )"
+echo "call_csf_compartments_arguments=('call_csf_compartments_ventbound_no_hem_with_cis_1' ${greyfile} ${csffile} ${ventricle_after_deepreg} ${cistern_after_deepreg})"
 #call_csf_compartments_arguments=('call_csf_compartments_ventbound_no_hem_with_cis_1' ${greyfile} ${csffile} ${betfile} ${ventricle_obb_mask} ${zoneV_min_z} ${zoneV_max_z} )
+
 call_csf_compartments_arguments=('call_csf_compartments_ventbound_no_hem_with_cis_1' ${greyfile} ${csffile}  ${ventricle_after_deepreg} ${cistern_after_deepreg} )
 outputfiles_present=$(python3 /software/CSF_COMPARTMENT_GITHUB_July212023.py "${call_csf_compartments_arguments[@]}")
 
