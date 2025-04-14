@@ -194,6 +194,8 @@ python3 findventriclemaskobb_10102024.py  ${venticle_only_mask} ${csffile} ${dir
 echo "python3 findventriclemaskobb_03102025.py  ${cistern_only_mask} ${csffile} ${dir_to_save} ${greyfile} ${betfile}"
 python3 findventriclemaskobb_03102025.py  ${cistern_only_mask} ${csffile} ${dir_to_save} ${greyfile} ${betfile}
 ventricle_obb_mask=${dir_to_save}/ventricle_obb_mask.nii
+ventricle_after_deepreg=${dir_to_save}/ventricle.nii
+cistern_after_deepreg=${dir_to_save}/cistern_after_deepreg.nii
 while IFS=',' read -ra array3; do
 echo "${array3[3]}::${array3[4]}"
 zoneV_min_z=${array3[3]}
@@ -213,8 +215,16 @@ done < <(tail -n +2 "${ventricleboundfile}")
 #outputfiles_present=$(python3 /software/CSF_COMPARTMENT_GITHUB_July212023.py "${call_csf_compartments_arguments[@]}")
 ##  echo ${outputfiles_present}
 #fi
-echo "call_csf_compartments_arguments=('call_csf_compartments_ventbound_no_hem_with_cis' ${greyfile} ${csffile} ${betfile} ${ventricle_obb_mask} ${zoneV_min_z} ${zoneV_max_z} )"
-call_csf_compartments_arguments=('call_csf_compartments_ventbound_no_hem_with_cis' ${greyfile} ${csffile} ${betfile} ${ventricle_obb_mask} ${zoneV_min_z} ${zoneV_max_z} )
+echo "call_csf_compartments_arguments=('call_csf_compartments_ventbound_no_hem_with_cis_1' ${greyfile} ${csffile}  ${ventricle_after_deepreg} )"
+
+#process_csf_ventricle_cistern(
+#        filename_gray:str,
+#        csf_path: str,
+#        ventricle_path: str,
+#        cistern_path: str,
+#        save_dir: str = "."
+#)
+call_csf_compartments_arguments=('call_csf_compartments_ventbound_no_hem_with_cis_1' ${greyfile} ${csffile}  ${ventricle_obb_mask} ${cistern_after_deepreg} )
 outputfiles_present=$(python3 /software/CSF_COMPARTMENT_GITHUB_July212023.py "${call_csf_compartments_arguments[@]}")
 echo ${outputfiles_present}
 URI_1=${url2%/resource*}
