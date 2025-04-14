@@ -537,15 +537,15 @@ def divideintozones_with_vent_obb_with_cistern_1(filename_gray,filename_mask,fil
     return  sulci_vol, ventricle_vol,leftcountven,rightcountven,leftcountsul,rightcountsul,sulci_vol_above_vent,sulci_vol_below_vent,sulci_vol_at_vent
 
 
-def process_csf_ventricle_cistern(
-        filename_gray:str,
-        csf_path: str,
-        ventricle_path: str,
-        cistern_path: str,
-        save_dir: str = "."
-):
+def process_csf_ventricle_cistern(filename_gray,csf_path,ventricle_path,cistern_path):
+#         filename_gray:str,
+#         csf_path: str,
+#         ventricle_path: str,
+#         cistern_path: str,
+#         save_dir: str = "."
+# ):
     # divideintozones_with_vent_obb_with_cistern_1(filename_gray,filename_mask,filename_bet,filename_vent_obb,zoneV_min_z,zoneV_max_z):
-
+    return
     """
     Processes CSF, ventricle, and cistern masks:
     - Dilates ventricle and cistern masks 3 times
