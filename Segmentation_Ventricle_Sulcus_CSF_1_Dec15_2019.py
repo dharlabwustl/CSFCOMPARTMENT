@@ -597,7 +597,7 @@ def process_csf_ventricle_cistern(filename_gray,csf_path,ventricle_path,cistern_
     # Create masks by slicing in Z direction
     above_ventricle_image = np.zeros_like(subtracted_image)
     above_ventricle_image[ :, :,zoneV_max_z+1:] = subtracted_image[ :, :,zoneV_max_z+1:]
-    # return
+    return
     covering_ventricle_image = np.zeros_like(subtracted_image)
     covering_ventricle_image[ :, :,zoneV_min_z:zoneV_max_z+1] = subtracted_image[ :, :,zoneV_min_z:zoneV_max_z+1]
 
