@@ -596,16 +596,16 @@ def process_csf_ventricle_cistern(filename_gray,csf_path,ventricle_path,cistern_
 
     # Create masks by slicing in Z direction
     above_ventricle_image = np.zeros_like(subtracted_image)
-    above_ventricle_image[ :, :,zoneV_max_z+1:] = subtracted_image[zoneV_max_z+1:, :, :]
-
+    above_ventricle_image[ :, :,zoneV_max_z+1:] = subtracted_image[ :, :,zoneV_max_z+1:]
+    # return
     covering_ventricle_image = np.zeros_like(subtracted_image)
-    covering_ventricle_image[ :, :,zoneV_min_z:zoneV_max_z+1] = subtracted_image[zoneV_min_z:zoneV_max_z+1, :, :]
+    covering_ventricle_image[ :, :,zoneV_min_z:zoneV_max_z+1] = subtracted_image[ :, :,zoneV_min_z:zoneV_max_z+1]
 
     below_ventricle_image = np.zeros_like(subtracted_image)
-    below_ventricle_image[ :, :,:zoneV_min_z] = subtracted_image[:zoneV_min_z, :, :]
+    below_ventricle_image[ :, :,:zoneV_min_z] = subtracted_image[ :, :,:zoneV_min_z]
     # save_nifti(ventricle_in_csf, affine, header, f"{save_dir}/ventricle_in_csf_mask.nii.gz")
     #################
-    return
+
     save_nifti(cistern_in_csf, affine, header,filename_gray.split(".nii")[0]+ "_ventricle_cistern.nii.gz", True)
 
     save_nifti(subtracted_image,  affine, header,filename_gray.split(".nii")[0]+ "_sulci_total.nii.gz", True)
