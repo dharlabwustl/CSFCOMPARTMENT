@@ -587,13 +587,13 @@ def process_csf_ventricle_cistern(filename_gray,csf_path,ventricle_path,cistern_
     ventricle_in_csf[cistern_in_csf>0]=0
     zoneV_min_z,zoneV_max_z=get_ventricles_range(ventricle_in_csf)
     # Ventricle cuboidal mask
-    return
+
     #######################################
 # Remove ventricle and cistern parts from CSF mask
     subtracted_image = csf.copy()
     subtracted_image[ventricle_in_csf > 0] = 0
     subtracted_image[cistern_in_csf > 0] = 0
-
+    return
     # Create masks by slicing in Z direction
     above_ventricle_image = np.zeros_like(subtracted_image)
     above_ventricle_image[ :, :,zoneV_max_z+1:] = subtracted_image[zoneV_max_z+1:, :, :]
