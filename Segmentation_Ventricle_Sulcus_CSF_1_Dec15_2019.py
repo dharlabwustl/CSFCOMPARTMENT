@@ -570,11 +570,11 @@ def process_csf_ventricle_cistern(filename_gray,csf_path,ventricle_path,cistern_
         nib.save(nib.Nifti1Image(data.astype(np.uint8), affine, header), filename)
 
     # Load masks
-    return
+
     csf, affine, header = load_binary_mask(csf_path)
     ventricle, _, _ = load_binary_mask(ventricle_path)
     cistern, _, _ = load_binary_mask(cistern_path)
-
+    return
     # Structuring element and dilation
     struct = np.ones((5, 5, 5), dtype=bool)
     for _ in range(3):
