@@ -52,6 +52,33 @@ def subtract_binary_1(binary_imageBig,binary_imageSmall):
     binary_imageBigCopy=np.copy(binary_imageBig)
     binary_imageBigCopy[binary_imageSmall>0]=0
     return binary_imageBigCopy
+import numpy as np
+
+def get_ventricles_range_np(numpy_array_3D_mask):
+    """
+    Find the first and last Z-slice indices that contain non-zero pixels
+    in a 3D binary mask (assumed shape: [X, Y, Z] as from nibabel).
+
+    Parameters:
+    - numpy_array_3D_mask: 3D NumPy array (X, Y, Z)
+
+    Returns:
+    - (zoneV_min_z, zoneV_max_z): tuple of first and last Z-slice indices
+    """
+    zoneV_min_z = None
+    zoneV_max_z = None
+
+    # Loop over Z-axis (3rd dimension)
+    for z in range(numpy_array_3D_mask.shape[2]):
+        if np.any(numpy_array_3D_mask[:, :, z]):
+            if zoneV_min_z is None:
+                zoneV_min_z = z
+            zoneV_max_z = z
+
+    # If nothing found, return (-1, -1)
+    if zoneV_min_z is None:
+        return -1, -1
+    return zoneV_min_z, zoneV_max_z
 
 
 
@@ -585,7 +612,7 @@ def process_csf_ventricle_cistern(filename_gray,csf_path,ventricle_path,cistern_
     ventricle_in_csf = np.logical_and(ventricle, csf).astype(np.uint8)
     cistern_in_csf = np.logical_and(cistern, csf).astype(np.uint8)
     ventricle_in_csf[cistern_in_csf>0]=0
-    zoneV_min_z,zoneV_max_z=get_ventricles_range(ventricle_in_csf)
+    zoneV_min_z,zoneV_max_z=get_ventricles_range_np(ventricle_in_csf)
     # Ventricle cuboidal mask
 
     #######################################
