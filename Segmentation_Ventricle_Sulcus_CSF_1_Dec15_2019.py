@@ -580,13 +580,14 @@ def process_csf_ventricle_cistern(filename_gray,csf_path,ventricle_path,cistern_
     for _ in range(3):
         ventricle = binary_dilation(ventricle, structure=struct)
         cistern = binary_dilation(cistern, structure=struct)
-    return
+
     # Intersection with CSF
     ventricle_in_csf = np.logical_and(ventricle, csf).astype(np.uint8)
     cistern_in_csf = np.logical_and(cistern, csf).astype(np.uint8)
     ventricle_in_csf[cistern_in_csf>0]=0
     zoneV_min_z,zoneV_max_z=get_ventricles_range(ventricle_in_csf)
     # Ventricle cuboidal mask
+    return
     #######################################
 # Remove ventricle and cistern parts from CSF mask
     subtracted_image = csf.copy()
