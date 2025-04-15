@@ -594,15 +594,33 @@ def process_csf_ventricle_cistern(filename_gray,csf_path,ventricle_path,cistern_
     subtracted_image[ventricle_in_csf > 0] = 0
     subtracted_image[cistern_in_csf > 0] = 0
 
-    # Create masks by slicing in Z direction
-    above_ventricle_image = np.zeros_like(subtracted_image)
-    above_ventricle_image[ :, :,zoneV_max_z+1:] = subtracted_image[ :, :,zoneV_max_z+1:]
-    return
-    covering_ventricle_image = np.zeros_like(subtracted_image)
-    covering_ventricle_image[ :, :,zoneV_min_z:zoneV_max_z+1] = subtracted_image[ :, :,zoneV_min_z:zoneV_max_z+1]
+    zoneV_min_z = int(zoneV_min_z)
+    zoneV_max_z = int(zoneV_max_z)
+    z_max = subtracted_image.shape[2]
 
+    # Above ventricle
+    above_ventricle_image = np.zeros_like(subtracted_image)
+    if zoneV_max_z + 1 < z_max:
+        above_ventricle_image[:, :, zoneV_max_z+1:] = subtracted_image[:, :, zoneV_max_z+1:]
+
+    # Covering ventricle
+    covering_ventricle_image = np.zeros_like(subtracted_image)
+    covering_ventricle_image[:, :, zoneV_min_z:zoneV_max_z+1] = subtracted_image[:, :, zoneV_min_z:zoneV_max_z+1]
+
+    # Below ventricle
     below_ventricle_image = np.zeros_like(subtracted_image)
-    below_ventricle_image[ :, :,:zoneV_min_z] = subtracted_image[ :, :,:zoneV_min_z]
+    if zoneV_min_z > 0:
+        below_ventricle_image[:, :, :zoneV_min_z] = subtracted_image[:, :, :zoneV_min_z]
+
+    # # Create masks by slicing in Z direction
+    # above_ventricle_image = np.zeros_like(subtracted_image)
+    # above_ventricle_image[ :, :,zoneV_max_z+1:] = subtracted_image[ :, :,zoneV_max_z+1:]
+    # # return
+    # covering_ventricle_image = np.zeros_like(subtracted_image)
+    # covering_ventricle_image[ :, :,zoneV_min_z:zoneV_max_z+1] = subtracted_image[ :, :,zoneV_min_z:zoneV_max_z+1]
+    #
+    # below_ventricle_image = np.zeros_like(subtracted_image)
+    # below_ventricle_image[ :, :,:zoneV_min_z] = subtracted_image[ :, :,:zoneV_min_z]
     # save_nifti(ventricle_in_csf, affine, header, f"{save_dir}/ventricle_in_csf_mask.nii.gz")
     #################
 
