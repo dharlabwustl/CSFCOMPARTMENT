@@ -545,7 +545,7 @@ def process_csf_ventricle_cistern(filename_gray,csf_path,ventricle_path,cistern_
 #         save_dir: str = "."
 # ):
     # divideintozones_with_vent_obb_with_cistern_1(filename_gray,filename_mask,filename_bet,filename_vent_obb,zoneV_min_z,zoneV_max_z):
-    return
+
     """
     Processes CSF, ventricle, and cistern masks:
     - Dilates ventricle and cistern masks 3 times
@@ -570,6 +570,7 @@ def process_csf_ventricle_cistern(filename_gray,csf_path,ventricle_path,cistern_
         nib.save(nib.Nifti1Image(data.astype(np.uint8), affine, header), filename)
 
     # Load masks
+    return
     csf, affine, header = load_binary_mask(csf_path)
     ventricle, _, _ = load_binary_mask(ventricle_path)
     cistern, _, _ = load_binary_mask(cistern_path)
