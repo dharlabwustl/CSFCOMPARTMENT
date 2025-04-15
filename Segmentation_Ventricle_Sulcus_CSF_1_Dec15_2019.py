@@ -574,13 +574,13 @@ def process_csf_ventricle_cistern(filename_gray,csf_path,ventricle_path,cistern_
     csf, affine, header = load_binary_mask(csf_path)
     ventricle, _, _ = load_binary_mask(ventricle_path)
     cistern, _, _ = load_binary_mask(cistern_path)
-    return
+
     # Structuring element and dilation
     struct = np.ones((5, 5, 5), dtype=bool)
     for _ in range(3):
         ventricle = binary_dilation(ventricle, structure=struct)
         cistern = binary_dilation(cistern, structure=struct)
-
+    return
     # Intersection with CSF
     ventricle_in_csf = np.logical_and(ventricle, csf).astype(np.uint8)
     cistern_in_csf = np.logical_and(cistern, csf).astype(np.uint8)
