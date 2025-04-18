@@ -39,10 +39,17 @@ function get_scanID_from_sessionID() {
   local output_csvfile="${sessionID}_SCANSELECTION_METADATA.csv"
 
   call_get_resourcefiles_metadata_saveascsv_args ${URI} ${resource_dir} ${working_dir} ${output_csvfile}
-  local niftifile_csvfilename=$(ls ${working_dir}/*NIFTILOCATION.csv)
-  local scanID=$(tail -n +2 "${niftifile_csvfilename}" | cut -d',' -f3 | head -n 1)
-  echo ${scanID}
+
+  local niftifile_csvfilename="${working_dir}/${output_csvfile}"
+  if [[ -f "${niftifile_csvfilename}" ]]; then
+    local scanID=$(tail -n +2 "${niftifile_csvfilename}" | cut -d',' -f3 | head -n 1)
+    echo ${scanID}
+  else
+    echo "ERROR: CSV file not found: ${niftifile_csvfilename}" >&2
+    echo ""
+  fi
 }
+
 
 #----------------------------------------
 # Get scanID before main loop
