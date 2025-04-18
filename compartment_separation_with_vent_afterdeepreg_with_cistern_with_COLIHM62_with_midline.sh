@@ -191,7 +191,10 @@ while IFS="," read -ra array; do
   echo "${url}"
   call_download_a_singlefile_with_URIString_arguments=('call_download_a_singlefile_with_URIString' ${url} $(basename ${url} ) ${working_dir})
   outputfiles_present=$(python3 download_with_session_ID.py "${call_download_a_singlefile_with_URIString_arguments[@]}")
-
+while IFS="," read -ra array1; do
+scanID=${array1[2]}
+echo ${scanID}
+done < <(tail -n + 2 "${working_dir}/$(basename ${url})")
 ##    for niftifile_csvfilename in ${working_dir}/*NIFTILOCATION.csv; do
 #niftifile_csvfilename=$(ls ${working_dir}/*NIFTILOCATION.csv)
 #while IFS=',' read -ra array5; do
