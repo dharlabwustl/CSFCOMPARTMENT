@@ -11,6 +11,68 @@ output_directory=/workingoutput
 
 final_output_directory=/outputinsidedocker
 
+run_IML() {
+  this_filename=${1}
+  this_betfilename=${2}
+  #  this_csfmaskfilename=${3}
+  #  this_infarctmaskfilename=${4}
+  echo "BET USING LEVELSET MASK"
+
+  /software/bet_withlevelset.sh $this_filename ${this_betfilename} #${output_directory} #Helsinki2000_1019_10132014_1048_Head_2.0_ax_Tilt_1_levelset # ${3} # Helsinki2000_702_12172013_2318_Head_2.0_ax_levelset.nii.gz #${3} # $6 $7 $8 $9 ${10}
+
+  echo "bet_withlevelset successful" >${output_directory}/success.txt
+  this_filename_brain=${this_filename%.nii*}_brain_f.nii.gz
+  # cp ${this_filename_brain} ${output_directory}/ #  ${final_output_directory}/
+  echo "LINEAR REGISTRATION TO TEMPLATE"
+  mat_file_num=$(ls ${output_directory}/*.mat | wc -l)
+  if [[ ${mat_file_num} -gt 1 ]]; then
+    echo "MAT FILES PRESENT"
+    #    /software/linear_rigid_registration_onlytrasnformwith_matfile.sh
+    /software/linear_rigid_registration_onlytrasnformwith_matfile.sh ${this_filename_brain}
+  else
+    /software/linear_rigid_registration.sh ${this_filename_brain} #${templatefilename} #$3 ${6} WUSTL_233_11122015_0840__levelset_brain_f.nii.gz
+    /software/linear_rigid_registration_onlytrasnformwith_matfile.sh ${this_filename_brain}
+    echo "linear_rigid_registration successful" >>${output_directory}/success.txt
+  fi
+
+  echo "RUNNING IML FSL PART"
+  /software/ideal_midline_fslpart.sh ${this_filename} # ${templatefilename} ${mask_on_template}  #$9 #${10} #$8
+  echo "ideal_midline_fslpart successful" >>${output_directory}/success.txt
+
+  echo "RUNNING IML PYTHON PART"
+
+  /software/ideal_midline_pythonpart.sh ${this_filename} #${templatefilename}  #$3 #$8 $9 ${10}
+  echo "ideal_midline_pythonpart successful" >>${output_directory}/success.txt
+  /software/ideal_midline_pythonpart_V2.sh ${this_filename} #${templatefilename}  #$3 #$8 $9 ${10}
+  #    echo "RUNNING NWU AND CSF VOLUME CALCULATION "
+  #
+  #  /software/nwu_csf_volume.sh ${this_filename} ${this_betfilename} ${this_csfmaskfilename} ${this_infarctmaskfilename} ${lower_threshold} ${upper_threshold}
+  #  echo "nwu_csf_volume successful" >>${output_directory}/success.txt
+  #  thisfile_basename=$(basename $this_filename)
+  #  # for texfile in $(/usr/lib/fsl/5.0/remove_ext ${output_directory}/$thisfile_basename)*.tex ;
+  #  for texfile in ${output_directory}/*.tex; do
+  #    pdflatex -halt-on-error -interaction=nonstopmode -output-directory=${output_directory} $texfile ##${output_directory}/$(/usr/lib/fsl/5.0/remove_ext $this_filename)*.tex
+  #    rm ${output_directory}/*.aux
+  #    rm ${output_directory}/*.log
+  #  done
+  #
+  #  for filetocopy in $(/usr/lib/fsl/5.0/remove_ext ${output_directory}/$thisfile_basename)*_brain_f.nii.gz; do
+  #    cp ${filetocopy} ${final_output_directory}/
+  #  done
+  #
+
+  #
+  #  for filetocopy in ${output_directory}/*.pdf; do
+  #    cp ${filetocopy} ${final_output_directory}/
+  #  done
+  #  for filetocopy in ${output_directory}/*.csv; do
+  #    cp ${filetocopy} ${final_output_directory}/
+  #  done
+
+}
+
+
+
 function midlineonly_each_scan() {
   local niftifilename_ext=${1}
 
@@ -261,17 +323,45 @@ cistern_only_mask=${dir_to_save}/${filename2}
 echo "${cistern_only_mask}"
 fi
 
-if [[ ${url2} == *"warped_1_mov_CISTERN_COLIHM62"* ]]; then #  || [[ ${url2} == *"_levelset_bet"* ]]  || [[ ${url2} == *"csf_unet"* ]]  ; then ##[[ $string == *"My long"* ]]; then
-echo "It's there!"
-echo "${array2[6]}"
-filename2=$(basename ${url2})
-call_download_a_singlefile_with_URIString_arguments=('call_download_a_singlefile_with_URIString' ${url2} ${filename2} ${dir_to_save})
-outputfiles_present=$(python3 download_with_session_ID.py "${call_download_a_singlefile_with_URIString_arguments[@]}")
-midline_only_mask=${dir_to_save}/${filename2}
-echo "${midline_only_mask}"
-fi
+#if [[ ${url2} == *"warped_1_mov_CISTERN_COLIHM62"* ]]; then #  || [[ ${url2} == *"_levelset_bet"* ]]  || [[ ${url2} == *"csf_unet"* ]]  ; then ##[[ $string == *"My long"* ]]; then
+#echo "It's there!"
+#echo "${array2[6]}"
+#filename2=$(basename ${url2})
+#call_download_a_singlefile_with_URIString_arguments=('call_download_a_singlefile_with_URIString' ${url2} ${filename2} ${dir_to_save})
+#outputfiles_present=$(python3 download_with_session_ID.py "${call_download_a_singlefile_with_URIString_arguments[@]}")
+#midline_only_mask=${dir_to_save}/${filename2}
+#echo "${midline_only_mask}"
+#fi
 
 done < <(tail -n +2 "${working_dir}/${output_csvfile_2}")
+#########################################################
+    resource_dir="MIDLINE_NPY"
+    output_csvfile_1=${sessionID}_MASK_METADATA.csv
+    call_get_resourcefiles_metadata_saveascsv_args ${url1} ${resource_dir} ${working_dir} ${output_csvfile_1}
+
+    while IFS=',' read -ra array2; do
+
+      url2=${array2[6]}
+      #################
+
+      if [[ ${url2} == *".npy"* ]]; then #  || [[ ${url2} == *"_levelset_bet"* ]]  || [[ ${url2} == *"csf_unet"* ]]  ; then ##[[ $string == *"My long"* ]]; then
+        echo "It's there!"
+        echo "${array2[6]}"
+        filename2=$(basename ${url2})
+        call_download_a_singlefile_with_URIString_arguments=('call_download_a_singlefile_with_URIString' ${url2} ${filename2} ${output_directory})
+        outputfiles_present=$(python3 download_with_session_ID.py "${call_download_a_singlefile_with_URIString_arguments[@]}")
+        greyfile=${dir_to_save}/${filename2}
+        echo "${greyfile}"
+      fi
+
+    done \
+      < <(tail -n +2 "${working_dir}/${output_csvfile_1}")
+    ################################################################
+    cp ${output_directory}/*_V2.npy ${working_dir_1}/
+
+
+###############################################################
+
 #        venticle_only_mask=${betfile}
 #        echo "${venticle_only_mask} ${csffile} ${dir_to_save} ${greyfile} ${betfile}"
 #        python3 findventriclemaskconvexhull10112024.py  ${venticle_only_mask} ${csffile} ${dir_to_save} ${greyfile} ${betfile}
