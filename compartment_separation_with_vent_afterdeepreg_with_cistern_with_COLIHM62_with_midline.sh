@@ -225,8 +225,8 @@ fi
 
 done < <(tail -n +2 "${working_dir}/${output_csvfile_2}")
 
-for each_npy in  $(find ./ZIPFILEDIR/ -name '*.npy') ;  do  if [[ $each_npy  == *'V2'* ]] ; then  mv $each_npy ${working_dir_1} ; fi ; done
- for each_npy in  $(find ./ZIPFILEDIR/ -name '*.npy') ;  do  if [[ $each_npy  == *'.npy'* ]] ; then  mv $each_npy ${output_directory} ; fi ; done
+for each_npy in  $(find /ZIPFILEDIR/ -name '*.npy') ;  do  if [[ $each_npy  == *'V2'* ]] ; then  mv $each_npy ${working_dir_1} ; fi ; done
+ for each_npy in  $(find /ZIPFILEDIR/ -name '*.npy') ;  do  if [[ $each_npy  == *'.npy'* ]] ; then  mv $each_npy ${output_directory} ; fi ; done
 ##################################################################################################################################
 #################################################################################################################################
 
