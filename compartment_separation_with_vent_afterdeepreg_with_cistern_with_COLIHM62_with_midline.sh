@@ -13,7 +13,7 @@ scanID=""
 working_dir=/workinginput
 output_directory=/workingoutput
 final_output_directory=/outputinsidedocker
-working_dir_1='/input'
+working_dir_1=/input
 #----------------------------------------
 # Function to get resource file metadata
 #----------------------------------------
