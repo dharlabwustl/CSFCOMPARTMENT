@@ -41,7 +41,7 @@ function get_scanID_from_sessionID() {
   call_get_resourcefiles_metadata_saveascsv_args ${URI} ${resource_dir} ${working_dir} ${output_csvfile}
   local niftifile_csvfilename=$(ls ${working_dir}/*NIFTILOCATION.csv)
   local scanID=$(tail -n +2 "${niftifile_csvfilename}" | cut -d',' -f3 | head -n 1)
-  echo ${scanID}
+#  echo ${scanID}
 }
 
 #----------------------------------------
