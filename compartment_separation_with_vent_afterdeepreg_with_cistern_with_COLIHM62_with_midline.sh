@@ -48,9 +48,9 @@ function get_scanID_from_sessionID() {
 # Step 1: Download NIFTI_LOCATION Metadata
 #----------------------------------------
 URI="/data/experiments/${sessionID}"
-resource_dir="NIFTI_LOCATION"
-output_csvfile="${sessionID}_SCANSELECTION_METADATA.csv"
-call_get_resourcefiles_metadata_saveascsv_args ${URI} ${resource_dir} ${working_dir} ${output_csvfile}
+#resource_dir="NIFTI_LOCATION"
+#output_csvfile="${sessionID}_SCANSELECTION_METADATA.csv"
+#call_get_resourcefiles_metadata_saveascsv_args ${URI} ${resource_dir} ${working_dir} ${output_csvfile}
 
 #----------------------------------------
 # Step 2: Download file(s) from metadata URLs
