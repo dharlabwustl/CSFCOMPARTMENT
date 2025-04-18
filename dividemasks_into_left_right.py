@@ -581,7 +581,7 @@ def divide_a_mask_into_left_right_submasks_v1(niftifilename,Mask_filename,npyfil
         subprocess.call(command,shell=True)
     return  returnvalue
 
-def distance_mask_point_from_midline(niftifilename,Mask_filename,npyfiledirectory,OUTPUT_DIRECTORY) :
+def distance_mask_point_from_midline(niftifilename,Mask_filename,npyfiledirectory) :
     returnvalue=0
     try:
         Mask_filename_fdata=nib.load(Mask_filename).get_fdata()

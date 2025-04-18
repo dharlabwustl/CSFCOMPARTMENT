@@ -623,6 +623,10 @@ def process_csf_ventricle_cistern(filename_gray, csf_path, ventricle_path, ciste
 
     # Remove cistern from ventricle if overlapping
     ventricle_in_csf[cistern_in_csf > 0] = 0
+####################################################
+
+    # distance_mask_point_from_midline(niftifilename,Mask_filename,npyfiledirectory)
+    ##########################################################
 
     # Get Z-range of ventricles
     zoneV_min_z, zoneV_max_z = get_ventricles_range_np(ventricle_in_csf)
