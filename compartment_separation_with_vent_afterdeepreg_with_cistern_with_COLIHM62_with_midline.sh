@@ -13,7 +13,7 @@ scanID=""
 working_dir=/workinginput
 output_directory=/workingoutput
 final_output_directory=/outputinsidedocker
-
+working_dir_1='/input'
 #----------------------------------------
 # Function to get resource file metadata
 #----------------------------------------
@@ -221,6 +221,38 @@ echo "${midline_only_mask}"
 fi
 
 done < <(tail -n +2 "${working_dir}/${output_csvfile_2}")
+##################################################################################################################################
+#################################################################################################################################
+
+##############################################
+resource_dir="MIDLINE_NPY"
+output_csvfile_2=${sessionID}_PREPROCESS_SEGM_METADATA.csv
+call_get_resourcefiles_metadata_saveascsv_args ${url1} ${resource_dir} ${working_dir} ${output_csvfile_2}
+#      filename1=$(basename ${url1})
+#  call_download_a_singlefile_with_URIString_arguments=('call_download_a_singlefile_with_URIString' ${url1} ${filename1} ${dir_to_save})
+#  outputfiles_present=$(python3 download_with_session_ID.py "${call_download_a_singlefile_with_URIString_arguments[@]}")
+echo "csffile:::::ATUL:::${csffile}"
+while IFS=',' read -ra array2; do
+url2=${array2[6]}
+
+if [[ ${url2} == *".npy"* ]]; then #  || [[ ${url2} == *"_levelset_bet"* ]]  || [[ ${url2} == *"csf_unet"* ]]  ; then ##[[ $string == *"My long"* ]]; then
+echo "It's there!"
+echo "${array2[6]}"
+filename2=$(basename ${url2})
+call_download_a_singlefile_with_URIString_arguments=('call_download_a_singlefile_with_URIString' ${url2} ${filename2} ${working_dir_1})
+outputfiles_present=$(python3 download_with_session_ID.py "${call_download_a_singlefile_with_URIString_arguments[@]}")
+fi
+
+done < <(tail -n +2 "${working_dir}/${output_csvfile_2}")
+
+
+
+
+
+#############################################################################################################################################
+############################################################################################################################################
+
+
 #        venticle_only_mask=${betfile}
 #        echo "${venticle_only_mask} ${csffile} ${dir_to_save} ${greyfile} ${betfile}"
 #        python3 findventriclemaskconvexhull10112024.py  ${venticle_only_mask} ${csffile} ${dir_to_save} ${greyfile} ${betfile}
