@@ -29,8 +29,30 @@ function call_get_resourcefiles_metadata_saveascsv_args() {
 }
 
 #----------------------------------------
+# Function to extract scanID given a sessionID
+#----------------------------------------
+function get_scanID_from_sessionID() {
+  local sessionID=$1
+  local working_dir=$2
+  local URI="/data/experiments/${sessionID}"
+  local resource_dir="NIFTI_LOCATION"
+  local output_csvfile="${sessionID}_SCANSELECTION_METADATA.csv"
+
+  call_get_resourcefiles_metadata_saveascsv_args ${URI} ${resource_dir} ${working_dir} ${output_csvfile}
+  local niftifile_csvfilename=$(ls ${working_dir}/*NIFTILOCATION.csv)
+  local scanID=$(tail -n +2 "${niftifile_csvfilename}" | cut -d',' -f3 | head -n 1)
+  echo ${scanID}
+}
+
+#----------------------------------------
+# Get scanID before main loop
+#----------------------------------------
+
+#----------------------------------------
 # Download NIFTI_LOCATION Metadata
 #----------------------------------------
+scanID=$(get_scanID_from_sessionID ${sessionID} ${working_dir})
+echo ${scanID}
 URI="/data/experiments/${sessionID}"
 resource_dir="NIFTI_LOCATION"
 output_csvfile="${sessionID}_SCANSELECTION_METADATA.csv"
@@ -56,8 +78,7 @@ while IFS=',' read -ra array; do
     output_csvfile_1="${sessionID}_MASK_METADATA.csv"
     call_get_resourcefiles_metadata_saveascsv_args ${url1} MASKS ${working_dir} ${output_csvfile_1}
 
-    niftifile_csvfilename=$(ls ${working_dir}/*NIFTILOCATION.csv)
-    scanID=$(tail -n +2 "${niftifile_csvfilename}" | cut -d',' -f3)
+    scanID=$(get_scanID_from_sessionID ${sessionID} ${working_dir})
 
     function_with_arguments=('call_delete_file_with_ext' ${sessionID} ${scanID} MASKS '_ventricle')
     outputfiles_present=$(python3 download_with_session_ID.py "${function_with_arguments[@]}")
