@@ -27,7 +27,7 @@ scanID=""
 while IFS=',' read -ra line; do
   scanID=${line[2]}
   echo ${line[2]}
-  break  # only need first scanID
+#  break  # only need first scanID
 done < <(tail -n +2 "${working_dir}/${output_csvfile}")
 #
 ## Resource directories, patterns, and save locations
