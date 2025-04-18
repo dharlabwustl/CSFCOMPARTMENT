@@ -194,7 +194,7 @@ while IFS="," read -ra array; do
 while IFS="," read -ra array1; do
 scanID=${array1[2]}
 echo ${scanID}
-done < <(tail -n + 2 "${working_dir}/$(basename ${url})")
+done < <(tail -n +2 "${working_dir}/$(basename ${url})")
 ##    for niftifile_csvfilename in ${working_dir}/*NIFTILOCATION.csv; do
 #niftifile_csvfilename=$(ls ${working_dir}/*NIFTILOCATION.csv)
 #while IFS=',' read -ra array5; do
