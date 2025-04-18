@@ -31,6 +31,7 @@ function call_get_resourcefiles_metadata_saveascsv_args() {
 #----------------------------------------
 # Function to extract scanID given a sessionID
 #----------------------------------------
+
 function get_scanID_from_sessionID() {
   local sessionID=$1
   local working_dir=$2
@@ -40,22 +41,11 @@ function get_scanID_from_sessionID() {
 
   call_get_resourcefiles_metadata_saveascsv_args ${URI} ${resource_dir} ${working_dir} ${output_csvfile}
 
-  local niftifile_csvfilename="${working_dir}/${output_csvfile}"
-  echo ">> Waiting for file: ${niftifile_csvfilename}"
-
-  for i in {1..10}; do
-    if [[ -f "${niftifile_csvfilename}" ]]; then
-      local scanID=$(tail -n +2 "${niftifile_csvfilename}" | cut -d',' -f3 | head -n 1)
-      echo ${scanID}
-      return 0
-    else
-      sleep 1
-    fi
-  done
-
-  echo "ERROR: Could not find ${niftifile_csvfilename} after waiting." >&2
-  return 1
+  local niftifile_csvfilename=$(ls ${working_dir}/*NIFTILOCATION.csv)
+  scanID=$(tail -n +2 "${niftifile_csvfilename}" | cut -d',' -f3 | head -n 1)
+  echo ${scanID}
 }
+
 #----------------------------------------
 # Step 1: Download NIFTI_LOCATION Metadata
 #----------------------------------------
