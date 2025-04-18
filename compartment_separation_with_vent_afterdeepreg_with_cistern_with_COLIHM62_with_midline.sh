@@ -48,8 +48,8 @@ function get_scanID_from_sessionID() {
 # Step 1: Download NIFTI_LOCATION Metadata
 #----------------------------------------
 URI="/data/experiments/${sessionID}"
-#resource_dir="NIFTI_LOCATION"
-#output_csvfile="${sessionID}_SCANSELECTION_METADATA.csv"
+resource_dir="NIFTI_LOCATION"
+output_csvfile="${sessionID}_SCANSELECTION_METADATA.csv"
 #call_get_resourcefiles_metadata_saveascsv_args ${URI} ${resource_dir} ${working_dir} ${output_csvfile}
   call_download_a_singlefile_with_URIString_arguments=("call_get_resourcefiles_metadata_saveascsv_args" ${URI} ${resource_dir} ${working_dir} ${output_csvfile})
   outputfiles_present=$(python3 download_with_session_ID.py "${call_download_a_singlefile_with_URIString_arguments[@]}")
