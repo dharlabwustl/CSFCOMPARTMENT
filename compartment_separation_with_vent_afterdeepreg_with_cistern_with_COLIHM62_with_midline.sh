@@ -227,7 +227,7 @@ url1=${array1[0]}
         call_download_a_singlefile_with_URIString_arguments=('call_download_a_singlefile_with_URIString' ${url2} ${filename2} ${output_directory})
         outputfiles_present=$(python3 download_with_session_ID.py "${call_download_a_singlefile_with_URIString_arguments[@]}")
         greyfile=${dir_to_save}/${filename2}
-        echo "${greyfile}"
+        echo "${url2}"
       fi
 
     done \
