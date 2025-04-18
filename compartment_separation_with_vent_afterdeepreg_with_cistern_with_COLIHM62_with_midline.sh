@@ -9,7 +9,7 @@ export XNAT_USER=${2}
 export XNAT_PASS=${3}
 export XNAT_HOST=${4}
 sessionID=${1}
-
+scanID=""
 working_dir=/workinginput
 output_directory=/workingoutput
 final_output_directory=/outputinsidedocker
@@ -31,6 +31,7 @@ function call_get_resourcefiles_metadata_saveascsv_args() {
 #----------------------------------------
 # Function to extract scanID given a sessionID
 #----------------------------------------
+
 function get_scanID_from_sessionID() {
   local sessionID=$1
   local working_dir=$2
@@ -40,8 +41,8 @@ function get_scanID_from_sessionID() {
 
   call_get_resourcefiles_metadata_saveascsv_args ${URI} ${resource_dir} ${working_dir} ${output_csvfile}
   local niftifile_csvfilename=$(ls ${working_dir}/*NIFTILOCATION.csv)
-  local scanID=$(tail -n +2 "${niftifile_csvfilename}" | cut -d',' -f3 | head -n 1)
-#  echo ${scanID}
+  scanID=$(tail -n +2 "${niftifile_csvfilename}" | cut -d',' -f3 | head -n 1)
+  echo ${scanID}
 }
 
 #----------------------------------------
@@ -66,7 +67,7 @@ done < <(tail -n +2 "${working_dir}/${output_csvfile}")
 #----------------------------------------
 # Step 3: Extract scanID from downloaded CSV
 #----------------------------------------
-scanID=$(get_scanID_from_sessionID ${sessionID} ${working_dir})
+get_scanID_from_sessionID ${sessionID} ${working_dir}
 echo ${sessionID}::${scanID}
 #----------------------------------------
 # Get scanID before main loop
