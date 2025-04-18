@@ -19,7 +19,7 @@ mkdir -p "${working_dir}/ventricles" "${working_dir}/gray" "${working_dir}/csf" 
 # Download metadata for NIFTI_LOCATION and extract scanID
 URI="/data/experiments/${sessionID}"
 resource_dir="NIFTILOCATION"
-output_csvfile="${working_dir}/${sessionID}_SCANSELECTION_METADATA.csv"
+output_csvfile="${sessionID}_SCANSELECTION_METADATA.csv"
 call_download_files_in_a_resource_in_a_session_arguments=('call_get_resourcefiles_metadata_saveascsv_args' ${URI} ${resource_dir} ${working_dir} ${output_csvfile})
 outputfiles_present=$(python3 download_with_session_ID.py "${call_download_files_in_a_resource_in_a_session_arguments[@]}")
 
