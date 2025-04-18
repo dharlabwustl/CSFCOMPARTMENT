@@ -12,25 +12,45 @@ sessionID=${1}
 working_dir=/workinginput
 output_directory=/workingoutput
 final_output_directory=/outputinsidedocker
+function call_get_resourcefiles_metadata_saveascsv_args() {
 
+local resource_dir=${2}   #"NIFTI"
+local output_csvfile=${4} #{array[1]}
+
+local URI=${1} #{array[0]}
+#  local file_ext=${5}
+#  local output_csvfile=${output_csvfile%.*}${resource_dir}.csv
+
+local final_output_directory=${3}
+local call_download_files_in_a_resource_in_a_session_arguments=('call_get_resourcefiles_metadata_saveascsv_args' ${URI} ${resource_dir} ${final_output_directory} ${output_csvfile})
+outputfiles_present=$(python3 download_with_session_ID.py "${call_download_files_in_a_resource_in_a_session_arguments[@]}")
+echo " I AM AT call_get_resourcefiles_metadata_saveascsv_args"
+
+}
 # Create directories
-mkdir -p "${working_dir}/ventricles" "${working_dir}/gray" "${working_dir}/csf" "${working_dir}/cisterns"
+#mkdir -p "${working_dir}/ventricles" "${working_dir}/gray" "${working_dir}/csf" "${working_dir}/cisterns"
 
 # Download metadata for NIFTI_LOCATION and extract scanID
-URI="/data/experiments/${sessionID}"
+URI=/data/experiments/${sessionID}
 resource_dir="NIFTI_LOCATION"
-output_csvfile="${sessionID}_SCANSELECTION_METADATA.csv"
-call_download_files_in_a_resource_in_a_session_arguments=('call_get_resourcefiles_metadata_saveascsv_args' ${URI} ${resource_dir} ${working_dir} ${output_csvfile})
-outputfiles_present=$(python3 download_with_session_ID.py "${call_download_files_in_a_resource_in_a_session_arguments[@]}")
+output_csvfile=${sessionID}_SCANSELECTION_METADATA.csv
+call_get_resourcefiles_metadata_saveascsv_args ${URI} ${resource_dir} ${working_dir} ${output_csvfile}
+
+#niftifile_csvfilename=$(ls ${working_dir}/*NIFTILOCATION.csv)
+#while IFS=',' read -ra array5; do
+#scanID=${array5[2]}
+#echo sessionId::${sessionID}
+#echo scanId::${scanID}
+#done < <(tail -n +2 "${niftifile_csvfilename}")
 #
 cat ${working_dir}/${output_csvfile}
-scanID=""
-while IFS=',' read -ra line; do
-  scanID=${line[2]}
-  echo ${line[2]}
-  echo line::${line[2]}
-#  break  # only need first scanID
-done < <(tail  "${working_dir}/${output_csvfile}")
+#scanID=""
+#while IFS=',' read -ra line; do
+#  scanID=${line[2]}
+#  echo ${line[2]}
+#  echo line::${line[2]}
+##  break  # only need first scanID
+#done < <(tail  "${working_dir}/${output_csvfile}")
 #
 ## Resource directories, patterns, and save locations
 #resource_dirs=("MASKS" "MASKS" "MASKS" "PREPROCESS_SEGM_3" "PREPROCESS_SEGM_3")
