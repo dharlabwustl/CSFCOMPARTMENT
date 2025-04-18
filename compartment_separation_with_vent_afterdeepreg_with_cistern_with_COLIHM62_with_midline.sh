@@ -39,18 +39,34 @@ function get_scanID_from_sessionID() {
   local output_csvfile="${sessionID}_SCANSELECTION_METADATA.csv"
 
   call_get_resourcefiles_metadata_saveascsv_args ${URI} ${resource_dir} ${working_dir} ${output_csvfile}
-
-  local niftifile_csvfilename="${working_dir}/${output_csvfile}"
-  if [[ -f "${niftifile_csvfilename}" ]]; then
-    local scanID=$(tail -n +2 "${niftifile_csvfilename}" | cut -d',' -f3 | head -n 1)
-    echo ${scanID}
-  else
-    echo "ERROR: CSV file not found: ${niftifile_csvfilename}" >&2
-    echo ""
-  fi
+  local niftifile_csvfilename=$(ls ${working_dir}/*NIFTILOCATION.csv)
+  local scanID=$(tail -n +2 "${niftifile_csvfilename}" | cut -d',' -f3 | head -n 1)
+  echo ${scanID}
 }
 
+#----------------------------------------
+# Step 1: Download NIFTI_LOCATION Metadata
+#----------------------------------------
+URI="/data/experiments/${sessionID}"
+resource_dir="NIFTI_LOCATION"
+output_csvfile="${sessionID}_SCANSELECTION_METADATA.csv"
+call_get_resourcefiles_metadata_saveascsv_args ${URI} ${resource_dir} ${working_dir} ${output_csvfile}
 
+#----------------------------------------
+# Step 2: Download file(s) from metadata URLs
+#----------------------------------------
+while IFS=',' read -ra array; do
+  url=${array[6]}
+  filename=$(basename ${url})
+  call_download_a_singlefile_with_URIString_arguments=('call_download_a_singlefile_with_URIString' ${url} ${filename} ${working_dir})
+  outputfiles_present=$(python3 download_with_session_ID.py "${call_download_a_singlefile_with_URIString_arguments[@]}")
+done < <(tail -n +2 "${working_dir}/${output_csvfile}")
+
+#----------------------------------------
+# Step 3: Extract scanID from downloaded CSV
+#----------------------------------------
+scanID=$(get_scanID_from_sessionID ${sessionID} ${working_dir})
+echo ${scanID}
 #----------------------------------------
 # Get scanID before main loop
 #----------------------------------------
@@ -58,8 +74,8 @@ function get_scanID_from_sessionID() {
 #----------------------------------------
 # Download NIFTI_LOCATION Metadata
 #----------------------------------------
-scanID=$(get_scanID_from_sessionID ${sessionID} ${working_dir})
-echo ${scanID}
+#scanID=$(get_scanID_from_sessionID ${sessionID} ${working_dir})
+#echo ${scanID}
 #URI="/data/experiments/${sessionID}"
 #resource_dir="NIFTI_LOCATION"
 #output_csvfile="${sessionID}_SCANSELECTION_METADATA.csv"
