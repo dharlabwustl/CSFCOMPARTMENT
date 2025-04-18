@@ -35,7 +35,7 @@ URI=/data/experiments/${sessionID}
 resource_dir="NIFTI_LOCATION"
 output_csvfile=${sessionID}_SCANSELECTION_METADATA.csv
 call_get_resourcefiles_metadata_saveascsv_args ${URI} ${resource_dir} ${working_dir} ${output_csvfile}
-
+cat ${working_dir}/${output_csvfile}
 #niftifile_csvfilename=$(ls ${working_dir}/*NIFTILOCATION.csv)
 while IFS=',' read -ra array5; do
 scanID=${array5[2]}
@@ -43,7 +43,7 @@ echo sessionId::${sessionID}
 echo scanId::${scanID}
 done < <(tail -n +2 "${working_dir}/${output_csvfile}")
 #
-cat ${working_dir}/${output_csvfile}
+
 #scanID=""
 #while IFS=',' read -ra line; do
 #  scanID=${line[2]}
