@@ -26,6 +26,7 @@ outputfiles_present=$(python3 download_with_session_ID.py "${call_download_files
 scanID=""
 while IFS=',' read -ra line; do
   scanID=${line[2]}
+  echo ${scanID}
   break  # only need first scanID
 done < <(tail -n +2 "${working_dir}/${output_csvfile}")
 #
