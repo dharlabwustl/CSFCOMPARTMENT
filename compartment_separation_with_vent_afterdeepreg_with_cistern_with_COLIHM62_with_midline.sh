@@ -71,6 +71,10 @@ done < <(tail -n +2 "${working_dir}/${output_csvfile}")
 get_scanID_from_sessionID ${sessionID} ${working_dir}
 echo ${sessionID}::${scanID}
 dir_to_save=${working_dir}
+resource_dir="MIDLINE_NPY"
+call_download_a_singlefile_with_URIString_arguments=('call_dowload_a_folder_as_zip' ${sessionID} ${scanID} ${resource_dir})
+outputfiles_present=$(python3 download_with_session_ID.py "${call_download_a_singlefile_with_URIString_arguments[@]}")
+
 
 greyfile="NONE" ##'/media/atul/WDJan2022/WASHU_WORKS/PROJECTS/DOCKERIZE/CSFSEPERATION/TESTING_CSF_SEPERATION/Krak_003_09042014_0949_MOZG_6.0_H31s_levelset.nii.gz'
 betfile="NONE"  ##'/media/atul/WDJan2022/WASHU_WORKS/PROJECTS/DOCKERIZE/CSFSEPERATION/TESTING_CSF_SEPERATION/Krak_003_09042014_0949_MOZG_6.0_H31s_levelset_bet.nii.gz'
@@ -225,25 +229,26 @@ done < <(tail -n +2 "${working_dir}/${output_csvfile_2}")
 #################################################################################################################################
 
 ##############################################
-resource_dir="MIDLINE_NPY"
-output_csvfile_2=${sessionID}_PREPROCESS_SEGM_METADATA.csv
-call_get_resourcefiles_metadata_saveascsv_args ${url1} ${resource_dir} ${working_dir} ${output_csvfile_2}
-#      filename1=$(basename ${url1})
-#  call_download_a_singlefile_with_URIString_arguments=('call_download_a_singlefile_with_URIString' ${url1} ${filename1} ${dir_to_save})
-#  outputfiles_present=$(python3 download_with_session_ID.py "${call_download_a_singlefile_with_URIString_arguments[@]}")
-echo "csffile:::::ATUL:::${csffile}"
-while IFS=',' read -ra array2; do
-url2=${array2[6]}
 
-if [[ ${url2} == *".npy"* ]]; then #  || [[ ${url2} == *"_levelset_bet"* ]]  || [[ ${url2} == *"csf_unet"* ]]  ; then ##[[ $string == *"My long"* ]]; then
-echo "It's there!"
-echo "${array2[6]}"
-filename2=$(basename ${url2})
-call_download_a_singlefile_with_URIString_arguments=('call_download_a_singlefile_with_URIString' ${url2} ${filename2} ${working_dir_1})
-outputfiles_present=$(python3 download_with_session_ID.py "${call_download_a_singlefile_with_URIString_arguments[@]}")
-fi
 
-done < <(tail -n +2 "${working_dir}/${output_csvfile_2}")
+#output_csvfile_2=${sessionID}_PREPROCESS_SEGM_METADATA.csv
+#call_get_resourcefiles_metadata_saveascsv_args ${url1} ${resource_dir} ${working_dir} ${output_csvfile_2}
+##      filename1=$(basename ${url1})
+##  call_download_a_singlefile_with_URIString_arguments=('call_download_a_singlefile_with_URIString' ${url1} ${filename1} ${dir_to_save})
+##  outputfiles_present=$(python3 download_with_session_ID.py "${call_download_a_singlefile_with_URIString_arguments[@]}")
+#echo "csffile:::::ATUL:::${csffile}"
+#while IFS=',' read -ra array2; do
+#url2=${array2[6]}
+#
+#if [[ ${url2} == *".npy"* ]]; then #  || [[ ${url2} == *"_levelset_bet"* ]]  || [[ ${url2} == *"csf_unet"* ]]  ; then ##[[ $string == *"My long"* ]]; then
+#echo "It's there!"
+#echo "${array2[6]}"
+#filename2=$(basename ${url2})
+#call_download_a_singlefile_with_URIString_arguments=('call_download_a_singlefile_with_URIString' ${url2} ${filename2} ${working_dir_1})
+#outputfiles_present=$(python3 download_with_session_ID.py "${call_download_a_singlefile_with_URIString_arguments[@]}")
+#fi
+#
+#done < <(tail -n +2 "${working_dir}/${output_csvfile_2}")
 
 
 
