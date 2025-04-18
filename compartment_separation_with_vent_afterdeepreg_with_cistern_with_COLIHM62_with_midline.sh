@@ -29,7 +29,7 @@ while IFS=',' read -ra line; do
   echo ${line[2]}
   echo line::${line[2]}
 #  break  # only need first scanID
-done < <(tail -n +2 "${working_dir}/${output_csvfile}")
+done < <(tail  "${working_dir}/${output_csvfile}")
 #
 ## Resource directories, patterns, and save locations
 #resource_dirs=("MASKS" "MASKS" "MASKS" "PREPROCESS_SEGM_3" "PREPROCESS_SEGM_3")
