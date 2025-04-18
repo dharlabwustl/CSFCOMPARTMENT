@@ -65,7 +65,7 @@ done < <(tail -n +2 "${working_dir}/${output_csvfile}")
 #----------------------------------------
 # Step 3: Extract scanID from downloaded CSV
 #----------------------------------------
-scanID=$(get_scanID_from_sessionID ${sessionID} ${working_dir})
+#scanID=$(get_scanID_from_sessionID ${sessionID} ${working_dir})
 #echo ${scanID}
 #----------------------------------------
 # Get scanID before main loop
