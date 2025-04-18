@@ -52,23 +52,28 @@ download_files_from_resource() {
     local extension=$4
     local output_dir=$5
 
-    echo "Starting download for sessionID=$sessionID, scanID=$scanID, resource=$resource_dir, extension=$extension"
+    echo "===> Downloading files with extension '${extension}' from resource '${resource_dir}' for session '${sessionID}' and scan '${scanID}'..."
 
-    # Generate metadata CSV
-    metadata_csv="${output_dir}/${sessionID}_${resource_dir}_METADATA.csv"
-    call_get_resourcefiles_metadata_saveascsv_args "${sessionID}" "${resource_dir}" "${output_dir}" "${metadata_csv}"
+    URI="/data/experiments/${sessionID}"
+    working_dir="${output_dir}"
+    output_csvfile="${sessionID}_${resource_dir}_METADATA.csv"
 
-    # Read the metadata CSV and download matching files
+    # Step 1: Get metadata CSV
+    call_download_metadata_arguments=("call_get_resourcefiles_metadata_saveascsv_args" "${URI}" "${resource_dir}" "${working_dir}" "${output_csvfile}")
+    outputfiles_present=$(python3 download_with_session_ID.py "${call_download_metadata_arguments[@]}")
+
+    # Step 2: Loop through metadata and download matching files
     while IFS=',' read -ra array; do
-        file_url="${array[6]}"
-        if [[ "${file_url}" == *"${extension}" ]]; then
-            echo "Downloading ${file_url}"
-            filename=$(basename "${file_url}")
-            call_download_a_singlefile_with_URIString_arguments=('call_download_a_singlefile_with_URIString' "${file_url}" "${filename}" "${output_dir}")
-            python3 download_with_session_ID.py "${call_download_a_singlefile_with_URIString_arguments[@]}"
+        url="${array[6]}"
+        if [[ "${url}" == *"${extension}" ]]; then
+            echo "Found file to download: ${url}"
+            filename=$(basename "${url}")
+            call_download_a_singlefile_with_URIString_arguments=("call_download_a_singlefile_with_URIString" "${url}" "${filename}" "${output_dir}")
+            outputfiles_present=$(python3 download_with_session_ID.py "${call_download_a_singlefile_with_URIString_arguments[@]}")
         fi
-    done < <(tail -n +2 "${metadata_csv}")
+    done < <(tail -n +2 "${working_dir}/${output_csvfile}")
 }
+
 
 #----------------------------------------
 # Step 1: Download NIFTI_LOCATION Metadata
