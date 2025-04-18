@@ -23,11 +23,11 @@ output_csvfile="${sessionID}_SCANSELECTION_METADATA.csv"
 call_download_files_in_a_resource_in_a_session_arguments=('call_get_resourcefiles_metadata_saveascsv_args' ${URI} ${resource_dir} ${working_dir} ${output_csvfile})
 outputfiles_present=$(python3 download_with_session_ID.py "${call_download_files_in_a_resource_in_a_session_arguments[@]}")
 #
-#scanID=""
-#while IFS=',' read -ra line; do
-#  scanID=${line[2]}
-#  break  # only need first scanID
-#done < <(tail -n +2 "${output_csvfile}")
+scanID=""
+while IFS=',' read -ra line; do
+  scanID=${line[2]}
+  break  # only need first scanID
+done < <(tail -n +2 "${working_dir}/${output_csvfile}")
 #
 ## Resource directories, patterns, and save locations
 #resource_dirs=("MASKS" "MASKS" "MASKS" "PREPROCESS_SEGM_3" "PREPROCESS_SEGM_3")
