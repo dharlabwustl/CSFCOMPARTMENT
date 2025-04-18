@@ -1,83 +1,162 @@
 #!/bin/bash
 
-echo "Starting COMPARTMENT_SEPARATION_WITH_VENT_BOUNDGIVEN.sh"
+echo ">>> STARTING COMPARTMENT_SEPARATION_WITH_VENT_BOUNDGIVEN.sh"
 
-# Input args
+#----------------------------------------
+# Environment Setup
+#----------------------------------------
 export XNAT_USER=${2}
 export XNAT_PASS=${3}
 export XNAT_HOST=${4}
 sessionID=${1}
 
-# Directories
 working_dir=/workinginput
 output_directory=/workingoutput
 final_output_directory=/outputinsidedocker
+
+#----------------------------------------
+# Function to get resource file metadata
+#----------------------------------------
 function call_get_resourcefiles_metadata_saveascsv_args() {
+  local URI=${1}
+  local resource_dir=${2}
+  local final_output_directory=${3}
+  local output_csvfile=${4}
 
-local resource_dir=${2}   #"NIFTI"
-local output_csvfile=${4} #{array[1]}
-
-local URI=${1} #{array[0]}
-#  local file_ext=${5}
-#  local output_csvfile=${output_csvfile%.*}${resource_dir}.csv
-
-local final_output_directory=${3}
-local call_download_files_in_a_resource_in_a_session_arguments=('call_get_resourcefiles_metadata_saveascsv_args' ${URI} ${resource_dir} ${final_output_directory} ${output_csvfile})
-outputfiles_present=$(python3 download_with_session_ID.py "${call_download_files_in_a_resource_in_a_session_arguments[@]}")
-echo " I AM AT call_get_resourcefiles_metadata_saveascsv_args"
-
+  local args=('call_get_resourcefiles_metadata_saveascsv_args' "${URI}" "${resource_dir}" "${final_output_directory}" "${output_csvfile}")
+  outputfiles_present=$(python3 download_with_session_ID.py "${args[@]}")
+  echo ">> Retrieved metadata for ${resource_dir}"
 }
-# Create directories
-#mkdir -p "${working_dir}/ventricles" "${working_dir}/gray" "${working_dir}/csf" "${working_dir}/cisterns"
 
-# Download metadata for NIFTI_LOCATION and extract scanID
-URI=/data/experiments/${sessionID}
+#----------------------------------------
+# Download NIFTI_LOCATION Metadata
+#----------------------------------------
+URI="/data/experiments/${sessionID}"
 resource_dir="NIFTI_LOCATION"
-output_csvfile=${sessionID}_SCANSELECTION_METADATA.csv
-call_get_resourcefiles_metadata_saveascsv_args ${URI} ${resource_dir} ${working_dir} ${output_csvfile}
-cat ${working_dir}/${output_csvfile}
-#niftifile_csvfilename=$(ls ${working_dir}/*NIFTILOCATION.csv)
-while IFS=',' read -ra array5; do
-scanID=${array5[2]}
-echo sessionId::${sessionID}
-echo scanId::${scanID}
-done < <(tail -n +2 "${working_dir}/${output_csvfile}")
-#
+output_csvfile="${sessionID}_SCANSELECTION_METADATA.csv"
+call_get_resourcefiles_metadata_saveascsv_args "${URI}" "${resource_dir}" "${working_dir}" "${output_csvfile}"
 
-#scanID=""
-#while IFS=',' read -ra line; do
-#  scanID=${line[2]}
-#  echo ${line[2]}
-#  echo line::${line[2]}
-##  break  # only need first scanID
-#done < <(tail  "${working_dir}/${output_csvfile}")
-#
-## Resource directories, patterns, and save locations
-#resource_dirs=("MASKS" "MASKS" "MASKS" "PREPROCESS_SEGM_3" "PREPROCESS_SEGM_3")
-#file_patterns=("_ventricle" "_levelset" "_csf_unet" "warped_1_mov_VENTRICLE" "warped_1_mov_CISTERN")
-#save_dirs=("/ventricles" "/gray" "/csf" "/ventricles" "/cisterns")
-#
-## Iterate through resources
-#for i in "${!resource_dirs[@]}"; do
-#  resource="${resource_dirs[$i]}"
-#  pattern="${file_patterns[$i]}"
-#  save_subdir="${save_dirs[$i]}"
-#  save_dir="${working_dir}${save_subdir}"
-#  mkdir -p "${save_dir}"
-#
-#  metadata_csv="${working_dir}/${sessionID}_${resource}_METADATA.csv"
-#  call_download_files_in_a_resource_in_a_session_arguments=('call_get_resourcefiles_metadata_saveascsv_args' ${URI} ${resource} ${working_dir} ${metadata_csv})
-#  outputfiles_present=$(python3 download_with_session_ID.py "${call_download_files_in_a_resource_in_a_session_arguments[@]}")
-#
-#  while IFS=',' read -ra columns; do
-#    url="${columns[6]}"
-#    if [[ "${url}" == *"${pattern}"* ]]; then
-#      filename=$(basename "${url}")
-#      echo "Downloading: ${filename} to ${save_dir}"
-#      call_download_a_singlefile_with_URIString_arguments=('call_download_a_singlefile_with_URIString' "${url}" "${filename}" "${save_dir}")
-#      outputfiles_present=$(python3 download_with_session_ID.py "${call_download_a_singlefile_with_URIString_arguments[@]}")
-#    fi
-#  done < <(tail -n +2 "${metadata_csv}")
-#done
-#
-#echo "All files downloaded."
+dir_to_save=${working_dir}
+greyfile="NONE"
+betfile="NONE"
+csffile="NONE"
+
+#----------------------------------------
+# Download individual scan files
+#----------------------------------------
+while IFS=',' read -ra array; do
+  url=${array[6]}
+  filename=$(basename "${url}")
+  args=('call_download_a_singlefile_with_URIString' "${url}" "${filename}" "${dir_to_save}")
+  python3 download_with_session_ID.py "${args[@]}"
+
+  # Get MASKS metadata
+  while IFS=',' read -ra array1; do
+    url1=${array1[0]}
+    output_csvfile_1="${sessionID}_MASK_METADATA.csv"
+    call_get_resourcefiles_metadata_saveascsv_args "${url1}" "MASKS" "${working_dir}" "${output_csvfile_1}"
+
+    # Get scanID from NIFTILOCATION CSV
+    niftifile_csvfilename=$(ls "${working_dir}"/*NIFTILOCATION.csv)
+    scanID=$(tail -n +2 "${niftifile_csvfilename}" | cut -d',' -f3)
+
+    # Delete existing ventricle and total masks
+    python3 download_with_session_ID.py "call_delete_file_with_ext" "${sessionID}" "${scanID}" "MASKS" "_ventricle"
+    python3 download_with_session_ID.py "call_delete_file_with_ext" "${sessionID}" "${scanID}" "MASKS" "_total"
+
+    # Process mask files
+    while IFS=',' read -ra array2; do
+      url2=${array2[6]}
+      filename2=$(basename "${url2}")
+
+      case "${url2}" in
+        *"_vertical_bounding_box_512x512.nii.gz"*)
+          greyfile="${dir_to_save}/${filename2}"
+          ;;
+        *"_levelset.nii.gz"*)
+          greyfile="${dir_to_save}/${filename2}"
+          ;;
+        *"_levelset_bet.nii.gz"*)
+          betfile="${dir_to_save}/${filename2}"
+          ;;
+        *"_csf_unet.nii.gz"*)
+          csffile="${dir_to_save}/${filename2}"
+          ;;
+      esac
+
+      if [[ -n ${filename2} ]]; then
+        args=('call_download_a_singlefile_with_URIString' "${url2}" "${filename2}" "${dir_to_save}")
+        python3 download_with_session_ID.py "${args[@]}"
+        echo ">> Downloaded ${filename2}"
+      fi
+    done < <(tail -n +2 "${working_dir}/${output_csvfile_1}")
+
+    #----------------------------------------
+    # Process PREPROCESS_SEGM_3
+    #----------------------------------------
+    output_csvfile_2="${sessionID}_PREPROCESS_SEGM_METADATA.csv"
+    call_get_resourcefiles_metadata_saveascsv_args "${url1}" "PREPROCESS_SEGM_3" "${working_dir}" "${output_csvfile_2}"
+
+    while IFS=',' read -ra array2; do
+      url2=${array2[6]}
+      filename2=$(basename "${url2}")
+
+      case "${url2}" in
+        *"warped_1_mov_VENTRICLE_COLIHM62"*)
+          venticle_only_mask="${dir_to_save}/${filename2}"
+          ;;
+        *"warped_1_mov_CISTERN_COLIHM62"*)
+          cistern_only_mask="${dir_to_save}/${filename2}"
+          ;;
+      esac
+
+      if [[ -n ${filename2} ]]; then
+        args=('call_download_a_singlefile_with_URIString' "${url2}" "${filename2}" "${dir_to_save}")
+        python3 download_with_session_ID.py "${args[@]}"
+      fi
+    done < <(tail -n +2 "${working_dir}/${output_csvfile_2}")
+
+    #----------------------------------------
+    # Run Ventricular Processing
+    #----------------------------------------
+    ventricleboundfile="${dir_to_save}/ventricle_bounds.csv"
+    python3 findventriclemaskobb_10102024.py "${venticle_only_mask}" "${csffile}" "${dir_to_save}" "${greyfile}" "${betfile}"
+    python3 findventriclemaskobb_03102025.py "${cistern_only_mask}" "${csffile}" "${dir_to_save}" "${greyfile}" "${betfile}"
+
+    ventricle_after_deepreg="${dir_to_save}/ventricle.nii"
+    cistern_after_deepreg="${dir_to_save}/cistern_after_deepreg.nii"
+
+    # Get ventricle z-bounds
+    while IFS=',' read -ra array3; do
+      zoneV_min_z=${array3[3]}
+      zoneV_max_z=${array3[4]}
+    done < <(tail -n +2 "${ventricleboundfile}")
+
+    #----------------------------------------
+    # Call CSF Compartment Segmentation
+    #----------------------------------------
+    args=('call_csf_compartments_ventbound_no_hem_with_cis_1' "${greyfile}" "${csffile}" "${ventricle_after_deepreg}" "${cistern_after_deepreg}")
+    python3 /software/CSF_COMPARTMENT_GITHUB_July212023.py "${args[@]}"
+    echo ">> Completed CSF Compartment Processing"
+
+    #----------------------------------------
+    # Upload results to XNAT
+    #----------------------------------------
+    URI_1=${url2%/resource*}
+    filename_prefix=$(basename "${url}")
+    filename_prefix=${filename_prefix%_NIFTILOCATION*}
+    resource_dirname="MASKS"
+    this_data_basename_noext=$(basename "${greyfile}" | cut -d'_' -f1)
+
+    for file_name in "${dir_to_save}/${filename_prefix}"*.nii.gz; do
+      if [[ ${file_name} == *"${this_data_basename_noext}"* ]] || [[ ${file_name} == *"ventricle"* ]] || [[ ${file_name} == *"sulci"* ]]; then
+        args=('call_uploadsinglefile_with_URI' "${URI_1}" "${file_name}" "${resource_dirname}")
+        python3 /software/download_with_session_ID.py "${args[@]}"
+        echo ">> Uploaded ${file_name}"
+      fi
+    done
+
+  done < <(tail -n +2 "${dir_to_save}/${filename}")
+done < <(tail -n +2 "${working_dir}/${output_csvfile}")
+
+echo ">>> DONE"
