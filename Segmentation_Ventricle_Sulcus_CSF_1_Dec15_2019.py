@@ -22,6 +22,7 @@
 # from mpl_toolkits.mplot3d import Axes3D
 # import matplotlib.pyplot as plt
 # from vtk import *
+from dividemasks_into_left_right import distance_mask_point_from_midline
 import sys,inspect,subprocess
 # import six
 import SimpleITK as sitk
