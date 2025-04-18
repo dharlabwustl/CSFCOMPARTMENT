@@ -196,7 +196,7 @@ while IFS="," read -ra array; do
 #echo sessionId::${sessionID}
 #echo scanId::${scanID}
 #done < <(tail -n +2 "${niftifile_csvfilename}")
-< <(tail -n +2 "${working_dir}/${output_csvfile}")
+done < <(tail -n +2 "${working_dir}/${output_csvfile}")
 #dir_to_save=${working_dir}
 #greyfile="NONE" ##'/media/atul/WDJan2022/WASHU_WORKS/PROJECTS/DOCKERIZE/CSFSEPERATION/TESTING_CSF_SEPERATION/Krak_003_09042014_0949_MOZG_6.0_H31s_levelset.nii.gz'
 #betfile="NONE"  ##'/media/atul/WDJan2022/WASHU_WORKS/PROJECTS/DOCKERIZE/CSFSEPERATION/TESTING_CSF_SEPERATION/Krak_003_09042014_0949_MOZG_6.0_H31s_levelset_bet.nii.gz'
