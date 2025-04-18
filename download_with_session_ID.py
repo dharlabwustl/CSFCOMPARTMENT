@@ -1242,29 +1242,41 @@ def get_nifti_using_xnat(sessionId, scanId):
 
 def dowload_a_folder_as_zip(sessionId, scanId,resource_dir):
     ##xnatSession = XnatSession(username=XNAT_USER, password=XNAT_PASS, host=XNAT_HOST)
-    url = ("/data/experiments/%s/scans/%s/resources/%s/files?format=zip" %
-           (sessionId, scanId,resource_dir))
+    try:
+        command = "echo  success at : " +  inspect.stack()[0][3]  + " >> " + "/output/error.txt"
+        subprocess.call(command,shell=True)
+        url = ("/data/experiments/%s/scans/%s/resources/%s/files?format=zip" %
+               (sessionId, scanId,resource_dir))
 
-    #xnatSession.renew_httpsession()
-    response = xnatSession.httpsess.get(xnatSession.host + url)
-    zipfilename=os.path.join('/workinginput',sessionId+scanId+resource_dir+'.zip')
-    with open(zipfilename, "wb") as f:
-        for chunk in response.iter_content(chunk_size=512):
-            if chunk:  # filter out keep-alive new chunks
-                f.write(chunk)
-    command = 'unzip -d /ZIPFILEDIR ' + zipfilename
-    subprocess.call(command,shell=True)
-    command='rm -r ' + zipfilename
-    # command = 'unzip -d /ZIPFILEDIR ' + zipfilename
-    # subprocess.call(command,shell=True)
-
-    return True
+        #xnatSession.renew_httpsession()
+        response = xnatSession.httpsess.get(xnatSession.host + url)
+        zipfilename=os.path.join('/workinginput',sessionId+scanId+resource_dir+'.zip')
+        with open(zipfilename, "wb") as f:
+            for chunk in response.iter_content(chunk_size=512):
+                if chunk:  # filter out keep-alive new chunks
+                    f.write(chunk)
+        command = 'unzip -d /ZIPFILEDIR ' + zipfilename
+        subprocess.call(command,shell=True)
+        command='rm -r ' + zipfilename
+        # command = 'unzip -d /ZIPFILEDIR ' + zipfilename
+        # subprocess.call(command,shell=True)
+        command = "echo  success at : " +  inspect.stack()[0][3]  + " >> " + "/output/error.txt"
+        subprocess.call(command,shell=True)
+        return True
+    except:
+        command = "echo  failed at : " +  inspect.stack()[0][3]  + " >> " + "/output/error.txt"
+        subprocess.call(command,shell=True)
 def call_dowload_a_folder_as_zip(args):
-    sessionId=args.stuff[1]
-    scanId=args.stuff[2]
-    resource_dir=args.stuff[3]
-    dowload_a_folder_as_zip(sessionId, scanId,resource_dir)
-
+    try:
+        sessionId=args.stuff[1]
+        scanId=args.stuff[2]
+        resource_dir=args.stuff[3]
+        dowload_a_folder_as_zip(sessionId, scanId,resource_dir)
+        command = "echo  success at : " +  inspect.stack()[0][3]  + " >> " + "/output/error.txt"
+        subprocess.call(command,shell=True)
+    except:
+        command = "echo  failed at : " +  inspect.stack()[0][3]  + " >> " + "/output/error.txt"
+        subprocess.call(command,shell=True)
 def downloadfiletolocaldir():
     print(sys.argv)
     sessionId=str(sys.argv[1])
