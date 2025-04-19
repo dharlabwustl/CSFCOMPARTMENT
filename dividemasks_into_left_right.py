@@ -668,7 +668,7 @@ def filter_clusters_by_distance_and_size(binary_slice, line_ptA, line_ptB, dista
     return (filtered_array > 0).astype(np.uint8)
 
 
-def distance_mask_point_from_midline(niftifilename,Mask_filename_data_np,npyfiledirectory) :
+def distance_mask_point_from_midline(niftifilename,Mask_filename_data_np_1,npyfiledirectory) :
     returnvalue=0
     try:
         # Mask_filename_fdata=nib.load(Mask_filename).get_fdata()
@@ -676,6 +676,7 @@ def distance_mask_point_from_midline(niftifilename,Mask_filename_data_np,npyfile
         # Mask_filename_fdata_June21_2023_np=resizeinto_512by512(Mask_filename_fdata_June21_2023)
         # Mask_filename_data_np=resizeinto_512by512(Mask_filename_fdata)
         # Mask_filename_data_np This is already 512x512 from the code where this function is called.
+        Mask_filename_data_np=Mask_filename_data_np_1.copy()
         Mask_filename_data_np[Mask_filename_data_np>1]=0
         Mask_filename_data_np[Mask_filename_data_np>=0.5]=1
         Mask_filename_data_np[Mask_filename_data_np<1]=0
