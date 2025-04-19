@@ -625,7 +625,7 @@ def process_csf_ventricle_cistern(filename_gray, csf_path, ventricle_path, ciste
     ventricle_in_csf[cistern_in_csf > 0] = 0
 ####################################################
 
-    # distance_mask_point_from_midline(filename_gray,ventricle_in_csf,npyfiledirectory)
+    ventricle_in_csf=distance_mask_point_from_midline(filename_gray,ventricle_in_csf,npyfiledirectory)
     # distance_mask_point_from_midline(filename_gray,Mask_filename,npyfiledirectory)
     ##########################################################
 
