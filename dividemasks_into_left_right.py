@@ -736,7 +736,7 @@ def distance_mask_point_from_midline(niftifilename,Mask_filename_data_np,npyfile
     except:
         command="echo failed at :: {} >> /software/error.txt".format(inspect.stack()[0][3])
         subprocess.call(command,shell=True)
-    return  returnvalue
+    return  Mask_filename_data_np
 
 
 def divide_a_mask_into_left_right_submasks(niftifilename,Mask_filename,npyfiledirectory,OUTPUT_DIRECTORY) :
