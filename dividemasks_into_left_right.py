@@ -700,37 +700,6 @@ def distance_mask_point_from_midline(niftifilename,Mask_filename_data_np_1,npyfi
                     y_points2=y_points2[:,0]
                     filtered_slice=filter_clusters_by_distance_and_size(Mask_filename_data_np[:,:,img_idx], (int(y_points2[511]),int(x_points2[511])),(int(y_points2[0]),int(x_points2[0])), distance_thresh=50, size_thresh=200)
                     Mask_filename_data_np[:,:,img_idx]=filtered_slice
-                    # img_with_line,centroid_data=get_centroids_and_sizes(Mask_filename_data_np[:,:,img_idx])
-                    # for (centroid_yx, count) in centroid_data:
-                    #     distance = distance_point_to_line((int(y_points2[511]),int(x_points2[511])),(int(y_points2[0]),int(x_points2[0])) , centroid_yx)
-                    #     print(f"Centroid at {centroid_yx}, Pixel Count: {count}, Distance to Line: {distance}")
-                    #     if distance < 100 and count < 200:
-
-                    # img_with_line[img_with_line>=0.5]=1
-                    # img_with_line[img_with_line<1]=0
-                    # img_with_line_nonzero_id = np.transpose(np.nonzero(img_with_line))
-                    # # Mask_filename_data_np_idx=Mask_filename_fdata_June21_2023_np[:,:,img_idx]
-                    # # Mask_filename_data_np_idx[Mask_filename_data_np_idx>=0.5]=1
-                    # # Mask_filename_data_np_idx[Mask_filename_data_np_idx<1]=0
-                    # for non_zero_pixel in img_with_line_nonzero_id:
-                    #     xx=distance_point_to_line((int(y_points2[511]),int(x_points2[511])),(int(y_points2[0]),int(x_points2[0])) ,non_zero_pixel)
-                    #     return xx
-                        # if xx>0: ## RIGHT
-                        #     righthalf_mask_np_3d[:,:,img_idx][non_zero_pixel[0],non_zero_pixel[1]]=1
-                        # if xx<0: ## LEFT
-                        #     lefthalf_mask_np_3d[:,:,img_idx][non_zero_pixel[0],non_zero_pixel[1]]=1
-        # # if numpy_image.shape[1] == 512 :
-        # if nib.load(niftifilename).get_fdata().shape[1]==512:
-        #     whenOFsize512x512_new_flip_np(lefthalf_mask_np_3d,niftifilename,left_half_filename,OUTPUT_DIRECTORY)
-        #     whenOFsize512x512_new_flip_np(righthalf_mask_np_3d,niftifilename,right_half_filename,OUTPUT_DIRECTORY)
-        # else:
-        #     whenOFsize512x5xx_new_flip_np(niftifilename,lefthalf_mask_np_3d,left_half_filename,OUTPUT_DIRECTORY)
-        #     whenOFsize512x5xx_new_flip_np(niftifilename,righthalf_mask_np_3d,right_half_filename,OUTPUT_DIRECTORY)
-        # # array_img_left = nib.Nifti1Image(lefthalf_mask_np_3d,affine=target_nii.affine, header=new_header)
-        # # nib.save(array_img, os.path.join(output_directoryname,target_save))
-        # # levelset2originalRF_new_flip_with_params(original_file,levelset_file,OUTPUT_DIRECTORY)
-
-        returnvalue=1
         command="echo successful at :: {}::maskfilename::{} >> /software/error.txt".format(inspect.stack()[0][3],Mask_filename)
         subprocess.call(command,shell=True)
         return Mask_filename_data_np
