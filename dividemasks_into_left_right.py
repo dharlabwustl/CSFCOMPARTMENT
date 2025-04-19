@@ -661,7 +661,7 @@ def filter_clusters_by_distance_and_size(binary_slice, line_ptA, line_ptB, dista
         if 0 <= y < binary_slice.shape[0] and 0 <= x < binary_slice.shape[1]:
             distance = distance_point_to_line(line_ptA, line_ptB, (y, x))
 
-            if  count < size_thresh: #distance < distance_thresh and
+            if distance < distance_thresh and count < size_thresh:
                 filtered_array[cluster_mask] = 0  # Remove this cluster
 
     # Convert back to binary image
@@ -698,7 +698,7 @@ def distance_mask_point_from_midline(niftifilename,Mask_filename_data_np_1,npyfi
                     y_points2=calculated_midline_points.item().get('y_axis')
                     x_points2=x_points2[:,0]
                     y_points2=y_points2[:,0]
-                    filtered_slice=filter_clusters_by_distance_and_size(Mask_filename_data_np[:,:,img_idx], (int(y_points2[511]),int(x_points2[511])),(int(y_points2[0]),int(x_points2[0])), distance_thresh=0, size_thresh=100)
+                    filtered_slice=filter_clusters_by_distance_and_size(Mask_filename_data_np[:,:,img_idx], (int(y_points2[511]),int(x_points2[511])),(int(y_points2[0]),int(x_points2[0])), distance_thresh=10, size_thresh=100)
                     Mask_filename_data_np[:,:,img_idx]=filtered_slice
         command="echo successful at :: {}::maskfilename::{} >> /software/error.txt".format(inspect.stack()[0][3],niftifilename)
         subprocess.call(command,shell=True)
