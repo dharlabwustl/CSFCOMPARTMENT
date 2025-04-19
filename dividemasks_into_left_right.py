@@ -580,23 +580,111 @@ def divide_a_mask_into_left_right_submasks_v1(niftifilename,Mask_filename,npyfil
         command="echo failed at :: {} >> /software/error.txt".format(inspect.stack()[0][3])
         subprocess.call(command,shell=True)
     return  returnvalue
+# import numpy as np
+# from scipy.ndimage import label, center_of_mass
+#
+# import numpy as np
+from scipy.ndimage import label, center_of_mass
 
-def distance_mask_point_from_midline(niftifilename,Mask_filename,npyfiledirectory) :
+def get_centroids_and_sizes(binary_slice):
+    """
+    Given a binary 2D image, returns:
+    1. An image with centroids of connected components marked as 1.
+    2. A list of tuples: ((y, x), count), where (y, x) is the centroid and count is number of pixels in the cluster.
+
+    Args:
+        binary_slice (np.ndarray): 2D binary image.
+
+    Returns:
+        centroid_image (np.ndarray): Binary image with centroid pixels = 1.
+        centroid_info_list (List[Tuple[Tuple[int, int], int]]): List of centroid coordinates and pixel counts.
+    """
+    if binary_slice.ndim != 2:
+        raise ValueError("Input must be a 2D binary image.")
+
+    # Label the connected components
+    labeled_array, num_features = label(binary_slice)
+
+    # Prepare the return image
+    centroid_image = np.zeros_like(binary_slice, dtype=np.uint8)
+    centroid_info_list = []
+
+    # Process each cluster
+    for label_idx in range(1, num_features + 1):
+        # Mask of current cluster
+        cluster_mask = (labeled_array == label_idx)
+
+        # Count of pixels in the cluster
+        count = np.count_nonzero(cluster_mask)
+
+        # Compute centroid
+        centroid = center_of_mass(cluster_mask)
+        y, x = np.round(centroid).astype(int)
+
+        if 0 <= y < centroid_image.shape[0] and 0 <= x < centroid_image.shape[1]:
+            centroid_image[y, x] = 1
+            centroid_info_list.append(((y, x), count))
+
+    return centroid_image, centroid_info_list
+import numpy as np
+from scipy.ndimage import label, center_of_mass
+
+def distance_point_to_line_1(A, B, P):
+    """
+    Calculate signed distance from point P to line defined by A and B
+    """
+    return abs((P[0] - A[0]) * (B[1] - A[1]) - (P[1] - A[1]) * (B[0] - A[0])) / np.linalg.norm(np.array(B) - np.array(A))
+
+def filter_clusters_by_distance_and_size(binary_slice, line_ptA, line_ptB, distance_thresh=100, size_thresh=200):
+    """
+    Removes clusters from a binary slice if their centroid is within `distance_thresh`
+    from a line AND their size is below `size_thresh`.
+
+    Returns the filtered binary image.
+    """
+    if binary_slice.ndim != 2:
+        raise ValueError("Input must be a 2D binary image.")
+
+    # Label connected components
+    labeled_array, num_features = label(binary_slice)
+
+    # Copy to modify
+    filtered_array = np.copy(labeled_array)
+
+    for label_idx in range(1, num_features + 1):
+        cluster_mask = (labeled_array == label_idx)
+        count = np.count_nonzero(cluster_mask)
+
+        centroid = center_of_mass(cluster_mask)
+        y, x = np.round(centroid).astype(int)
+
+        if 0 <= y < binary_slice.shape[0] and 0 <= x < binary_slice.shape[1]:
+            distance = distance_point_to_line(line_ptA, line_ptB, (y, x))
+
+            if distance < distance_thresh and count < size_thresh:
+                filtered_array[cluster_mask] = 0  # Remove this cluster
+
+    # Convert back to binary image
+    return (filtered_array > 0).astype(np.uint8)
+
+
+def distance_mask_point_from_midline(niftifilename,Mask_filename_data_np,npyfiledirectory) :
     returnvalue=0
     try:
-        Mask_filename_fdata=nib.load(Mask_filename).get_fdata()
-        Mask_filename_fdata_June21_2023=nib.load(Mask_filename).get_fdata()
-        Mask_filename_fdata_June21_2023_np=resizeinto_512by512(Mask_filename_fdata_June21_2023)
-        Mask_filename_data_np=resizeinto_512by512(Mask_filename_fdata)
+        # Mask_filename_fdata=nib.load(Mask_filename).get_fdata()
+        # Mask_filename_fdata_June21_2023=nib.load(Mask_filename).get_fdata()
+        # Mask_filename_fdata_June21_2023_np=resizeinto_512by512(Mask_filename_fdata_June21_2023)
+        # Mask_filename_data_np=resizeinto_512by512(Mask_filename_fdata)
+        # Mask_filename_data_np This is already 512x512 from the code where this function is called.
         Mask_filename_data_np[Mask_filename_data_np>1]=0
         Mask_filename_data_np[Mask_filename_data_np>=0.5]=1
         Mask_filename_data_np[Mask_filename_data_np<1]=0
         filename_gray_data_np=resizeinto_512by512(nib.load(niftifilename).get_fdata())
         numpy_image=filename_gray_data_np
-        left_half_filename=Mask_filename.split('.nii')[0]+'_left_half_originalRF.nii.gz'
-        right_half_filename=Mask_filename.split('.nii')[0]+'_right_half_originalRF.nii.gz'
-        lefthalf_mask_np_3d= np.zeros([numpy_image.shape[0],numpy_image.shape[1],numpy_image.shape[2]])
-        righthalf_mask_np_3d= np.zeros([numpy_image.shape[0],numpy_image.shape[1],numpy_image.shape[2]])
+        # left_half_filename=Mask_filename.split('.nii')[0]+'_left_half_originalRF.nii.gz'
+        # right_half_filename=Mask_filename.split('.nii')[0]+'_right_half_originalRF.nii.gz'
+        # lefthalf_mask_np_3d= np.zeros([numpy_image.shape[0],numpy_image.shape[1],numpy_image.shape[2]])
+        # righthalf_mask_np_3d= np.zeros([numpy_image.shape[0],numpy_image.shape[1],numpy_image.shape[2]])
         for img_idx in range(numpy_image.shape[2]):
             if img_idx>0 and img_idx < numpy_image.shape[2]:
                 method_name="REGIS"
@@ -609,17 +697,23 @@ def distance_mask_point_from_midline(niftifilename,Mask_filename,npyfiledirector
                     y_points2=calculated_midline_points.item().get('y_axis')
                     x_points2=x_points2[:,0]
                     y_points2=y_points2[:,0]
+                    filtered_slice=filter_clusters_by_distance_and_size(Mask_filename_data_np[:,:,img_idx], (int(y_points2[511]),int(x_points2[511])),(int(y_points2[0]),int(x_points2[0])), distance_thresh=100, size_thresh=200)
+                    Mask_filename_data_np[:,:,img_idx]=filtered_slice
+                    # img_with_line,centroid_data=get_centroids_and_sizes(Mask_filename_data_np[:,:,img_idx])
+                    # for (centroid_yx, count) in centroid_data:
+                    #     distance = distance_point_to_line((int(y_points2[511]),int(x_points2[511])),(int(y_points2[0]),int(x_points2[0])) , centroid_yx)
+                    #     print(f"Centroid at {centroid_yx}, Pixel Count: {count}, Distance to Line: {distance}")
+                    #     if distance < 100 and count < 200:
 
-                    img_with_line=Mask_filename_data_np[:,:,img_idx]
                     # img_with_line[img_with_line>=0.5]=1
                     # img_with_line[img_with_line<1]=0
-                    img_with_line_nonzero_id = np.transpose(np.nonzero(img_with_line))
-                    # Mask_filename_data_np_idx=Mask_filename_fdata_June21_2023_np[:,:,img_idx]
-                    # Mask_filename_data_np_idx[Mask_filename_data_np_idx>=0.5]=1
-                    # Mask_filename_data_np_idx[Mask_filename_data_np_idx<1]=0
-                    for non_zero_pixel in img_with_line_nonzero_id:
-                        xx=distance_point_to_line((int(y_points2[511]),int(x_points2[511])),(int(y_points2[0]),int(x_points2[0])) ,non_zero_pixel)
-                        return xx
+                    # img_with_line_nonzero_id = np.transpose(np.nonzero(img_with_line))
+                    # # Mask_filename_data_np_idx=Mask_filename_fdata_June21_2023_np[:,:,img_idx]
+                    # # Mask_filename_data_np_idx[Mask_filename_data_np_idx>=0.5]=1
+                    # # Mask_filename_data_np_idx[Mask_filename_data_np_idx<1]=0
+                    # for non_zero_pixel in img_with_line_nonzero_id:
+                    #     xx=distance_point_to_line((int(y_points2[511]),int(x_points2[511])),(int(y_points2[0]),int(x_points2[0])) ,non_zero_pixel)
+                    #     return xx
                         # if xx>0: ## RIGHT
                         #     righthalf_mask_np_3d[:,:,img_idx][non_zero_pixel[0],non_zero_pixel[1]]=1
                         # if xx<0: ## LEFT
@@ -638,6 +732,7 @@ def distance_mask_point_from_midline(niftifilename,Mask_filename,npyfiledirector
         returnvalue=1
         command="echo successful at :: {}::maskfilename::{} >> /software/error.txt".format(inspect.stack()[0][3],Mask_filename)
         subprocess.call(command,shell=True)
+        return Mask_filename_data_np
     except:
         command="echo failed at :: {} >> /software/error.txt".format(inspect.stack()[0][3])
         subprocess.call(command,shell=True)

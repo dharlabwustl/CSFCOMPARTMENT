@@ -567,7 +567,7 @@ def divideintozones_with_vent_obb_with_cistern_1(filename_gray,filename_mask,fil
 # import numpy as np
 # from scipy.ndimage import binary_dilation
 
-def process_csf_ventricle_cistern(filename_gray, csf_path, ventricle_path, cistern_path):
+def process_csf_ventricle_cistern(filename_gray, csf_path, ventricle_path, cistern_path,npyfiledirectory):
     """
     Processes CSF, ventricle, and cistern masks:
     - Dilates ventricle and cistern masks 3 times
@@ -625,7 +625,8 @@ def process_csf_ventricle_cistern(filename_gray, csf_path, ventricle_path, ciste
     ventricle_in_csf[cistern_in_csf > 0] = 0
 ####################################################
 
-    # distance_mask_point_from_midline(niftifilename,Mask_filename,npyfiledirectory)
+    distance_mask_point_from_midline(filename_gray,ventricle_in_csf,npyfiledirectory)
+    # distance_mask_point_from_midline(filename_gray,Mask_filename,npyfiledirectory)
     ##########################################################
 
     # Get Z-range of ventricles
