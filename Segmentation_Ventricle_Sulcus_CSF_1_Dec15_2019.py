@@ -613,7 +613,7 @@ def process_csf_ventricle_cistern(filename_gray, csf_path, ventricle_path, ciste
 
     # Dilate ventricle and cistern masks 3 times
     struct = np.ones((3, 3, 3), dtype=bool)
-    for _ in range(2):
+    for _ in range(4):
         ventricle = binary_dilation(ventricle, structure=struct)
         cistern = binary_dilation(cistern, structure=struct)
 
