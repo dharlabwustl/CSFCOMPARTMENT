@@ -625,12 +625,12 @@ def process_csf_ventricle_cistern(filename_gray, csf_path, ventricle_path, ciste
     ventricle_in_csf[cistern_in_csf > 0] = 0
 ####################################################
 
-    ventricle_in_csf_1=distance_mask_point_from_midline(filename_gray,ventricle_in_csf,npyfiledirectory)
+    # ventricle_in_csf_1=distance_mask_point_from_midline(filename_gray,ventricle_in_csf,npyfiledirectory)
     # distance_mask_point_from_midline(filename_gray,Mask_filename,npyfiledirectory)
     ##########################################################
 
     # Get Z-range of ventricles
-    zoneV_min_z, zoneV_max_z = get_ventricles_range_np(ventricle_in_csf_1)
+    zoneV_min_z, zoneV_max_z = get_ventricles_range_np(ventricle_in_csf) #_1)
     if zoneV_min_z < 0 or zoneV_max_z < 0:
         raise ValueError("Invalid ventricle mask: no non-zero slices found.")
     # Remove ventricle and cistern from CSF → get remaining sulci CSF
