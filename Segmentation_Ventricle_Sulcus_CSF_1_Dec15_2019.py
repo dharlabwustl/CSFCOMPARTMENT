@@ -566,6 +566,24 @@ def divideintozones_with_vent_obb_with_cistern_1(filename_gray,filename_mask,fil
 # import nibabel as nib
 # import numpy as np
 # from scipy.ndimage import binary_dilation
+import numpy as np
+from scipy.ndimage import label
+
+def get_largest_cc(mask):
+    labeled_array, num_features = label(mask)
+    if num_features == 0:
+        return np.zeros_like(mask)
+
+    # Count voxel occurrences for each label
+    sizes = np.bincount(labeled_array.ravel())
+    sizes[0] = 0  # ignore background
+
+    # Get the label of the largest component
+    largest_label = sizes.argmax()
+
+    # Return a binary mask of only the largest component
+    largest_cc = (labeled_array == largest_label)
+    return largest_cc.astype(np.uint8)
 
 def process_csf_ventricle_cistern(filename_gray, csf_path, ventricle_path, cistern_path,npyfiledirectory):
     """
@@ -624,20 +642,20 @@ def process_csf_ventricle_cistern(filename_gray, csf_path, ventricle_path, ciste
     # Remove cistern from ventricle if overlapping
     ventricle_in_csf[cistern_in_csf > 0] = 0
 ####################################################
-
-    ventricle_in_csf_1=distance_mask_point_from_midline(filename_gray,ventricle_in_csf,npyfiledirectory)
+    ventricle_in_csf=get_largest_cc(ventricle_in_csf)
+    # ventricle_in_csf_1=distance_mask_point_from_midline(filename_gray,ventricle_in_csf,npyfiledirectory)
     # distance_mask_point_from_midline(filename_gray,Mask_filename,npyfiledirectory)
     ##########################################################
 
     # Get Z-range of ventricles
-    zoneV_min_z, zoneV_max_z = get_ventricles_range_np(ventricle_in_csf_1)
+    zoneV_min_z, zoneV_max_z = get_ventricles_range_np(ventricle_in_csf) #_1)
     if zoneV_min_z < 0 or zoneV_max_z < 0:
         raise ValueError("Invalid ventricle mask: no non-zero slices found.")
     # Remove ventricle and cistern from CSF → get remaining sulci CSF
     ################################
     _ventricle_image = np.zeros_like(ventricle_in_csf)
     _ventricle_image[:, :, zoneV_min_z:zoneV_max_z+1] = ventricle_in_csf[:, :, zoneV_min_z:zoneV_max_z+1]
-    ventricle_in_csf=ventricle_in_csf_1.copy()
+    # ventricle_in_csf=ventricle_in_csf_1.copy()
     ######################################
 
     subtracted_image = csf.copy()
