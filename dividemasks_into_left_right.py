@@ -699,8 +699,8 @@ def distance_mask_point_from_midline(niftifilename,Mask_filename_data_np_1,npyfi
                     x_points2=x_points2[:,0]
                     y_points2=y_points2[:,0]
                     filtered_slice=filter_clusters_by_distance_and_size(Mask_filename_data_np[:,:,img_idx], (int(y_points2[511]),int(x_points2[511])),(int(y_points2[0]),int(x_points2[0])), distance_thresh=5000, size_thresh=25)
-                    if img_idx > 2*Mask_filename_data_np.shape[2]/3:
-                        filtered_slice=filter_clusters_by_distance_and_size(filtered_slice, (int(y_points2[511]),int(x_points2[511])),(int(y_points2[0]),int(x_points2[0])), distance_thresh=50, size_thresh=50)
+                    if img_idx > Mask_filename_data_np.shape[2]/2:
+                        filtered_slice=filter_clusters_by_distance_and_size(filtered_slice, (int(y_points2[511]),int(x_points2[511])),(int(y_points2[0]),int(x_points2[0])), distance_thresh=50, size_thresh=100)
                     Mask_filename_data_np[:,:,img_idx]=filtered_slice
         command="echo successful at :: {}::maskfilename::{} >> /software/error.txt".format(inspect.stack()[0][3],niftifilename)
         subprocess.call(command,shell=True)
