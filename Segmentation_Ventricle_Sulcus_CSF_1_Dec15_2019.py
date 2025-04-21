@@ -637,7 +637,7 @@ def process_csf_ventricle_cistern(filename_gray, csf_path, ventricle_path, ciste
     ################################
     _ventricle_image = np.zeros_like(ventricle_in_csf)
     _ventricle_image[:, :, zoneV_min_z:zoneV_max_z+1] = ventricle_in_csf[:, :, zoneV_min_z:zoneV_max_z+1]
-    ventricle_in_csf=ventricle_in_csf_1.copy()
+    # ventricle_in_csf=ventricle_in_csf_1.copy()
     ######################################
 
     subtracted_image = csf.copy()
