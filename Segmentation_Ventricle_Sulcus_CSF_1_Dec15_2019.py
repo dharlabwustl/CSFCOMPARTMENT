@@ -638,7 +638,7 @@ def process_csf_ventricle_cistern(filename_gray, csf_path, ventricle_path, ciste
     # Intersections with CSF
     ventricle_in_csf = np.logical_and(ventricle, csf).astype(np.uint8)
     cistern_in_csf = np.logical_and(cistern, csf).astype(np.uint8)
-
+    cistern_in_csf=get_largest_cc(cistern_in_csf)
     # Remove cistern from ventricle if overlapping
     ventricle_in_csf[cistern_in_csf > 0] = 0
 ####################################################
