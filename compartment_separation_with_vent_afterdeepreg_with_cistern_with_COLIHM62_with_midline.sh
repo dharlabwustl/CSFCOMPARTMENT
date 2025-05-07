@@ -337,7 +337,6 @@ done
       for f in "${all_files_to_upload[@]}"; do
         function_with_arguments+=("$f")
       done
-      echo ${}
       echo "outputfiles_present=(python3 download_with_session_ID.py ${function_with_arguments[@]})"
       outputfiles_present=$(python3 download_with_session_ID.py "${function_with_arguments[@]}")
 
