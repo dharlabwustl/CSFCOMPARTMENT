@@ -1818,6 +1818,7 @@ def pipeline_step_completed(db_table_name,session_id,scan_id,column_name,column_
         URI=f'/data/experiments/{session_id}/scans/{scan_id}'
         list_of_files_in_resource_dir=get_resourcefiles_metadata(URI,resource_dir)
         df_scan_resource = pd.read_json(json.dumps(list_of_files_in_resource_dir)) #pd.read_json(json.dumps(metadata_masks))
+
         # Check if each extension exists in **any** row in the url column
         ext_found = [any(df_scan_resource['URI'].str.contains(ext, case=False)) for ext in list_of_file_ext_tobe_checked]
 
@@ -1829,8 +1830,8 @@ def pipeline_step_completed(db_table_name,session_id,scan_id,column_name,column_
         fill_google_mysql_db_with_single_value(db_table_name, session_id,column_name,column_value)
         command = "echo  success at : " +  inspect.stack()[0][3]  + " >> " + "/output/error.txt"
         subprocess.call(command,shell=True)
-    except:
-        command = "echo  failed at : " +  inspect.stack()[0][3]  + " >> " + "/output/error.txt"
+    except Exception as e:
+        command = "echo  failed at : " +  inspect.stack()[0][3]  + f" error::{e} >> " + "/output/error.txt"
         subprocess.call(command,shell=True)
         pass
     return 1
