@@ -332,7 +332,7 @@ done
       first_value=$(awk -F, -v idx="$col_index" 'NR==2 { print $idx }' "$csv_file")
       database_table_name=${first_value}
       echo "database_table_name::${database_table_name}"
-      function_with_arguments=('call_pipeline_step_completed' ${database_table_name} ${sessionID} ${scanID} "NONRIGID_REGIS_WITH_COLIHM62_COMPLETE" 0 ${snipr_output_foldername} ) ##$(basename  ${fixed_image_filename}) $(basename  ${infarct_mask_binary_output_filename})  $(basename  ${registration_mat_file}) $(basename  ${registration_nii_file}) $(basename  ${mask_binary_output_dir}/${mask_binary_output_filename})  ) ##'warped_1_mov_mri_region_' )
+      function_with_arguments=('call_pipeline_step_completed' ${database_table_name} ${sessionID} ${scanID} "COMPARTMENT_SEPARATION_COMPLETE" 0 ${resource_dirname} ) ##$(basename  ${fixed_image_filename}) $(basename  ${infarct_mask_binary_output_filename})  $(basename  ${registration_mat_file}) $(basename  ${registration_nii_file}) $(basename  ${mask_binary_output_dir}/${mask_binary_output_filename})  ) ##'warped_1_mov_mri_region_' )
       # Append all warped files to the arguments array
       for f in "${all_files_to_upload[@]}"; do
         function_with_arguments+=("$f")
