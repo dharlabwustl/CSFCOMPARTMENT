@@ -313,7 +313,7 @@ if [[ ${file_name} == *"${this_data_basename_noext}"* ]] || [[ ${file_name} == *
 call_uploadsinglefile_with_URI_arguments=('call_uploadsinglefile_with_URI' ${URI_1} ${file_name} ${resource_dirname})
 outputfiles_present=$(python3 /software/download_with_session_ID.py "${call_uploadsinglefile_with_URI_arguments[@]}")
 echo ${outputfiles_present}
-all_files_to_upload+=($(basename ${file_name}))
+all_files_to_upload+=("$(basename ${file_name})")
 fi
 done
 
@@ -337,7 +337,7 @@ done
       for f in "${all_files_to_upload[@]}"; do
         function_with_arguments+=("$f")
       done
-
+      echo ${}
       echo "outputfiles_present=(python3 download_with_session_ID.py ${function_with_arguments[@]})"
       outputfiles_present=$(python3 download_with_session_ID.py "${function_with_arguments[@]}")
 
