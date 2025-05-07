@@ -11,6 +11,7 @@ import numpy as np
 # import pydicom as dicom
 import pathlib
 import argparse
+from biomarkerdbclass import BiomarkerDB
 from xnatSession import XnatSession
 catalogXmlRegex = re.compile(r'.*\.xml$')
 XNAT_HOST_URL=os.environ['XNAT_HOST'] #'https://snipr02.nrg.wustl.edu:8080' #'https://snipr02.nrg.wustl.edu' #'https://snipr.wustl.edu'
