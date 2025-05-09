@@ -115,12 +115,12 @@ call_get_resourcefiles_metadata_saveascsv_args ${url1} ${resource_dir} ${working
 #      filename1=$(basename ${url1})
 #  call_download_a_singlefile_with_URIString_arguments=('call_download_a_singlefile_with_URIString' ${url1} ${filename1} ${dir_to_save})
 #  outputfiles_present=$(python3 download_with_session_ID.py "${call_download_a_singlefile_with_URIString_arguments[@]}")
-function_with_arguments=('call_delete_file_with_ext' ${sessionID} ${scanID} MASKS '_ventricle' ) ##'warped_1_mov_mri_region_' )
+#function_with_arguments=('call_delete_file_with_ext' ${sessionID} ${scanID} MASKS '_ventricle' ) ##'warped_1_mov_mri_region_' )
 #    echo "outputfiles_present="'$(python3 utilities_simple_trimmed.py' "${function_with_arguments[@]}"
-outputfiles_present=$(python3 download_with_session_ID.py "${function_with_arguments[@]}")
-function_with_arguments=('call_delete_file_with_ext' ${sessionID} ${scanID} MASKS '_total' ) ##'warped_1_mov_mri_region_' )
+#outputfiles_present=$(python3 download_with_session_ID.py "${function_with_arguments[@]}")
+#function_with_arguments=('call_delete_file_with_ext' ${sessionID} ${scanID} MASKS '_total' ) ##'warped_1_mov_mri_region_' )
 #    echo "outputfiles_present="'$(python3 utilities_simple_trimmed.py' "${function_with_arguments[@]}"
-outputfiles_present=$(python3 download_with_session_ID.py "${function_with_arguments[@]}")
+#outputfiles_present=$(python3 download_with_session_ID.py "${function_with_arguments[@]}")
 while IFS=',' read -ra array2; do
 
 url2=${array2[6]}
