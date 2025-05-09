@@ -306,14 +306,41 @@ filename_prefix=${filename_prefix%_NIFTILOCATION*}
 resource_dirname="MASKS"
 this_data_basename=$(basename {greyfile})
 this_data_basename_noext=${this_data_basename%_resaved*}
+all_files_to_upload=()
 for file_name in ${dir_to_save}/${filename_prefix}*.nii.gz; do
 echo ${file_name}
 if [[ ${file_name} == *"${this_data_basename_noext}"* ]] || [[ ${file_name} == *"ventricle"* ]] || [[ ${file_name} == *"sulci"* ]]; then
 call_uploadsinglefile_with_URI_arguments=('call_uploadsinglefile_with_URI' ${URI_1} ${file_name} ${resource_dirname})
 outputfiles_present=$(python3 /software/download_with_session_ID.py "${call_uploadsinglefile_with_URI_arguments[@]}")
 echo ${outputfiles_present}
+all_files_to_upload+=("$(basename ${file_name})")
 fi
 done
+
+#########################################################################################################################
+     ####################### GET PROJECT NAME ###############################
+    #################### WRITE TO THE MYSQL DATABASE IF THE STEP IS DONE #######################################################
+      call_get_session_label_arguments=('call_get_session_project' ${sessionID} ${output_directory}/${this_data_basename_noext}_SESSION_PROJECT.csv)
+      outputfiles_present=$(python3 download_with_session_ID.py "${call_get_session_label_arguments[@]}")
+      csv_file=${output_directory}/${this_data_basename_noext}_SESSION_PROJECT.csv
+      column_name="SESSION_PROJECT"
+      # Get the index (column number) of the desired column
+      col_index=$(awk -F, -v col="$column_name" 'NR==1 {
+        for (i=1; i<=NF; i++) if ($i == col) { print i; exit }
+      }' "$csv_file")
+      # Get the first value under that column (excluding header)
+      first_value=$(awk -F, -v idx="$col_index" 'NR==2 { print $idx }' "$csv_file")
+      database_table_name=${first_value}
+      echo "database_table_name::${database_table_name}"
+      function_with_arguments=('call_pipeline_step_completed' ${database_table_name} ${sessionID} ${scanID} "COMPARTMENT_SEPARATION_COMPLETE" 0 ${resource_dirname} ) ##$(basename  ${fixed_image_filename}) $(basename  ${infarct_mask_binary_output_filename})  $(basename  ${registration_mat_file}) $(basename  ${registration_nii_file}) $(basename  ${mask_binary_output_dir}/${mask_binary_output_filename})  ) ##'warped_1_mov_mri_region_' )
+      # Append all warped files to the arguments array
+      for f in "${all_files_to_upload[@]}"; do
+        function_with_arguments+=("$f")
+      done
+      echo "outputfiles_present=(python3 download_with_session_ID.py ${function_with_arguments[@]})"
+      outputfiles_present=$(python3 download_with_session_ID.py "${function_with_arguments[@]}")
+
+
 done < <(tail -n +2 "${dir_to_save}/${filename}")
 
 done \
