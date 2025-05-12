@@ -26,6 +26,22 @@ def demo():
 #     dflux.hist('INFARCT', bins=255, ax=axes[0])
 #     dflux2.hist('NONINFARCT', bins=255, ax=axes[1])
 #     fig.savefig(image_filename)
+def levelset2originalRF_new_flip_with_params(original_file,levelset_file,OUTPUT_DIRECTORY) : #original_file,levelset_file,OUTPUT_DIRECTORY="./"):
+    #     print(sys.argv[1])
+
+    # original_file=sys.argv[1]
+    # levelset_file=sys.argv[2]
+    # OUTPUT_DIRECTORY=sys.argv[3]
+    original_file_nib=nib.load(original_file)
+
+    original_file_nib_data=original_file_nib.get_fdata()
+    print("For the file {}".format(levelset_file))
+    print("I am in levelset2originalRF_new_flip()")
+    print("original_file_nib_data.shape[1]: {}".format(original_file_nib_data.shape[1]))
+    if original_file_nib_data.shape[1] == 512 :
+        whenOFsize512x512_new_flip(levelset_file,original_file,OUTPUT_DIRECTORY)
+    else:
+        whenOFsize512x5xx_new_flip(original_file,levelset_file,OUTPUT_DIRECTORY)
 
 def coninuous2binary0_255(coninuous_image_file):
     coninuous_image_file_nib=nib.load(coninuous_image_file)
