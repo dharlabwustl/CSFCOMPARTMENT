@@ -112,6 +112,8 @@ def get_dicom_datetime(dicom_path):
 
     except Exception as e:
         print(f"Error reading DICOM datetime: {e}")
+
+
         return None
 
 
