@@ -641,8 +641,10 @@ def process_csf_ventricle_cistern(filename_gray, csf_path, ventricle_path, ciste
     # cistern_in_csf=get_largest_cc(cistern_in_csf)
     # Remove cistern from ventricle if overlapping
     ventricle_in_csf[cistern_in_csf > 0] = 0
+    save_nifti(ventricle_in_csf, affine, header, f"{filename_root}_ventricle_total_intermediate0.nii.gz")
 ####################################################
     ventricle_in_csf=get_largest_cc(ventricle_in_csf)
+    save_nifti(ventricle_in_csf, affine, header, f"{filename_root}_ventricle_total_intermediate1.nii.gz")
     # ventricle_in_csf_1=distance_mask_point_from_midline(filename_gray,ventricle_in_csf,npyfiledirectory)
     # distance_mask_point_from_midline(filename_gray,Mask_filename,npyfiledirectory)
     ##########################################################
