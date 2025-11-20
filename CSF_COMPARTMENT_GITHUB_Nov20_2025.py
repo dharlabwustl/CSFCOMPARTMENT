@@ -92,7 +92,7 @@ def call_csf_compartments_ventbound_no_hem_with_cis_1(args):
         # zoneV_max_z=int(args.stuff[6])
         subprocess.call("echo " + "SUCCEEDED 2 AT ::{}  >> error.txt".format(inspect.stack()[0][3]) ,shell=True )
         xx=process_csf_ventricle_cistern(filename_gray,filename_csf,filename_ventricle,filename_cistern,npyfiledirectory) ##,zoneV_min_z,zoneV_max_z)
-        return returnvalue
+        # return returnvalue
         subprocess.call("echo " + "SUCCEEDED 3 AT ::{}  >> error.txt".format(inspect.stack()[0][3]) ,shell=True )
         returnvalue=1
     except:
