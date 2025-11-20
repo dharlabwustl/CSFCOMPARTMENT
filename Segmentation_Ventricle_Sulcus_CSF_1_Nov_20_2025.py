@@ -650,6 +650,7 @@ def process_csf_ventricle_cistern(filename_gray, csf_path, ventricle_path, ciste
     ##########################################################
 
     # Get Z-range of ventricles
+    subprocess.call("echo " + "SUCCEEDED 2 AT ::{}  >> error.txt".format(inspect.stack()[0][3]), shell=True)
     zoneV_min_z, zoneV_max_z = get_ventricles_range_np(ventricle_in_csf) #_1)
     if zoneV_min_z < 0 or zoneV_max_z < 0:
         raise ValueError("Invalid ventricle mask: no non-zero slices found.")
