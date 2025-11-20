@@ -613,8 +613,8 @@ def process_csf_ventricle_cistern(filename_gray, csf_path, ventricle_path, ciste
         data = (img.get_fdata() > 0).astype(np.uint8)
         return data, img.affine, img.header
 
-    def save_nifti(data, affine, header, filename):
-        nib.save(nib.Nifti1Image(data.astype(np.uint8), affine, header), filename)
+    # def save_nifti(data, affine, header, filename):
+    #     nib.save(nib.Nifti1Image(data.astype(np.uint8), affine, header), filename)
 
     # Remove .nii or .nii.gz for clean filename base
     if filename_gray.endswith(".nii.gz"):
