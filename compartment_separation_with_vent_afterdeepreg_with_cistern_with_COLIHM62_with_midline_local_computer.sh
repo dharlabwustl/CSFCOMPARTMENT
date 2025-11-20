@@ -7,25 +7,46 @@ echo ">>> STARTING COMPARTMENT_SEPARATION_WITH_VENT_BOUNDGIVEN_LOCAL.sh"
 # Directory setup (local, no XNAT)
 #############################################
 
-# These should be mounted from host when running the container
-working_dir=/workinginput          # CT + masks + CSV live here
-working_dir_1=/input1              # will receive selected .npy files (V2)
+working_dir=/workinginput          # CT + masks + CSV live here (after copy)
+working_dir_1=/input1              # will receive selected NIFTI / npy
 output_directory=/workingoutput    # final outputs + other .npy files
 dir_to_save="${working_dir}"       # same directory used in original script
 zip_dir=/ZIPFILEDIR                # where .npy files are initially stored
-cp /input/SCANS/2/NIFTI/* ${working_dir_1}/
-# Directory containing masks from prior pipeline (Yasheng outputs etc.)
-#WORKING_DIR_MASKS="/workinginput"
-cp /input/SCANS/2/PREPROCESS_SEGM/* ${working_dir}/
-cp /input/SCANS/2/PREPROCESS_SEGM_3/* ${working_dir}/
-cp /input/SCANS/2/MASKS/* ${working_dir}/
+
 # Ensure directories exist
-#for d in "$working_dir" "$working_dir_1" "$output_directory" "$zip_dir"; do
-#  if [ ! -d "$d" ]; then
-#    echo "Creating directory: $d"
-#    mkdir -p "$d"
-#  fi
-#done
+for d in "$working_dir" "$working_dir_1" "$output_directory" "$zip_dir"; do
+  if [ ! -d "$d" ]; then
+    echo "Creating directory: $d"
+    mkdir -p "$d"
+  fi
+done
+
+#############################################
+# COPY INPUTS FROM /input/SCANS/... (LOCAL)
+#############################################
+
+echo ">>> Copying local scan files from /input/SCANS/2/... into working dirs"
+
+# NIFTI -> /input1
+if [ -d /input/SCANS/2/NIFTI ]; then
+  cp /input/SCANS/2/NIFTI/* "${working_dir_1}/"
+fi
+
+# PREPROCESS_SEGM + PREPROCESS_SEGM_3 + MASKS -> /workinginput
+if [ -d /input/SCANS/2/PREPROCESS_SEGM ]; then
+  cp /input/SCANS/2/PREPROCESS_SEGM/* "${working_dir}/"
+fi
+
+if [ -d /input/SCANS/2/PREPROCESS_SEGM_3 ]; then
+  cp /input/SCANS/2/PREPROCESS_SEGM_3/* "${working_dir}/"
+fi
+
+if [ -d /input/SCANS/2/MASKS ]; then
+  cp /input/SCANS/2/MASKS/* "${working_dir}/"
+fi
+
+echo ">>> Done copying. Now locating required NIfTI files in ${dir_to_save}"
+
 
 #############################################
 # Helper: find a single file by pattern
@@ -159,11 +180,6 @@ call_csf_compartments_arguments=(
   "${cistern_after_deepreg}"
   "${output_directory}"
 )
- echo  greyfile::"${greyfile}"
- echo  csfile::"${csffile}"
-  echo ventricle_after_deepreg::"${ventricle_after_deepreg}"
-  echo cistern_after_deepreg::"${cistern_after_deepreg}"
-  echo output_directory::"${output_directory}"
 
 outputfiles_present=$(python3 /software/CSF_COMPARTMENT_GITHUB_July212023.py "${call_csf_compartments_arguments[@]}")
 
