@@ -120,12 +120,6 @@ done < <(find "$zip_dir" -type f -name "*.npy" -print0)
 #############################################
 
 ventricleboundfile="${dir_to_save}/ventricle_bounds.csv"
-if [[ -f "${ventricleboundfile}" ]]; then
-  echo ">>> Found ventricle bounds CSV: ${ventricleboundfile}"
-else
-  echo "WARNING: ventricle_bounds.csv not found in ${dir_to_save}"
-  echo "         Continuing without using zoneV_min_z / zoneV_max_z (they are unused in active code)."
-fi
 
 #############################################
 # Run ventricle & cistern OBB / DeepReg steps
@@ -145,6 +139,7 @@ python3 findventriclemaskobb_10102024.py \
 echo ">>> Running cistern OBB step:"
 echo "python3 findventriclemaskobb_03102025.py \\"
 echo "  ${cistern_only_mask} ${csffile} ${dir_to_save} ${greyfile} ${betfile}"
+
 
 python3 findventriclemaskobb_03102025.py \
   "${cistern_only_mask}" \
@@ -167,7 +162,12 @@ fi
 if [[ ! -f "${cistern_after_deepreg}" ]]; then
   echo "WARNING: Expected cistern_after_deepreg.nii not found in ${dir_to_save}"
 fi
-
+if [[ -f "${ventricleboundfile}" ]]; then
+  echo ">>> Found ventricle bounds CSV: ${ventricleboundfile}"
+else
+  echo "WARNING: ventricle_bounds.csv not found in ${dir_to_save}"
+  echo "         Continuing without using zoneV_min_z / zoneV_max_z (they are unused in active code)."
+fi
 echo ">>> Running CSF compartment computation:"
 echo "call_csf_compartments_arguments = ('call_csf_compartments_ventbound_no_hem_with_cis_1' \\"
 echo "  ${greyfile} ${csffile} ${ventricle_after_deepreg} ${cistern_after_deepreg} ${output_directory})"
