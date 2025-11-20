@@ -95,7 +95,7 @@ def call_csf_compartments_ventbound_no_hem_with_cis_1(args):
         subprocess.call("echo " + "SUCCEEDED 3 AT ::{}  >> error.txt".format(inspect.stack()[0][3]) ,shell=True )
         returnvalue=1
     except:
-        subprocess.call("echo " + "FAILED AT ::{}  >> error.txt".format(inspect.stack()[0][3]) ,shell=True )
+        subprocess.call("echo " + "FAILED AT HERE WHY DONT KNOW::{}  >> error.txt".format(inspect.stack()[0][3]) ,shell=True )
         pass
     return returnvalue
 
