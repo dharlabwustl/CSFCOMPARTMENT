@@ -699,113 +699,113 @@ def process_csf_ventricle_cistern(filename_gray, csf_path, ventricle_path, ciste
     )
 
 
-def process_csf_ventricle_cistern_notworking(filename_gray,csf_path,ventricle_path,cistern_path):
-#         filename_gray:str,
-#         csf_path: str,
-#         ventricle_path: str,
-#         cistern_path: str,
-#         save_dir: str = "."
-# ):
-    # divideintozones_with_vent_obb_with_cistern_1(filename_gray,filename_mask,filename_bet,filename_vent_obb,zoneV_min_z,zoneV_max_z):
-
-    """
-    Processes CSF, ventricle, and cistern masks:
-    - Dilates ventricle and cistern masks 3 times
-    - Intersects them with CSF to get refined masks
-    - Generates cuboidal mask around ventricle
-    - Saves all outputs as NIfTI files
-
-    Parameters:
-    - csf_path: path to CSF NIfTI mask
-    - ventricle_path: path to ventricle_deepreg NIfTI mask
-    - cistern_path: path to cistern_deepreg NIfTI mask
-    - save_dir: directory to save output NIfTI masks
-    """
-    sulci_vol, ventricle_vol,leftcountven,rightcountven,leftcountsul,rightcountsul,sulci_vol_above_vent,sulci_vol_below_vent,sulci_vol_at_vent=(0,0,0,0,0,0,0,0,0) #seg_explicit_thresholds, subtracted_image
-
-    def load_binary_mask(path):
-        img = nib.load(path)
-        data = (img.get_fdata() > 0).astype(np.uint8)
-        return data, img.affine, img.header
-
-    def save_nifti(data, affine, header, filename):
-        nib.save(nib.Nifti1Image(data.astype(np.uint8), affine, header), filename)
-
-    # Load masks
-
-    csf, affine, header = load_binary_mask(csf_path)
-    ventricle, _, _ = load_binary_mask(ventricle_path)
-    cistern, _, _ = load_binary_mask(cistern_path)
-
-    # Structuring element and dilation
-    struct = np.ones((5, 5, 5), dtype=bool)
-    for _ in range(3):
-        ventricle = binary_dilation(ventricle, structure=struct)
-        cistern = binary_dilation(cistern, structure=struct)
-
-    # Intersection with CSF
-    ventricle_in_csf = np.logical_and(ventricle, csf).astype(np.uint8)
-    cistern_in_csf = np.logical_and(cistern, csf).astype(np.uint8)
-    ventricle_in_csf[cistern_in_csf>0]=0
-    zoneV_min_z,zoneV_max_z=get_ventricles_range_np(ventricle_in_csf)
-    # Ventricle cuboidal mask
-
-    #######################################
-# Remove ventricle and cistern parts from CSF mask
-    subtracted_image = csf.copy()
-    subtracted_image[ventricle_in_csf > 0] = 0
-    subtracted_image[cistern_in_csf > 0] = 0
-
-    zoneV_min_z = int(zoneV_min_z)
-    zoneV_max_z = int(zoneV_max_z)
-    z_max = subtracted_image.shape[2]
-
-    # Above ventricle
-    above_ventricle_image = np.zeros_like(subtracted_image)
-    if zoneV_max_z + 1 < z_max:
-        above_ventricle_image[:, :, zoneV_max_z+1:] = subtracted_image[:, :, zoneV_max_z+1:]
-
-    # Covering ventricle
-    covering_ventricle_image = np.zeros_like(subtracted_image)
-    covering_ventricle_image[:, :, zoneV_min_z:zoneV_max_z+1] = subtracted_image[:, :, zoneV_min_z:zoneV_max_z+1]
-
-    # Below ventricle
-    below_ventricle_image = np.zeros_like(subtracted_image)
-    if zoneV_min_z > 0:
-        below_ventricle_image[:, :, :zoneV_min_z] = subtracted_image[:, :, :zoneV_min_z]
-
-    # # Create masks by slicing in Z direction
-    # above_ventricle_image = np.zeros_like(subtracted_image)
-    # above_ventricle_image[ :, :,zoneV_max_z+1:] = subtracted_image[ :, :,zoneV_max_z+1:]
-    # # return
-    # covering_ventricle_image = np.zeros_like(subtracted_image)
-    # covering_ventricle_image[ :, :,zoneV_min_z:zoneV_max_z+1] = subtracted_image[ :, :,zoneV_min_z:zoneV_max_z+1]
-    #
-    # below_ventricle_image = np.zeros_like(subtracted_image)
-    # below_ventricle_image[ :, :,:zoneV_min_z] = subtracted_image[ :, :,:zoneV_min_z]
-    # save_nifti(ventricle_in_csf, affine, header, f"{save_dir}/ventricle_in_csf_mask.nii.gz")
-    #################
-
-    save_nifti(cistern_in_csf, affine, header,filename_gray.split(".nii")[0]+ "_ventricle_cistern.nii.gz", True)
-
-    save_nifti(subtracted_image,  affine, header,filename_gray.split(".nii")[0]+ "_sulci_total.nii.gz", True)
-
-    # seg_explicit_thresholds.CopyInformation( img_T1_bet)
-    save_nifti(ventricle_in_csf, affine, header,filename_gray.split(".nii")[0]+ "_ventricle_total.nii.gz", True)
-
-    save_nifti(above_ventricle_image, affine, header,filename_gray.split(".nii")[0]+ "_sulci_above_ventricle.nii.gz", True)
-
-    save_nifti(below_ventricle_image,affine, header, filename_gray.split(".nii")[0]+ "_sulci_below_ventricle.nii.gz", True)
-
-    save_nifti(covering_ventricle_image,affine, header, filename_gray.split(".nii")[0]+ "_sulci_at_ventricle.nii.gz", True)
-
-#############
-
-
-    return  sulci_vol, ventricle_vol,leftcountven,rightcountven,leftcountsul,rightcountsul,sulci_vol_above_vent,sulci_vol_below_vent,sulci_vol_at_vent
-
-
-################################
+# def process_csf_ventricle_cistern_notworking(filename_gray,csf_path,ventricle_path,cistern_path):
+# #         filename_gray:str,
+# #         csf_path: str,
+# #         ventricle_path: str,
+# #         cistern_path: str,
+# #         save_dir: str = "."
+# # ):
+#     # divideintozones_with_vent_obb_with_cistern_1(filename_gray,filename_mask,filename_bet,filename_vent_obb,zoneV_min_z,zoneV_max_z):
+#
+#     """
+#     Processes CSF, ventricle, and cistern masks:
+#     - Dilates ventricle and cistern masks 3 times
+#     - Intersects them with CSF to get refined masks
+#     - Generates cuboidal mask around ventricle
+#     - Saves all outputs as NIfTI files
+#
+#     Parameters:
+#     - csf_path: path to CSF NIfTI mask
+#     - ventricle_path: path to ventricle_deepreg NIfTI mask
+#     - cistern_path: path to cistern_deepreg NIfTI mask
+#     - save_dir: directory to save output NIfTI masks
+#     """
+#     sulci_vol, ventricle_vol,leftcountven,rightcountven,leftcountsul,rightcountsul,sulci_vol_above_vent,sulci_vol_below_vent,sulci_vol_at_vent=(0,0,0,0,0,0,0,0,0) #seg_explicit_thresholds, subtracted_image
+#
+#     def load_binary_mask(path):
+#         img = nib.load(path)
+#         data = (img.get_fdata() > 0).astype(np.uint8)
+#         return data, img.affine, img.header
+#
+#     def save_nifti(data, affine, header, filename):
+#         nib.save(nib.Nifti1Image(data.astype(np.uint8), affine, header), filename)
+#
+#     # Load masks
+#
+#     csf, affine, header = load_binary_mask(csf_path)
+#     ventricle, _, _ = load_binary_mask(ventricle_path)
+#     cistern, _, _ = load_binary_mask(cistern_path)
+#
+#     # Structuring element and dilation
+#     struct = np.ones((5, 5, 5), dtype=bool)
+#     for _ in range(3):
+#         ventricle = binary_dilation(ventricle, structure=struct)
+#         cistern = binary_dilation(cistern, structure=struct)
+#
+#     # Intersection with CSF
+#     ventricle_in_csf = np.logical_and(ventricle, csf).astype(np.uint8)
+#     cistern_in_csf = np.logical_and(cistern, csf).astype(np.uint8)
+#     ventricle_in_csf[cistern_in_csf>0]=0
+#     zoneV_min_z,zoneV_max_z=get_ventricles_range_np(ventricle_in_csf)
+#     # Ventricle cuboidal mask
+#
+#     #######################################
+# # Remove ventricle and cistern parts from CSF mask
+#     subtracted_image = csf.copy()
+#     subtracted_image[ventricle_in_csf > 0] = 0
+#     subtracted_image[cistern_in_csf > 0] = 0
+#
+#     zoneV_min_z = int(zoneV_min_z)
+#     zoneV_max_z = int(zoneV_max_z)
+#     z_max = subtracted_image.shape[2]
+#
+#     # Above ventricle
+#     above_ventricle_image = np.zeros_like(subtracted_image)
+#     if zoneV_max_z + 1 < z_max:
+#         above_ventricle_image[:, :, zoneV_max_z+1:] = subtracted_image[:, :, zoneV_max_z+1:]
+#
+#     # Covering ventricle
+#     covering_ventricle_image = np.zeros_like(subtracted_image)
+#     covering_ventricle_image[:, :, zoneV_min_z:zoneV_max_z+1] = subtracted_image[:, :, zoneV_min_z:zoneV_max_z+1]
+#
+#     # Below ventricle
+#     below_ventricle_image = np.zeros_like(subtracted_image)
+#     if zoneV_min_z > 0:
+#         below_ventricle_image[:, :, :zoneV_min_z] = subtracted_image[:, :, :zoneV_min_z]
+#
+#     # # Create masks by slicing in Z direction
+#     # above_ventricle_image = np.zeros_like(subtracted_image)
+#     # above_ventricle_image[ :, :,zoneV_max_z+1:] = subtracted_image[ :, :,zoneV_max_z+1:]
+#     # # return
+#     # covering_ventricle_image = np.zeros_like(subtracted_image)
+#     # covering_ventricle_image[ :, :,zoneV_min_z:zoneV_max_z+1] = subtracted_image[ :, :,zoneV_min_z:zoneV_max_z+1]
+#     #
+#     # below_ventricle_image = np.zeros_like(subtracted_image)
+#     # below_ventricle_image[ :, :,:zoneV_min_z] = subtracted_image[ :, :,:zoneV_min_z]
+#     # save_nifti(ventricle_in_csf, affine, header, f"{save_dir}/ventricle_in_csf_mask.nii.gz")
+#     #################
+#
+#     save_nifti(cistern_in_csf, affine, header,filename_gray.split(".nii")[0]+ "_ventricle_cistern.nii.gz", True)
+#
+#     save_nifti(subtracted_image,  affine, header,filename_gray.split(".nii")[0]+ "_sulci_total.nii.gz", True)
+#
+#     # seg_explicit_thresholds.CopyInformation( img_T1_bet)
+#     save_nifti(ventricle_in_csf, affine, header,filename_gray.split(".nii")[0]+ "_ventricle_total.nii.gz", True)
+#
+#     save_nifti(above_ventricle_image, affine, header,filename_gray.split(".nii")[0]+ "_sulci_above_ventricle.nii.gz", True)
+#
+#     save_nifti(below_ventricle_image,affine, header, filename_gray.split(".nii")[0]+ "_sulci_below_ventricle.nii.gz", True)
+#
+#     save_nifti(covering_ventricle_image,affine, header, filename_gray.split(".nii")[0]+ "_sulci_at_ventricle.nii.gz", True)
+#
+# #############
+#
+#
+#     return  sulci_vol, ventricle_vol,leftcountven,rightcountven,leftcountsul,rightcountsul,sulci_vol_above_vent,sulci_vol_below_vent,sulci_vol_at_vent
+#
+#
+# ################################
 
 
     # coords = np.array(np.where(ventricle)).T
