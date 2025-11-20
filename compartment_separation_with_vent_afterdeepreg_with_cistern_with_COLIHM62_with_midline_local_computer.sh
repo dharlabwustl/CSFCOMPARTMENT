@@ -36,7 +36,9 @@ fi
 if [ -d /input/SCANS/2/PREPROCESS_SEGM ]; then
   cp /input/SCANS/2/PREPROCESS_SEGM/* "${working_dir}/"
 fi
-
+if [ -d /input/SCANS/2/PREPROCESS_SEGM_3 ]; then
+  cp /input/SCANS/2/PREPROCESS_SEGM_3/*.npy "${zip_dir}/"
+fi
 if [ -d /input/SCANS/2/PREPROCESS_SEGM_3 ]; then
   cp /input/SCANS/2/PREPROCESS_SEGM_3/* "${working_dir}/"
 fi
@@ -113,7 +115,7 @@ while IFS= read -r -d '' each_npy; do
     echo "  Moving npy -> ${output_directory}: $(basename "$each_npy")"
     mv "$each_npy" "${output_directory}/"
   fi
-done < <(find "${working_dir}" -type f -name "*.npy" -print0)
+done < <(find "${zip_dir}" -type f -name "*.npy" -print0)
 
 #############################################
 # Ventricle bounds CSV (assumed local)
