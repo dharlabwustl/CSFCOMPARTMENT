@@ -691,7 +691,7 @@ def process_csf_ventricle_cistern(filename_gray, csf_path, ventricle_path, ciste
     save_nifti(above_ventricle_image, affine, header, f"{filename_root}_sulci_above_ventricle.nii.gz")
     save_nifti(below_ventricle_image, affine, header, f"{filename_root}_sulci_below_ventricle.nii.gz")
     save_nifti(covering_ventricle_image, affine, header, f"{filename_root}_sulci_at_ventricle.nii.gz")
-    # subprocess.call("echo " + "SUCCEEDED 2 AT ::{}  >> error.txt".format(inspect.stack()[0][3]), shell=True)
+    subprocess.call("echo " + "SUCCEEDED 2 AT ::{}  >> error.txt".format(inspect.stack()[0][3]), shell=True)
     print("✅ All masks saved.")
 
     return (
