@@ -113,7 +113,7 @@ while IFS= read -r -d '' each_npy; do
     echo "  Moving npy -> ${output_directory}: $(basename "$each_npy")"
     mv "$each_npy" "${output_directory}/"
   fi
-done < <(find "$zip_dir" -type f -name "*.npy" -print0)
+done < <(find "${working_dir}" -type f -name "*.npy" -print0)
 
 #############################################
 # Ventricle bounds CSV (assumed local)
