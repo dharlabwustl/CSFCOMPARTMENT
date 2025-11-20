@@ -187,7 +187,14 @@ call_csf_compartments_arguments=(
   "${cistern_after_deepreg}"
   "${output_directory}"
 )
-
+echo "(
+  "call_csf_compartments_ventbound_no_hem_with_cis_1"
+  "${greyfile}"
+  "${csffile}"
+  "${ventricle_after_deepreg}"
+  "${cistern_after_deepreg}"
+  "${output_directory}"
+)"
 outputfiles_present=$(python3 /software/CSF_COMPARTMENT_GITHUB_July212023.py "${call_csf_compartments_arguments[@]}")
 
 echo ">>> CSF compartment script output:"
