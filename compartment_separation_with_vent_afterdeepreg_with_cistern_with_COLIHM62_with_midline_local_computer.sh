@@ -197,9 +197,11 @@ echo "(
   "${cistern_after_deepreg}"
   "${output_directory}"
 )"
-outputfiles_present=$(python3 /software/CSF_COMPARTMENT_GITHUB_July212023.py "${call_csf_compartments_arguments[@]}")
 
-echo ">>> CSF compartment script output:"
-echo "${outputfiles_present}"
-
-echo ">>> DONE: COMPARTMENT_SEPARATION_WITH_VENT_BOUNDGIVEN_LOCAL.sh"
+python3 /software/CSF_COMPARTMENT_GITHUB_July212023.py "${call_csf_compartments_arguments[@]}"
+#outputfiles_present=$(python3 /software/CSF_COMPARTMENT_GITHUB_July212023.py "${call_csf_compartments_arguments[@]}")
+#
+#echo ">>> CSF compartment script output:"
+#echo "${outputfiles_present}"
+#
+#echo ">>> DONE: COMPARTMENT_SEPARATION_WITH_VENT_BOUNDGIVEN_LOCAL.sh"
