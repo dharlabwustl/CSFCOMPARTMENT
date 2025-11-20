@@ -18,6 +18,7 @@ cp /input/SCANS/2/NIFTI/* ${working_dir_1}/
 #WORKING_DIR_MASKS="/workinginput"
 cp /input/SCANS/2/PREPROCESS_SEGM/* ${working_dir}/
 cp /input/SCANS/2/PREPROCESS_SEGM_3/* ${working_dir}/
+cp /input/SCANS/2/MASKS/* ${working_dir}/
 # Ensure directories exist
 #for d in "$working_dir" "$working_dir_1" "$output_directory" "$zip_dir"; do
 #  if [ ! -d "$d" ]; then
