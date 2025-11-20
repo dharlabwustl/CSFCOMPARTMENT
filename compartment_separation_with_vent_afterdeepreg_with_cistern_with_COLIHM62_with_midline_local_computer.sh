@@ -154,14 +154,21 @@ python3 findventriclemaskobb_03102025.py \
 
 ventricle_after_deepreg="${dir_to_save}/ventricle.nii"
 cistern_after_deepreg="${dir_to_save}/cistern_after_deepreg.nii"
+if [[ -f "${ventricle_after_deepreg}" ]]; then
+  echo ">>> Found ventricle bounds CSV: ${ventricle_after_deepreg}"
+else
+  echo "WARNING: ${ventricle_after_deepreg} not found in ${dir_to_save}"
 
-if [[ ! -f "${ventricle_after_deepreg}" ]]; then
-  echo "WARNING: Expected ventricle.nii not found in ${dir_to_save}"
 fi
 
-if [[ ! -f "${cistern_after_deepreg}" ]]; then
-  echo "WARNING: Expected cistern_after_deepreg.nii not found in ${dir_to_save}"
+if [[ -f "${cistern_after_deepreg}" ]]; then
+  echo ">>> Found ventricle bounds CSV: ${cistern_after_deepreg}"
+else
+  echo "WARNING: ${cistern_after_deepreg} not found in ${dir_to_save}"
+
 fi
+
+
 if [[ -f "${ventricleboundfile}" ]]; then
   echo ">>> Found ventricle bounds CSV: ${ventricleboundfile}"
 else
