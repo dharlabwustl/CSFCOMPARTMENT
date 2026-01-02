@@ -71,6 +71,14 @@ echo " I AM IN TYPE_OF_PROGRAM == VENT_BOUND_IN_SNIPR_CSF_WITH_CISTERN_MIDLINE_W
 #/software/compartment_separation_with_vent_afterdeepreg_include_hemorrhagemask.sh  $SESSION_ID $XNAT_USER $XNAT_PASS $XNAT_HOST
 fi
 
+if [[ ${TYPE_OF_PROGRAM} == 'COMPARTMENT_SEPARATION_THEN_PDF_FOR_EDEMA_BIOMARKER_N_CSF_COMPARTMENT_WITH_REST_API' ]]; then
+echo " I AM IN TYPE_OF_PROGRAM == COMPARTMENT_SEPARATION_THEN_PDF_FOR_EDEMA_BIOMARKER_N_CSF_COMPARTMENT_WITH_REST_API"
+/software/compartment_separation_with_vent_afterdeepreg_with_cistern_with_COLIHM62_with_midline.sh  $SESSION_ID $XNAT_USER $XNAT_PASS $XNAT_HOST
+/callfromgithub/downloadcodefromgithub.sh $SESSION_ID $XNAT_USER $XNAT_PASS 'https://github.com/dharlabwustl/EDEMA_MARKERS_PROD.git' PDF_FOR_EDEMA_BIOMARKER_N_CSF_COMPARTMENT_WITH_REST_API  $XNAT_HOST
+
+fi
+
+
 if [[ ${TYPE_OF_PROGRAM} == "VENT_BOUND_IN_SNIPR_NODEEPREG" ]] ;
 then
 echo " I AM IN TYPE_OF_PROGRAM == VENT_BOUND_IN_SNIPR_NODEEPREG"
