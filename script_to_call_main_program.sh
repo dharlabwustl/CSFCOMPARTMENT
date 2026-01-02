@@ -74,6 +74,18 @@ fi
 if [[ ${TYPE_OF_PROGRAM} == 'COMPARTMENT_SEPARATION_THEN_PDF_FOR_EDEMA_BIOMARKER_N_CSF_COMPARTMENT_WITH_REST_API' ]]; then
 echo " I AM IN TYPE_OF_PROGRAM == COMPARTMENT_SEPARATION_THEN_PDF_FOR_EDEMA_BIOMARKER_N_CSF_COMPARTMENT_WITH_REST_API"
 /software/compartment_separation_with_vent_afterdeepreg_with_cistern_with_COLIHM62_with_midline.sh  $SESSION_ID $XNAT_USER $XNAT_PASS $XNAT_HOST
+rm -r working/*
+rm -r input1/*
+rm -r ZIPFILEDIR/*
+rm -r output/*
+rm -r NIFTIFILEDIR/*
+rm -r DICOMFILEDIR/*
+rm -r workinginput/*
+rm -r workingoutput/*.*
+rm -r outputinsidedocker/*
+rm -r workingoutput/*.*
+rm -r ZIPFILEDIR/*
+rm -r outputinsidedocker/*
 /callfromgithub/downloadcodefromgithub.sh $SESSION_ID $XNAT_USER $XNAT_PASS 'https://github.com/dharlabwustl/EDEMA_MARKERS_PROD.git' PDF_FOR_EDEMA_BIOMARKER_N_CSF_COMPARTMENT_WITH_REST_API  $XNAT_HOST
 
 fi
