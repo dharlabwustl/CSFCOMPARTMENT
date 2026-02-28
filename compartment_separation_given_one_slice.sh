@@ -48,7 +48,7 @@ EOF
 echo "TOPSLICE = $topslice"
 
 
-exit
+#exit
 final_output_directory=/outputinsidedocker
 function call_get_resourcefiles_metadata_saveascsv_args() {
 
