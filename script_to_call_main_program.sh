@@ -22,7 +22,7 @@ fi
 
 
 echo ${TYPE_OF_PROGRAM}::TYPE_OF_PROGRAM
-exit
+#exit
 export XNAT_USER=$XNAT_USER
 export XNAT_PASS=$XNAT_PASS
 export XNAT_HOST=${XNAT_HOST} 
