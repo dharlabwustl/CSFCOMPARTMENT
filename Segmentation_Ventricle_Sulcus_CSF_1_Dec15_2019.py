@@ -100,7 +100,7 @@ def get_ventricles_range(numpy_array_3D_mask):
 #    print(zoneV_max_z)
     return zoneV_min_z,zoneV_max_z
 
-def divideintozones_upper_bound_given(filename_gray,filename_mask,filename_bet,upper_bound_slice_num):
+def divideintozones_upper_bound_given(filename_gray,filename_mask,filename_bet,upper_bound_slice_num=30):
     try:
         sulci_vol, ventricle_vol,leftcountven,rightcountven,leftcountsul,rightcountsul,sulci_vol_above_vent,sulci_vol_below_vent,sulci_vol_at_vent=(0,0,0,0,0,0,0,0,0) #seg_explicit_thresholds, subtracted_image
 
