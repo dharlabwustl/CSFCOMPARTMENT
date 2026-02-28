@@ -1678,3 +1678,82 @@ def xnat_set_all_scan_types_in_session(session_id: str, new_type: str = "Z-Axial
         log_error({"session_id": session_id, "new_type": new_type}, func_name)
         summary["errors"].append({"scan_id": None, "error": "Unhandled exception (see error log)"})
         return summary
+def xnat_download_file_from_project_resource(
+        project_id: str,
+        resource_name: str,
+        filename: str,
+        local_directory: str,
+        chunk_size: int = 1024 * 1024,
+) -> str:
+    """
+    Download a specific file from a PROJECT-level resource folder.
+
+    Parameters
+    ----------
+    project_id : str
+        XNAT project ID
+    resource_name : str
+        Resource folder name under the project
+    filename : str
+        Exact filename inside the resource folder
+    local_directory : str
+        Local directory where file will be saved
+    chunk_size : int
+        Streaming chunk size (default 1MB)
+
+    Returns
+    -------
+    str
+        Full local file path if successful
+
+    Raises
+    ------
+    Exception on failure
+    """
+
+    func_name = "xnat_download_file_from_project_resource"
+
+    try:
+        if not project_id or not resource_name or not filename:
+            raise ValueError("project_id, resource_name, and filename are required")
+
+        os.makedirs(local_directory, exist_ok=True)
+
+        local_path = os.path.join(local_directory, filename)
+
+        with xnat.connect(XNAT_HOST, user=XNAT_USER, password=XNAT_PASS) as sess:
+            base = XNAT_HOST.rstrip("/")
+            http = getattr(sess, "interface", sess)
+
+            download_url = (
+                f"{base}/data/projects/{project_id}/resources/"
+                f"{resource_name}/files/{filename}"
+            )
+
+            r = http.get(download_url, stream=True)
+
+            if getattr(r, "status_code", 999) != 200:
+                raise RuntimeError(
+                    f"Download failed: HTTP {r.status_code} :: "
+                    f"{getattr(r, 'text', '')[:300]}"
+                )
+
+            with open(local_path, "wb") as f:
+                for chunk in r.iter_content(chunk_size=chunk_size):
+                    if chunk:
+                        f.write(chunk)
+
+        return local_path
+
+    except Exception as e:
+        log_error(
+            {
+                "project_id": project_id,
+                "resource_name": resource_name,
+                "filename": filename,
+                "local_directory": local_directory,
+                "error": str(e),
+            },
+            func_name,
+        )
+        raise
