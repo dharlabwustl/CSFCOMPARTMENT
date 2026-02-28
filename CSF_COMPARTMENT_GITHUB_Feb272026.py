@@ -117,7 +117,7 @@ def call_csf_compartments_ventbound_no_hem_with_cis(args):
     return returnvalue
 
 
-def csf_compartments(filename_gray,filename_mask,filename_bet):
+def csf_compartments(filename_gray,filename_mask,filename_bet,upper_bound_ven=20):
     returnvalue=0
     try:
 
