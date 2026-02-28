@@ -188,7 +188,8 @@ def call_csf_compartments(args):
         filename_gray=args.stuff[1]
         filename_mask=args.stuff[2]
         filename_bet=args.stuff[3]
-        csf_compartments(filename_gray,filename_mask,filename_bet)
+        upper_bound_slice=int(args.stuff[4])
+        csf_compartments(filename_gray,filename_mask,filename_bet) #,upper_bound_slice)
         print("I SUCCEED AT ::{}".format(inspect.stack()[0][3]))
         returnvalue=1
     except:
