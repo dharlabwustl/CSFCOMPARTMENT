@@ -1765,8 +1765,8 @@ def get_value_from_csv_match(
         csv_path: str,
         search_column: str,
         target_column: str,
-        case_sensitive: bool = False,
-        exact_match: bool = False,
+        case_sensitive: bool = True,
+        exact_match: bool = True,
 ):
     """
     Generalized CSV matcher.
