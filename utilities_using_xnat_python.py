@@ -1757,3 +1757,66 @@ def xnat_download_file_from_project_resource(
             func_name,
         )
         raise
+
+import pandas as pd
+
+def get_value_from_csv_match(
+        search_string: str,
+        csv_path: str,
+        search_column: str,
+        target_column: str,
+        case_sensitive: bool = False,
+        exact_match: bool = False,
+):
+    """
+    Generalized CSV matcher.
+
+    Parameters
+    ----------
+    search_string : str
+        String to search
+    csv_path : str
+        Path to CSV file
+    search_column : str
+        Column name to search inside
+    target_column : str
+        Column name from which to return value
+    case_sensitive : bool
+        Whether search should be case sensitive
+    exact_match : bool
+        If True, performs exact match instead of partial match
+
+    Returns
+    -------
+    Value from target_column of first matching row,
+    or None if no match found.
+    """
+
+    try:
+        df = pd.read_csv(csv_path)
+
+        if search_column not in df.columns:
+            raise ValueError(f"'{search_column}' column not found")
+
+        if target_column not in df.columns:
+            raise ValueError(f"'{target_column}' column not found")
+
+        col_series = df[search_column].astype(str)
+
+        if not case_sensitive:
+            col_series = col_series.str.lower()
+            search_string = search_string.lower()
+
+        if exact_match:
+            matches = df[col_series == search_string]
+        else:
+            matches = df[col_series.str.contains(search_string, na=False)]
+
+        if matches.empty:
+            return None
+
+        return matches.iloc[0][target_column]
+
+    except Exception as e:
+        print(f"Error: {e}")
+        return None
