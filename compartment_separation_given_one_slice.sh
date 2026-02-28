@@ -63,15 +63,15 @@ while IFS=',' read -ra array; do
 
       url2=${array2[6]}
 
-      if [[ ${url2} == *"_vertical_bounding_box_512x512.nii.gz"* ]]; then #  || [[ ${url2} == *"_levelset_bet"* ]]  || [[ ${url2} == *"csf_unet"* ]]  ; then ##[[ $string == *"My long"* ]]; then
-        echo "It's there!"
-        echo "${array2[6]}"
-        filename2=$(basename ${url2})
-        call_download_a_singlefile_with_URIString_arguments=('call_download_a_singlefile_with_URIString' ${url2} ${filename2} ${dir_to_save})
-        outputfiles_present=$(python3 download_with_session_ID.py "${call_download_a_singlefile_with_URIString_arguments[@]}")
-        greyfile=${dir_to_save}/${filename2}
-        echo "${greyfile}"
-      fi
+#      if [[ ${url2} == *"_vertical_bounding_box_512x512.nii.gz"* ]]; then #  || [[ ${url2} == *"_levelset_bet"* ]]  || [[ ${url2} == *"csf_unet"* ]]  ; then ##[[ $string == *"My long"* ]]; then
+#        echo "It's there!"
+#        echo "${array2[6]}"
+#        filename2=$(basename ${url2})
+#        call_download_a_singlefile_with_URIString_arguments=('call_download_a_singlefile_with_URIString' ${url2} ${filename2} ${dir_to_save})
+#        outputfiles_present=$(python3 download_with_session_ID.py "${call_download_a_singlefile_with_URIString_arguments[@]}")
+#        greyfile=${dir_to_save}/${filename2}
+#        echo "${greyfile}"
+#      fi
       if [[ ${url2} == *"_levelset.nii.gz"* ]]; then #  || [[ ${url2} == *"_levelset_bet"* ]]  || [[ ${url2} == *"csf_unet"* ]]  ; then ##[[ $string == *"My long"* ]]; then
         echo "It's there!"
         echo "${array2[6]}"
@@ -109,9 +109,8 @@ while IFS=',' read -ra array; do
         echo "${csffile}"
       fi
     done < <(tail -n +2 "${working_dir}/${output_csvfile_1}")
-    upper_slice_ventricle=35
-    call_csf_compartments_arguments=('call_csf_compartments' ${greyfile} ${csffile} ${betfile} ${upper_slice_ventricle})
-    outputfiles_present=$(python3 /software/CSF_COMPARTMENT_GITHUB_Feb272026.py "${call_csf_compartments_arguments[@]}")
+    call_csf_compartments_arguments=('call_csf_compartments' ${greyfile} ${csffile} ${betfile})
+    outputfiles_present=$(python3 /software/CSF_COMPARTMENT_GITHUB_July212023.py "${call_csf_compartments_arguments[@]}")
     #  echo ${outputfiles_present}
     #fi
     echo ${outputfiles_present}

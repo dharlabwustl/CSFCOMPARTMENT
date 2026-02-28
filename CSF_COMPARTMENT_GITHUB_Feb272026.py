@@ -117,11 +117,11 @@ def call_csf_compartments_ventbound_no_hem_with_cis(args):
     return returnvalue
 
 
-def csf_compartments(filename_gray,filename_mask,filename_bet,upper_bound_slice_num):
+def csf_compartments(filename_gray,filename_mask,filename_bet):
     returnvalue=0
     try:
 
-        sulci_vol, ventricle_vol,leftcountven,rightcountven,leftcountsul,rightcountsul,sulci_vol_above_vent,sulci_vol_below_vent,sulci_vol_at_vent = divideintozones_upper_bound_given(filename_gray,filename_mask,filename_bet,upper_bound_slice_num)
+        sulci_vol, ventricle_vol,leftcountven,rightcountven,leftcountsul,rightcountsul,sulci_vol_above_vent,sulci_vol_below_vent,sulci_vol_at_vent = divideintozones_v1(filename_gray,filename_mask,filename_bet)
 
         print("I SUCCEED AT ::{}".format(inspect.stack()[0][3]))
         returnvalue=1
@@ -188,8 +188,7 @@ def call_csf_compartments(args):
         filename_gray=args.stuff[1]
         filename_mask=args.stuff[2]
         filename_bet=args.stuff[3]
-        upper_bound_slice_num=args.stuff[4]
-        csf_compartments(filename_gray,filename_mask,filename_bet,upper_bound_slice_num)
+        csf_compartments(filename_gray,filename_mask,filename_bet)
         print("I SUCCEED AT ::{}".format(inspect.stack()[0][3]))
         returnvalue=1
     except:
