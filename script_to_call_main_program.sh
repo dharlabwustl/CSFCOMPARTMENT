@@ -103,6 +103,14 @@ then
 echo " I AM IN TYPE_OF_PROGRAM == 1"
 /software/compartment_separation.sh  $SESSION_ID $XNAT_USER $XNAT_PASS $XNAT_HOST
 fi
+
+if [[ ${TYPE_OF_PROGRAM} == CSF_COMPARTMENT_GIVEN_UPPER_BOUND ]] ;
+then
+echo " I AM IN TYPE_OF_PROGRAM == 1"
+/software/compartment_separation_given_one_slice.sh  $SESSION_ID $XNAT_USER $XNAT_PASS $XNAT_HOST
+fi
+
+
 if [[ ${TYPE_OF_PROGRAM} == 2 ]] ;
 then
 echo " I AM IN TYPE_OF_PROGRAM == ${TYPE_OF_PROGRAM}"
