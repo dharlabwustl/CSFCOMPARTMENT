@@ -296,6 +296,7 @@ def divideintozones_v1(filename_gray,filename_mask,filename_bet):
             seg_explicit_thresholds = sitk.ConnectedThreshold(img_T1, seedList=initial_seed_point_indexes, lower=100, upper=255)
 
             zoneV_min_z,zoneV_max_z=get_ventricles_range(sitk.GetArrayFromImage(seg_explicit_thresholds))
+            zoneV_max_z=37
             subtracted_image=subtract_binary_1(sitk.GetArrayFromImage(img_T1_Copy),sitk.GetArrayFromImage(seg_explicit_thresholds)*255)
             subtracted_image=sitk.GetImageFromArray(subtracted_image)
             above_ventricle_image= sitk.GetArrayFromImage(subtracted_image)
