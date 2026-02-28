@@ -50,7 +50,7 @@ fi
 
 if [[ ${TYPE_OF_PROGRAM} == "VENT_BOUND_IN_SNIPR_CSF_WITH_CISTERN_WITH_COLI_HM62" ]] ;
 then
-echo " I AM IN TYPE_OF_PROGRAM == VENT_BOUND_IN_SNIPR_CSF_WITH_CISTERN_WITH_COLI_HM62"
+#echo " I AM IN TYPE_OF_PROGRAM == VENT_BOUND_IN_SNIPR_CSF_WITH_CISTERN_WITH_COLI_HM62"
 /software/compartment_separation_with_vent_afterdeepreg_with_cistern_with_COLIHM62.sh  $SESSION_ID $XNAT_USER $XNAT_PASS $XNAT_HOST
 #/software/compartment_separation_with_vent_afterdeepreg_include_hemorrhagemask.sh  $SESSION_ID $XNAT_USER $XNAT_PASS $XNAT_HOST
 fi
@@ -58,7 +58,7 @@ fi
 
 if [[ ${TYPE_OF_PROGRAM} == "VENT_BOUND_IN_SNIPR_CSF_WITH_CISTERN_MIDLINE_WITH_COLI_HM62_LOCAL_COMPUTER" ]] ;
 then
-echo " I AM IN TYPE_OF_PROGRAM == VENT_BOUND_IN_SNIPR_CSF_WITH_CISTERN_MIDLINE_WITH_COLI_HM62_LOCAL_COMPUTER"
+#echo " I AM IN TYPE_OF_PROGRAM == VENT_BOUND_IN_SNIPR_CSF_WITH_CISTERN_MIDLINE_WITH_COLI_HM62_LOCAL_COMPUTER"
 /software/compartment_separation_with_vent_afterdeepreg_with_cistern_with_COLIHM62_with_midline_local_computer.sh  $SESSION_ID $XNAT_USER $XNAT_PASS $XNAT_HOST
 #/software/compartment_separation_with_vent_afterdeepreg_include_hemorrhagemask.sh  $SESSION_ID $XNAT_USER $XNAT_PASS $XNAT_HOST
 fi
@@ -66,7 +66,7 @@ fi
 if [[ ${TYPE_OF_PROGRAM} == "VENT_BOUND_IN_SNIPR_CSF_WITH_CISTERN_MIDLINE_WITH_COLI_HM62" ]] ;
 echo "I AM HERE"
 then
-echo " I AM IN TYPE_OF_PROGRAM == VENT_BOUND_IN_SNIPR_CSF_WITH_CISTERN_MIDLINE_WITH_COLI_HM62"
+#echo " I AM IN TYPE_OF_PROGRAM == VENT_BOUND_IN_SNIPR_CSF_WITH_CISTERN_MIDLINE_WITH_COLI_HM62"
 /software/compartment_separation_with_vent_afterdeepreg_with_cistern_with_COLIHM62_with_midline.sh  $SESSION_ID $XNAT_USER $XNAT_PASS $XNAT_HOST
 #/software/compartment_separation_with_vent_afterdeepreg_include_hemorrhagemask.sh  $SESSION_ID $XNAT_USER $XNAT_PASS $XNAT_HOST
 fi
