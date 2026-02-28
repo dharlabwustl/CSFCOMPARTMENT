@@ -5,7 +5,14 @@ export XNAT_HOST=${4}
 sessionID=${1}
 working_dir=/workinginput
 output_directory=/workingoutput
-
+#
+#xnat_download_file_from_project_resource(
+#    "MY_PROJECT",
+#    "MY_RESOURCE",
+#    "report_09_26_2023.pdf",
+#    "/software/downloads"
+python3 -c "from utilities_using_xnat_python import xnat_download_file_from_project_resource; xnat_download_file_from_project_resource( 'SAH','INCOMPLETE','VNS_study_to_fix_02282026.csv','/output)"
+exit
 final_output_directory=/outputinsidedocker
 function call_get_resourcefiles_metadata_saveascsv_args() {
 
