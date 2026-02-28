@@ -153,10 +153,10 @@ while IFS=',' read -ra array; do
       fi
     done < <(tail -n +2 "${working_dir}/${output_csvfile_1}")
     call_csf_compartments_arguments=('call_csf_compartments' ${greyfile} ${csffile} ${betfile} ${topslice})
-    outputfiles_present=$(python3 /software/CSF_COMPARTMENT_GITHUB_July212023.py "${call_csf_compartments_arguments[@]}")
+#    outputfiles_present=$(python3 /software/CSF_COMPARTMENT_GITHUB_July212023.py "${call_csf_compartments_arguments[@]}")
     #  echo ${outputfiles_present}
     #fi
-#    outputfiles_present=$(python3 /software/CSF_COMPARTMENT_GITHUB_Feb272026.py "${call_csf_compartments_arguments[@]}")
+    outputfiles_present=$(python3 /software/CSF_COMPARTMENT_GITHUB_Feb272026.py "${call_csf_compartments_arguments[@]}")
 
     echo ${outputfiles_present}
     URI_1=${url2%/resource*}
