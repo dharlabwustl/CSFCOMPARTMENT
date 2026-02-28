@@ -100,7 +100,7 @@ def get_ventricles_range(numpy_array_3D_mask):
 #    print(zoneV_max_z)
     return zoneV_min_z,zoneV_max_z
 
-def divideintozones_upper_bound_given(filename_gray,filename_mask,filename_bet):
+def divideintozones_upper_bound_given(filename_gray,filename_mask,filename_bet,upper_bound_slice_num):
     try:
         sulci_vol, ventricle_vol,leftcountven,rightcountven,leftcountsul,rightcountsul,sulci_vol_above_vent,sulci_vol_below_vent,sulci_vol_at_vent=(0,0,0,0,0,0,0,0,0) #seg_explicit_thresholds, subtracted_image
 
@@ -174,6 +174,7 @@ def divideintozones_upper_bound_given(filename_gray,filename_mask,filename_bet):
             seg_explicit_thresholds = sitk.ConnectedThreshold(img_T1, seedList=initial_seed_point_indexes, lower=100, upper=255)
 
             zoneV_min_z,zoneV_max_z=get_ventricles_range(sitk.GetArrayFromImage(seg_explicit_thresholds))
+            zoneV_max_z=upper_bound_slice_num
             subtracted_image=subtract_binary_1(sitk.GetArrayFromImage(img_T1_Copy),sitk.GetArrayFromImage(seg_explicit_thresholds)*255)
             subtracted_image=sitk.GetImageFromArray(subtracted_image)
             above_ventricle_image= sitk.GetArrayFromImage(subtracted_image)
