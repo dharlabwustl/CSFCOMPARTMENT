@@ -5,18 +5,36 @@ export XNAT_HOST=${4}
 sessionID=${1}
 working_dir=/workinginput
 output_directory=/workingoutput
-#
-#xnat_download_file_from_project_resource(
-#    "MY_PROJECT",
-#    "MY_RESOURCE",
-#    "report_09_26_2023.pdf",
-#    "/software/downloads"
-python3 -c "from utilities_using_xnat_python import xnat_download_file_from_project_resource; xnat_download_file_from_project_resource( 'SAH','INCOMPLETE','VNS_study_to_fix_02282026.csv','/software')"
+
+read project_id subject_id <<< $(python3 - <<EOF
+from utilities_using_xnat_python import given_sessionid_get_project_n_subjectids
+
+proj, subj = given_sessionid_get_project_n_subjectids("${sessionID}")
+
+if proj is not None and subj is not None:
+    print(f"{proj} {subj}")
+EOF
+)
+
+echo "PROJECT = $project_id"
+echo "SUBJECT = $subject_id"
+session_label=$(python3 - <<EOF
+from utilities_using_xnat_python import get_session_label_from_session_id
+
+label = get_session_label_from_session_id("${sessionID}")
+
+if label is not None:
+    print(label)
+EOF
+)
+
+echo "SESSION LABEL = $session_label"
+python3 -c "from utilities_using_xnat_python import xnat_download_file_from_project_resource; xnat_download_file_from_project_resource( '${project_id}','INCOMPLETE','VNS_study_to_fix_02282026.csv','/software')"
 topslice=$(python3 - <<EOF
 from utilities_using_xnat_python import get_value_from_csv_match
 
 value = get_value_from_csv_match(
-    search_string="SAH_522_01032024_1711_CT1",
+    search_string="${session_label}",
     csv_path="/software/VNS_study_to_fix_02282026.csv",
     search_column="snipr.session",
     target_column="topslice"
