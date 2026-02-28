@@ -152,8 +152,8 @@ while IFS=',' read -ra array; do
         echo "${csffile}"
       fi
     done < <(tail -n +2 "${working_dir}/${output_csvfile_1}")
-    call_csf_compartments_arguments=('call_csf_compartments' ${greyfile} ${csffile} ${betfile})
-    outputfiles_present=$(python3 /software/CSF_COMPARTMENT_GITHUB_July212023.py "${call_csf_compartments_arguments[@]}")
+    call_csf_compartments_arguments=('call_csf_compartments' ${greyfile} ${csffile} ${betfile} ${topslice})
+    outputfiles_present=$(python3 /software/CSF_COMPARTMENT_GITHUB_Feb272026.py "${call_csf_compartments_arguments[@]}")
     #  echo ${outputfiles_present}
     #fi
     echo ${outputfiles_present}
